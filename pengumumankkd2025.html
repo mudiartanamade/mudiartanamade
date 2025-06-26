@@ -790,5 +790,28 @@
             }
         });
     </script> 
+    <script>
+    function sendHeightToParent() {
+        const height = document.body.scrollHeight;
+        window.parent.postMessage({
+            height: height,
+            origin: 'https://mudiartanamade.github.io'
+        }, '*');
+    }
+    
+    // Kirim tinggi halaman saat dimuat dan diresize
+    window.addEventListener('load', sendHeightToParent);
+    window.addEventListener('resize', sendHeightToParent);
+    
+    // Jika konten berubah dinamis, panggil juga setelah perubahan
+    // Contoh: MutationObserver untuk mendeteksi perubahan DOM
+    const observer = new MutationObserver(sendHeightToParent);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+    });
+</script>
 </body>
 </html>
