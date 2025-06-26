@@ -789,41 +789,6 @@
                 });
             }
         });
-    </script>
-    <script>
-// Fungsi untuk mengirim tinggi dokumen ke parent
-function updateIframeHeight() {
-    const height = document.documentElement.scrollHeight;
-    window.parent.postMessage({
-        type: 'iframe-resize',
-        height: height,
-        id: 'spmb-denpasar-iframe'
-    }, '*');
-}
-
-// Jalankan saat konten dimuat
-document.addEventListener('DOMContentLoaded', updateIframeHeight);
-
-// Jalankan juga saat:
-// - Ada perubahan DOM
-// - Window di-resize
-// - Setelah pencarian data
-const observer = new MutationObserver(updateIframeHeight);
-observer.observe(document.body, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    characterData: true
-});
-
-window.addEventListener('resize', updateIframeHeight);
-
-// Panggil juga setelah menampilkan hasil pencarian
-const originalDisplayResult = displayResult;
-displayResult = function(data) {
-    originalDisplayResult(data);
-    setTimeout(updateIframeHeight, 300); // Beri waktu untuk render
-};
-</script>
+    </script> 
 </body>
 </html>
