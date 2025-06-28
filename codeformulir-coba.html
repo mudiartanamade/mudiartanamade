@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Murid Baru SD Negeri Kota Denpasar</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #27ae60;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .header h2 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-col {
+            flex: 1;
+            min-width: 250px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-download {
+            background: var(--success-color);
+            margin-top: 20px;
+        }
+        
+        .btn-download:hover {
+            background: #219653;
+        }
+        
+        .error {
+            color: var(--accent-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-container {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .success-icon {
+            color: var(--success-color);
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .form-col {
+                flex: 100%;
+                padding: 0;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .header h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://via.placeholder.com/150x80?text=Logo+Dinas+Pendidikan" alt="Logo Dinas Pendidikan" class="logo">
+            <h1>PENDAFTARAN MURID BARU</h1>
+            <h2>SD NEGERI KOTA DENPASAR</h2>
+            <p>Tahun Ajaran 2025/2026</p>
+        </div>
+        
+        <div id="successContainer" class="success-container">
+            <div class="success-icon">✓</div>
+            <h2>Pendaftaran Berhasil!</h2>
+            <p>Data pendaftaran Anda telah berhasil dikirim.</p>
+            <p>Silakan unduh bukti pendaftaran untuk keperluan administrasi.</p>
+            <button id="downloadBtn" class="btn btn-download">Unduh Bukti Pendaftaran</button>
+        </div>
+        
+        <form id="pendaftaranForm">
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="nik" class="required">Nomor Induk Kependudukan (NIK)</label>
+                        <input type="number" id="nik" name="nik" placeholder="Masukkan 16 digit NIK" maxlength="16" inputmode="numeric">
+                        <div id="nikError" class="error">NIK harus terdiri dari 16 digit angka</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kategoriKK" class="required">Kategori KK</label>
+                        <select id="kategoriKK" name="kategoriKK" required>
+                            <option value="" selected disabled>Pilih Kategori KK</option>
+                            <option value="KK Denpasar">KK Denpasar</option>
+                            <option value="KK Luar Denpasar">KK Luar Denpasar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="jalurPenerimaan" class="required">Jalur Penerimaan Murid Baru</label>
+                        <select id="jalurPenerimaan" name="jalurPenerimaan" required>
+                            <option value="" selected disabled>Pilih Jalur Penerimaan</option>
+                            <option value="Afirmasi">Afirmasi</option>
+                            <option value="Mutasi">Mutasi</option>
+                            <option value="Domisili">Domisili</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="banjarAsal" class="required">Banjar Asal Calon Murid Baru</label>
+                        <select id="banjarAsal" name="banjarAsal" required>
+                            <option value="" selected disabled>Pilih Banjar Asal</option>
+                            <option value="Balun">Balun</option>
+                            <option value="Belong Gede">Belong Gede</option>
+                            <option value="Margajati">Margajati</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sekolah1" class="required">Pilihan Sekolah 1</label>
+                        <select id="sekolah1" name="sekolah1" required>
+                            <option value="" selected disabled>Pilih Banjar Asal terlebih dahulu</option>
+                        </select>
+                        <div id="sekolah1Error" class="error">Pilihan sekolah 1 harus dipilih</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sekolah2">Pilihan Sekolah 2 (Opsional)</label>
+                        <select id="sekolah2" name="sekolah2">
+                            <option value="" selected>Tidak memilih</option>
+                        </select>
+                        <div id="sekolah2Error" class="error">Pilihan sekolah tidak boleh sama</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sekolah3">Pilihan Sekolah 3 (Opsional)</label>
+                        <select id="sekolah3" name="sekolah3">
+                            <option value="" selected>Tidak memilih</option>
+                        </select>
+                        <div id="sekolah3Error" class="error">Pilihan sekolah tidak boleh sama</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-block">Daftar Sekarang</button>
+        </form>
+    </div>
+
+    <script>
+        // Inisialisasi jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        // Data sekolah berdasarkan banjar
+        const sekolahOptions = {
+            'Balun': [
+                'SD Negeri 14 Pemecutan', 
+                'SD Negeri 12 Pemecutan'
+            ],
+            'Belong Gede': [
+                'SD Negeri 8 Pemecutan', 
+                'SD Negeri 4 Pemecutan', 
+                'SD Negeri 12 Pemecutan'
+            ],
+            'Margajati': [
+                'SD Negeri 12 Pemecutan', 
+                'SD Negeri 14 Pemecutan', 
+                'SD Negeri 24 Pemecutan'
+            ]
+        };
+        
+        // Inisialisasi semua sekolah untuk dropdown sekolah 2 dan 3
+        const semuaSekolah = [
+            'SD Negeri 4 Pemecutan',
+            'SD Negeri 8 Pemecutan',
+            'SD Negeri 12 Pemecutan',
+            'SD Negeri 14 Pemecutan',
+            'SD Negeri 24 Pemecutan'
+        ];
+        
+        // Variabel untuk menyimpan data formulir
+        let formData = {};
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const banjarAsal = document.getElementById('banjarAsal');
+            const sekolah1 = document.getElementById('sekolah1');
+            const sekolah2 = document.getElementById('sekolah2');
+            const sekolah3 = document.getElementById('sekolah3');
+            const nikInput = document.getElementById('nik');
+            const nikError = document.getElementById('nikError');
+            const sekolah1Error = document.getElementById('sekolah1Error');
+            const sekolah2Error = document.getElementById('sekolah2Error');
+            const sekolah3Error = document.getElementById('sekolah3Error');
+            const form = document.getElementById('pendaftaranForm');
+            const successContainer = document.getElementById('successContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Validasi input NIK (hanya angka dan maksimal 16 digit)
+            nikInput.addEventListener('input', function() {
+                // Hanya izinkan input angka
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // Batasi panjang input menjadi 16 digit
+                if (this.value.length > 16) {
+                    this.value = this.value.slice(0, 16);
+                }
+                
+                // Tampilkan error jika kurang dari 16 digit
+                if (this.value.length !== 16 && this.value.length > 0) {
+                    nikError.style.display = 'block';
+                } else {
+                    nikError.style.display = 'none';
+                }
+            });
+            
+            // Validasi ketika berpindah dari input NIK
+            nikInput.addEventListener('blur', function() {
+                if (this.value.length !== 16 && this.value.length > 0) {
+                    nikError.style.display = 'block';
+                    this.focus();
+                }
+            });
+            
+            // Isi dropdown sekolah 2 dan 3 dengan semua pilihan
+            function isiSemuaSekolah(selectElement) {
+                selectElement.innerHTML = '<option value="" selected>Tidak memilih</option>';
+                semuaSekolah.forEach(sekolah => {
+                    const option = document.createElement('option');
+                    option.value = sekolah;
+                    option.textContent = sekolah;
+                    selectElement.appendChild(option);
+                });
+            }
+            
+            isiSemuaSekolah(sekolah2);
+            isiSemuaSekolah(sekolah3);
+            
+            // Event listener untuk perubahan banjar asal
+            banjarAsal.addEventListener('change', function() {
+                const selectedBanjar = this.value;
+                
+                // Kosongkan dan isi ulang sekolah1 berdasarkan banjar
+                sekolah1.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
+                
+                if (selectedBanjar && sekolahOptions[selectedBanjar]) {
+                    sekolahOptions[selectedBanjar].forEach(sekolah => {
+                        const option = document.createElement('option');
+                        option.value = sekolah;
+                        option.textContent = sekolah;
+                        sekolah1.appendChild(option);
+                    });
+                }
+            });
+            
+            // Validasi pilihan sekolah unik
+            function validasiSekolahUnik() {
+                let valid = true;
+                const sekolah1Val = sekolah1.value;
+                const sekolah2Val = sekolah2.value;
+                const sekolah3Val = sekolah3.value;
+                
+                // Reset error messages
+                sekolah1Error.style.display = 'none';
+                sekolah2Error.style.display = 'none';
+                sekolah3Error.style.display = 'none';
+                
+                // Validasi sekolah1 harus dipilih
+                if (!sekolah1Val) {
+                    sekolah1Error.style.display = 'block';
+                    valid = false;
+                }
+                
+                // Validasi sekolah tidak boleh sama
+                if (sekolah2Val && sekolah2Val === sekolah1Val) {
+                    sekolah2Error.style.display = 'block';
+                    valid = false;
+                }
+                
+                if (sekolah3Val && (sekolah3Val === sekolah1Val || sekolah3Val === sekolah2Val)) {
+                    sekolah3Error.style.display = 'block';
+                    valid = false;
+                }
+                
+                if (sekolah2Val && sekolah3Val && sekolah2Val === sekolah3Val) {
+                    sekolah2Error.style.display = 'block';
+                    sekolah3Error.style.display = 'block';
+                    valid = false;
+                }
+                
+                return valid;
+            }
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validasi NIK
+                if (nikInput.value.length !== 16) {
+                    nikError.style.display = 'block';
+                    nikInput.focus();
+                    return;
+                }
+                
+                // Validasi sekolah unik
+                if (!validasiSekolahUnik()) {
+                    return;
+                }
+                
+                // Simpan data formulir
+                formData = {
+                    nik: nikInput.value,
+                    kategoriKK: document.getElementById('kategoriKK').value,
+                    jalurPenerimaan: document.getElementById('jalurPenerimaan').value,
+                    banjarAsal: banjarAsal.value,
+                    sekolah1: sekolah1.value,
+                    sekolah2: sekolah2.value || '-',
+                    sekolah3: sekolah3.value || '-',
+                    tanggalDaftar: new Date().toLocaleDateString('id-ID', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }),
+                    waktuDaftar: new Date().toLocaleTimeString('id-ID')
+                };
+                
+                // Kirim data ke Google Sheets
+                kirimData();
+            });
+            
+            // Fungsi untuk mengirim data ke Google Sheets
+            function kirimData() {
+                // Ganti dengan API KEY dan spreadsheet ID Anda
+                const API_KEY = 'API_KEY_ANDA';
+                const SPREADSHEET_ID = 'xxxx';
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!A1:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
+                
+                const data = {
+                    values: [
+                        [
+                            new Date().toISOString(),
+                            formData.nik,
+                            formData.kategoriKK,
+                            formData.jalurPenerimaan,
+                            formData.banjarAsal,
+                            formData.sekolah1,
+                            formData.sekolah2,
+                            formData.sekolah3
+                        ]
+                    ]
+                };
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Tampilkan pesan sukses
+                    form.style.display = 'none';
+                    successContainer.style.display = 'block';
+                    
+                    // Scroll ke atas
+                    window.scrollTo(0, 0);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
+                });
+            }
+            
+            // Fungsi untuk membuat bukti pendaftaran PDF
+            function buatBuktiPendaftaran() {
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: 'a4'
+                });
+                
+                // Margin 30px
+                const margin = 30;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const contentWidth = pageWidth - 2 * margin;
+                
+                // Logo di bagian atas
+                doc.addImage('https://via.placeholder.com/150x80?text=Logo+Dinas+Pendidikan', 'JPEG', margin, margin, 120, 60);
+                
+                // Header dokumen
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text('PEMERINTAH KOTA DENPASAR', pageWidth / 2, margin + 30, { align: 'center' });
+                doc.text('DINAS PENDIDIKAN', pageWidth / 2, margin + 45, { align: 'center' });
+                
+                // Judul dokumen
+                doc.setFontSize(14);
+                doc.text('BUKTI PENDAFTARAN MURID BARU', pageWidth / 2, margin + 70, { align: 'center' });
+                doc.setFontSize(12);
+                doc.text('SD NEGERI KOTA DENPASAR TAHUN AJARAN 2025/2026', pageWidth / 2, margin + 85, { align: 'center' });
+                
+                // Garis pemisah
+                doc.setDrawColor(150);
+                doc.setLineWidth(0.5);
+                doc.line(margin, margin + 95, pageWidth - margin, margin + 95);
+                
+                // Data pendaftaran dalam tabel
+                const data = [
+                    ["Nomor Induk Kependudukan (NIK)", formData.nik],
+                    ["Kategori KK", formData.kategoriKK],
+                    ["Jalur Penerimaan", formData.jalurPenerimaan],
+                    ["Banjar Asal", formData.banjarAsal],
+                    ["Pilihan Sekolah 1", formData.sekolah1],
+                    ["Pilihan Sekolah 2", formData.sekolah2],
+                    ["Pilihan Sekolah 3", formData.sekolah3],
+                    ["Tanggal Pendaftaran", formData.tanggalDaftar],
+                    ["Waktu Pendaftaran", formData.waktuDaftar],
+                    ["Nomor Pendaftaran", 'REG-' + Math.floor(100000 + Math.random() * 900000)]
+                ];
+                
+                // Membuat tabel dengan styling
+                doc.autoTable({
+                    startY: margin + 105,
+                    head: [['Informasi', 'Detail']],
+                    body: data,
+                    margin: { top: margin + 105, right: margin, bottom: margin, left: margin },
+                    tableWidth: contentWidth,
+                    styles: {
+                        font: 'helvetica',
+                        fontSize: 10,
+                        cellPadding: 8,
+                        valign: 'middle',
+                        halign: 'left',
+                        textColor: [0, 0, 0],
+                        lineColor: [200, 200, 200],
+                        lineWidth: 0.3
+                    },
+                    headStyles: {
+                        fillColor: [41, 128, 185],
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        halign: 'center'
+                    },
+                    columnStyles: {
+                        0: { fontStyle: 'bold', cellWidth: '40%', halign: 'left' },
+                        1: { cellWidth: '60%', halign: 'left' }
+                    },
+                    theme: 'grid',
+                    tableLineColor: [200, 200, 200],
+                    tableLineWidth: 0.3,
+                    showHead: 'firstPage',
+                    showFoot: 'never'
+                });
+                
+                // Tanda tangan di bagian bawah
+                const tandaTanganY = pageHeight - margin - 80;
+                const tandaTanganX1 = pageWidth / 2 - 120;
+                const tandaTanganX2 = pageWidth / 2 + 40;
+                
+                doc.setFontSize(12);
+                doc.text('Denpasar, ' + new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }), pageWidth / 2, tandaTanganY, { align: 'center' });
+                
+                // Garis tanda tangan
+                doc.setDrawColor(150);
+                doc.setLineWidth(0.5);
+                
+                // Tanda tangan orang tua/wali
+                doc.text('Orang Tua/Wali', tandaTanganX1 + 60, tandaTanganY + 40, { align: 'center' });
+                doc.line(tandaTanganX1, tandaTanganY + 50, tandaTanganX1 + 120, tandaTanganY + 50);
+                doc.text('Nama Lengkap', tandaTanganX1 + 60, tandaTanganY + 60, { align: 'center' });
+                
+                // Tanda tangan kepala sekolah
+                doc.text('Kepala Sekolah', tandaTanganX2 + 60, tandaTanganY + 40, { align: 'center' });
+                doc.line(tandaTanganX2, tandaTanganY + 50, tandaTanganX2 + 120, tandaTanganY + 50);
+                doc.text('Nama Lengkap', tandaTanganX2 + 60, tandaTanganY + 60, { align: 'center' });
+                
+                // Catatan kaki
+                doc.setFontSize(10);
+                doc.text('*Bukti ini sah dan dapat digunakan untuk keperluan administrasi', margin, pageHeight - margin - 15);
+                
+                // Simpan PDF
+                doc.save('Bukti_Pendaftaran_' + formData.nik + '.pdf');
+            }
+            
+            // Event listener untuk tombol download
+            downloadBtn.addEventListener('click', buatBuktiPendaftaran);
+        });
+    </script>
+</body>
+</html>
