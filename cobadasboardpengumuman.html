@@ -129,7 +129,7 @@
     <div class="dashboard-header">
         <div class="container">
             <div class="d-flex align-items-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Sekolah" class="logo">
+                <img src="https://via.placeholder.com/60x60" alt="Logo Sekolah" class="logo">
                 <div>
                     <h1 class="mb-1">Pengumuman Penerimaan Peserta Didik Baru</h1>
                     <p class="mb-0">Tahun Ajaran 2023/2024</p>
@@ -190,9 +190,9 @@
                                 <th>No.</th>
                                 <th>NIK</th>
                                 <th>Nama Calon Murid</th>
-                                <th>Asal Sekolah</th>
+                                <th>Tempat, Tanggal Lahir</th>
                                 <th>Diterima di</th>
-                                <th>Status</th>
+                                <th>Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -222,8 +222,8 @@
     <script>
         // Google Sheets API configuration
         const SPREADSHEET_ID = '1-aVgkXjn2YgbwmfG7wDAuZYo7akFk9ejyBIfTL62huQ';
-        const API_KEY = 'AIzaSyDB77XJY5CTvQxnbRt42GAf06VT2ePTvXc'; // Ganti dengan API key Anda
-        const SHEET_NAME = 'PengumumanGabung'; // Ganti dengan nama sheet Anda
+        const API_KEY = 'YOUR_GOOGLE_SHEETS_API_KEY'; // Ganti dengan API key Anda
+        const SHEET_NAME = 'Sheet1'; // Ganti dengan nama sheet Anda
         
         // Initialize the data table
         let ppdbTable;
@@ -266,9 +266,9 @@
                         // Map headers to column indices
                         const nikIndex = headers.indexOf('NIKCalonMurid');
                         const nameIndex = headers.indexOf('NamaCalonMurid');
-                        const schoolIndex = headers.indexOf('AsalSekolah');
+                        const birthPlaceIndex = headers.indexOf('TempatTglLahir');
                         const acceptedIndex = headers.indexOf('Diterima di');
-                        const statusIndex = headers.indexOf('Status');
+                        const noteIndex = headers.indexOf('Keterangan');
                         
                         // Process each row (skip header row)
                         allData = [];
@@ -276,13 +276,13 @@
                         
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
-                            if (row.length > Math.max(nikIndex, nameIndex, schoolIndex, acceptedIndex, statusIndex)) {
+                            if (row.length > Math.max(nikIndex, nameIndex, birthPlaceIndex, acceptedIndex, noteIndex)) {
                                 allData.push({
                                     nik: row[nikIndex] || '',
                                     name: row[nameIndex] || '',
-                                    school: row[schoolIndex] || '',
+                                    birthPlace: row[birthPlaceIndex] || '',
                                     accepted: row[acceptedIndex] || '',
-                                    status: row[statusIndex] || ''
+                                    note: row[noteIndex] || ''
                                 });
                                 
                                 // Add to unique schools set
@@ -326,17 +326,17 @@
                     index + 1,
                     item.nik,
                     item.name,
-                    item.school,
+                    item.birthPlace,
                     item.accepted,
-                    item.status
+                    item.note
                 ]),
                 columns: [
                     { title: "No.", width: "5%" },
                     { title: "NIK", width: "15%" },
                     { title: "Nama Calon Murid", width: "25%" },
-                    { title: "Asal Sekolah", width: "20%" },
+                    { title: "Tempat, Tanggal Lahir", width: "20%" },
                     { title: "Diterima di", width: "20%" },
-                    { title: "Status", width: "15%" }
+                    { title: "Keterangan", width: "15%" }
                 ],
                 language: {
                     lengthMenu: "Tampilkan _MENU_ data per halaman",
@@ -378,7 +378,7 @@
         function exportToExcel() {
             // Prepare data for export
             const exportData = [
-                ["No.", "NIK", "Nama Calon Murid", "Asal Sekolah", "Diterima di", "Status"]
+                ["No.", "NIK", "Nama Calon Murid", "Tempat, Tanggal Lahir", "Diterima di", "Keterangan"]
             ];
             
             allData.forEach((item, index) => {
@@ -386,9 +386,9 @@
                     index + 1,
                     item.nik,
                     item.name,
-                    item.school,
+                    item.birthPlace,
                     item.accepted,
-                    item.status
+                    item.note
                 ]);
             });
             
@@ -427,14 +427,14 @@
                 index + 1,
                 item.nik,
                 item.name,
-                item.school,
+                item.birthPlace,
                 item.accepted,
-                item.status
+                item.note
             ]);
             
             // Add table to PDF
             doc.autoTable({
-                head: [['No.', 'NIK', 'Nama Calon Murid', 'Asal Sekolah', 'Diterima di', 'Status']],
+                head: [['No.', 'NIK', 'Nama Calon Murid', 'Tempat, Tanggal Lahir', 'Diterima di', 'Keterangan']],
                 body: pdfData,
                 startY: 40,
                 styles: {
