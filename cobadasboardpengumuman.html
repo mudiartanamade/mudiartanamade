@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pengumuman PPDB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            padding: 5px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .dataTables_wrapper .dataTables_length select {
+            border-radius: 20px;
+            padding: 5px;
+        }
+        
+        .search-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .logo {
+            max-height: 60px;
+            margin-right: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <img src="https://via.placeholder.com/60x60" alt="Logo Sekolah" class="logo">
+                <div>
+                    <h1 class="mb-1">Pengumuman Penerimaan Peserta Didik Baru</h1>
+                    <p class="mb-0">Tahun Ajaran 2023/2024</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-box">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nikSearch" class="form-label">Cari berdasarkan NIK Calon Murid:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                        <input type="text" class="form-control" id="nikSearch" placeholder="Masukkan NIK...">
+                        <button class="btn btn-primary" id="searchNikBtn">Cari</button>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="schoolSearch" class="form-label">Cari berdasarkan Sekolah Tujuan:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-school"></i></span>
+                        <select class="form-select" id="schoolSearch">
+                            <option value="">Semua Sekolah</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                        <button class="btn btn-primary" id="searchSchoolBtn">Cari</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Memuat data...</span>
+            </div>
+            <p class="mt-2">Sedang memuat data...</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="fas fa-table me-2"></i>Daftar Peserta Didik Baru</span>
+                <div>
+                    <button id="exportExcel" class="btn btn-success btn-sm me-2">
+                        <i class="fas fa-file-excel me-1"></i> Excel
+                    </button>
+                    <button id="exportPDF" class="btn btn-danger btn-sm">
+                        <i class="fas fa-file-pdf me-1"></i> PDF
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="ppdbTable" class="table table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>NIK</th>
+                                <th>Nama Calon Murid</th>
+                                <th>Asal Sekolah</th>
+                                <th>Diterima di</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">© 2023 PPDB Online. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+        // Google Sheets API configuration
+        const SPREADSHEET_ID = '1-aVgkXjn2YgbwmfG7wDAuZYo7akFk9ejyBIfTL62huQ';
+        const API_KEY = 'YOUR_GOOGLE_SHEETS_API_KEY'; // Ganti dengan API key Anda
+        const SHEET_NAME = 'Sheet1'; // Ganti dengan nama sheet Anda
+        
+        // Initialize the data table
+        let ppdbTable;
+        let allData = [];
+        let uniqueSchools = [];
+        
+        $(document).ready(function() {
+            // Show loading spinner
+            $('#loadingSpinner').show();
+            
+            // Load data from Google Sheets
+            loadDataFromGoogleSheets();
+            
+            // Initialize buttons
+            $('#searchNikBtn').click(searchByNik);
+            $('#searchSchoolBtn').click(searchBySchool);
+            $('#exportExcel').click(exportToExcel);
+            $('#exportPDF').click(exportToPDF);
+            
+            // Allow Enter key to trigger search
+            $('#nikSearch').keypress(function(e) {
+                if (e.which === 13) {
+                    searchByNik();
+                }
+            });
+        });
+        
+        function loadDataFromGoogleSheets() {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Process the data
+                    const rows = data.values;
+                    if (rows.length > 0) {
+                        // Get headers (assuming first row is headers)
+                        const headers = rows[0];
+                        
+                        // Map headers to column indices
+                        const nikIndex = headers.indexOf('NIKCalonMurid');
+                        const nameIndex = headers.indexOf('NamaCalonMurid');
+                        const schoolIndex = headers.indexOf('AsalSekolah');
+                        const acceptedIndex = headers.indexOf('Diterima di');
+                        const statusIndex = headers.indexOf('Status');
+                        
+                        // Process each row (skip header row)
+                        allData = [];
+                        uniqueSchools = new Set();
+                        
+                        for (let i = 1; i < rows.length; i++) {
+                            const row = rows[i];
+                            if (row.length > Math.max(nikIndex, nameIndex, schoolIndex, acceptedIndex, statusIndex)) {
+                                allData.push({
+                                    nik: row[nikIndex] || '',
+                                    name: row[nameIndex] || '',
+                                    school: row[schoolIndex] || '',
+                                    accepted: row[acceptedIndex] || '',
+                                    status: row[statusIndex] || ''
+                                });
+                                
+                                // Add to unique schools set
+                                if (row[acceptedIndex]) {
+                                    uniqueSchools.add(row[acceptedIndex]);
+                                }
+                            }
+                        }
+                        
+                        // Populate school dropdown
+                        const schoolDropdown = $('#schoolSearch');
+                        schoolDropdown.empty();
+                        schoolDropdown.append('<option value="">Semua Sekolah</option>');
+                        
+                        Array.from(uniqueSchools).sort().forEach(school => {
+                            schoolDropdown.append(`<option value="${school}">${school}</option>`);
+                        });
+                        
+                        // Initialize DataTable
+                        initializeDataTable(allData);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    $('#loadingSpinner').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Gagal memuat data. Silakan coba lagi nanti.
+                        </div>
+                    `);
+                });
+        }
+        
+        function initializeDataTable(data) {
+            if ($.fn.DataTable.isDataTable('#ppdbTable')) {
+                ppdbTable.destroy();
+            }
+            
+            ppdbTable = $('#ppdbTable').DataTable({
+                data: data.map((item, index) => [
+                    index + 1,
+                    item.nik,
+                    item.name,
+                    item.school,
+                    item.accepted,
+                    item.status
+                ]),
+                columns: [
+                    { title: "No.", width: "5%" },
+                    { title: "NIK", width: "15%" },
+                    { title: "Nama Calon Murid", width: "25%" },
+                    { title: "Asal Sekolah", width: "20%" },
+                    { title: "Diterima di", width: "20%" },
+                    { title: "Status", width: "15%" }
+                ],
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ data per halaman",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    infoEmpty: "Tidak ada data tersedia",
+                    infoFiltered: "(disaring dari _MAX_ total data)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    }
+                },
+                responsive: true,
+                dom: '<"top"lf>rt<"bottom"ip>',
+                initComplete: function() {
+                    $('#loadingSpinner').hide();
+                }
+            });
+        }
+        
+        function searchByNik() {
+            const nik = $('#nikSearch').val().trim();
+            ppdbTable.search(nik).draw();
+        }
+        
+        function searchBySchool() {
+            const school = $('#schoolSearch').val().trim();
+            
+            if (school === "") {
+                ppdbTable.columns(4).search("").draw();
+            } else {
+                ppdbTable.columns(4).search("^" + school + "$", true, false).draw();
+            }
+        }
+        
+        function exportToExcel() {
+            // Prepare data for export
+            const exportData = [
+                ["No.", "NIK", "Nama Calon Murid", "Asal Sekolah", "Diterima di", "Status"]
+            ];
+            
+            allData.forEach((item, index) => {
+                exportData.push([
+                    index + 1,
+                    item.nik,
+                    item.name,
+                    item.school,
+                    item.accepted,
+                    item.status
+                ]);
+            });
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
+            XLSX.utils.book_append_sheet(wb, ws, "PPDB");
+            
+            // Export to Excel
+            XLSX.writeFile(wb, "Pengumuman_PPDB.xlsx");
+        }
+        
+        function exportToPDF() {
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.text("Pengumuman Penerimaan Peserta Didik Baru", 105, 15, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text("Tahun Ajaran 2023/2024", 105, 22, { align: 'center' });
+            
+            // Add current date
+            const currentDate = new Date().toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            doc.setFontSize(10);
+            doc.text(`Dicetak pada: ${currentDate}`, 14, 30);
+            
+            // Prepare data for PDF
+            const pdfData = allData.map((item, index) => [
+                index + 1,
+                item.nik,
+                item.name,
+                item.school,
+                item.accepted,
+                item.status
+            ]);
+            
+            // Add table to PDF
+            doc.autoTable({
+                head: [['No.', 'NIK', 'Nama Calon Murid', 'Asal Sekolah', 'Diterima di', 'Status']],
+                body: pdfData,
+                startY: 40,
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 2,
+                    overflow: 'linebreak'
+                },
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255
+                },
+                columnStyles: {
+                    0: { cellWidth: 10 },
+                    1: { cellWidth: 25 },
+                    2: { cellWidth: 40 },
+                    3: { cellWidth: 35 },
+                    4: { cellWidth: 35 },
+                    5: { cellWidth: 25 }
+                },
+                margin: { left: 10 }
+            });
+            
+            // Save PDF
+            doc.save('Pengumuman_PPDB.pdf');
+        }
+    </script>
+</body>
+</html>
