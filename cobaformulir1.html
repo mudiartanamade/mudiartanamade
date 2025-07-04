@@ -11,29 +11,33 @@
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .logo-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            height: 100px;
+        }
         .form-container {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            margin-top: 30px;
+            margin-top: 20px;
             margin-bottom: 30px;
         }
-        .header {
+        .form-header {
             background-color: #2c3e50;
             color: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px 8px 0 0;
-            margin-bottom: 30px;
-        }
-        .logo {
-            height: 80px;
-            margin-right: 20px;
+            margin-bottom: 25px;
+            text-align: center;
         }
         .form-title {
             font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-bottom: 2px solid #2c3e50;
             padding-bottom: 10px;
         }
@@ -64,31 +68,36 @@
             border-color: #2c3e50;
             box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
         }
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Logo Header -->
+        <div class="logo-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" class="logo">
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="form-container">
-                    <div class="header text-center">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Coat_of_arms_of_Denpasar.svg/1200px-Coat_of_arms_of_Denpasar.svg.png" alt="Logo Kota Denpasar" class="logo">
-                            <div>
-                                <h2>PEMERINTAH KOTA DENPASAR</h2>
-                                <h3>DINAS PENDIDIKAN</h3>
-                                <h4>FORMULIR PENDAFTARAN MURID BARU</h4>
-                            </div>
-                        </div>
+                    <div class="form-header">
+                        <h4>PEMERINTAH KOTA DENPASAR</h4>
+                        <h5>DINAS PENDIDIKAN</h5>
+                        <h6>FORMULIR PENDAFTARAN MURID BARU</h6>
                     </div>
 
-                    <form id="registrationForm">
+                    <form id="registrationForm" novalidate>
+                        <!-- Data Calon Murid -->
                         <div class="form-section">
                             <h5 class="section-title">DATA CALON MURID</h5>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="nik" class="form-label required-field">NIK Calon Murid Baru</label>
-                                    <input type="text" class="form-control" id="nik" maxlength="16" required>
+                                    <input type="text" class="form-control" id="nik" maxlength="16" pattern="[0-9]{16}" required>
                                     <div class="invalid-feedback">Harap isi NIK dengan 16 digit angka</div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -118,6 +127,7 @@
                             </div>
                         </div>
 
+                        <!-- Data Kartu Keluarga -->
                         <div class="form-section">
                             <h5 class="section-title">DATA KARTU KELUARGA</h5>
                             <div class="row">
@@ -146,6 +156,7 @@
                             </div>
                         </div>
 
+                        <!-- Pilihan Sekolah -->
                         <div class="form-section">
                             <h5 class="section-title">PILIHAN SEKOLAH</h5>
                             <div class="row">
@@ -170,8 +181,9 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="pilihan2" class="form-label required-field">Pilihan Sekolah 2</label>
-                                    <select class="form-select" id="pilihan2" required disabled>
-                                        <option value="" selected disabled>Pilih Pilihan 1 terlebih dahulu</option>
+                                    <select class="form-select" id="pilihan2" required>
+                                        <option value="" selected disabled>Pilih Sekolah</option>
+                                        <!-- Options will be loaded dynamically -->
                                     </select>
                                     <div class="invalid-feedback">Harap pilih sekolah kedua</div>
                                 </div>
@@ -179,8 +191,9 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="pilihan3" class="form-label required-field">Pilihan Sekolah 3</label>
-                                    <select class="form-select" id="pilihan3" required disabled>
-                                        <option value="" selected disabled>Pilih Pilihan 2 terlebih dahulu</option>
+                                    <select class="form-select" id="pilihan3" required>
+                                        <option value="" selected disabled>Pilih Sekolah</option>
+                                        <!-- Options will be loaded dynamically -->
                                     </select>
                                     <div class="invalid-feedback">Harap pilih sekolah ketiga</div>
                                 </div>
@@ -188,7 +201,10 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <button type="submit" class="btn btn-primary btn-submit" id="submitButton">Submit Pendaftaran</button>
+                            <button type="submit" class="btn btn-primary btn-submit" id="submitButton">
+                                <span id="submitText">Submit Pendaftaran</span>
+                                <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -210,6 +226,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="button" class="btn btn-primary" id="downloadBtn">Unduh Bukti</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Terjadi Kesalahan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">Terjadi kesalahan saat menyimpan data. Silahkan coba lagi.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -237,17 +271,29 @@
         const SPREADSHEET_ID = '1YHEQmKfJsPspRr5IL26-hR9zNJAIFAwcqeRQ5FWuf6I';
         const API_KEY = 'AIzaSyDB77XJY5CTvQxnbRt42GAf06VT2ePTvXc';
         
+        // Global variables for sekolah data
+        let allSekolahOptions = [];
+        
         // Load banjar data from Google Sheets
         async function loadBanjarData() {
             try {
-                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Match!A2:A?key=${API_KEY}`);
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Match!A2:B?key=${API_KEY}`);
                 const data = await response.json();
                 
                 if (data.values) {
                     const banjarSelect = document.getElementById('banjar');
-                    // Remove duplicates and sort
-                    const uniqueBanjar = [...new Set(data.values.flat())].sort();
+                    // Get unique banjar names
+                    const banjarSet = new Set();
+                    data.values.forEach(row => banjarSet.add(row[0]));
+                    const uniqueBanjar = Array.from(banjarSet).sort();
                     
+                    // Store all sekolah options for pilihan 2 and 3
+                    allSekolahOptions = [...new Set(data.values.map(row => row[1]))].sort();
+                    
+                    // Load sekolah options for pilihan 2 and 3
+                    loadAllSekolahOptions();
+                    
+                    // Add banjar options
                     uniqueBanjar.forEach(banjar => {
                         const option = document.createElement('option');
                         option.value = banjar;
@@ -257,10 +303,38 @@
                 }
             } catch (error) {
                 console.error('Error loading banjar data:', error);
+                showError('Gagal memuat data banjar. Silahkan refresh halaman.');
             }
         }
         
-        // Load sekolah options based on selected banjar
+        // Load all sekolah options for pilihan 2 and 3
+        function loadAllSekolahOptions() {
+            const pilihan2Select = document.getElementById('pilihan2');
+            const pilihan3Select = document.getElementById('pilihan3');
+            
+            // Clear existing options except the first one
+            while (pilihan2Select.options.length > 1) {
+                pilihan2Select.remove(1);
+            }
+            while (pilihan3Select.options.length > 1) {
+                pilihan3Select.remove(1);
+            }
+            
+            // Add all sekolah options
+            allSekolahOptions.forEach(sekolah => {
+                const option2 = document.createElement('option');
+                option2.value = sekolah;
+                option2.textContent = sekolah;
+                pilihan2Select.appendChild(option2.cloneNode(true));
+                
+                const option3 = document.createElement('option');
+                option3.value = sekolah;
+                option3.textContent = sekolah;
+                pilihan3Select.appendChild(option3);
+            });
+        }
+        
+        // Load sekolah options based on selected banjar for pilihan 1
         async function loadSekolahOptions(banjar) {
             try {
                 const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Match!A2:B?key=${API_KEY}`);
@@ -282,72 +356,18 @@
                     });
                     
                     pilihan1Select.disabled = false;
-                    
-                    // Reset and disable pilihan 2 and 3
-                    const pilihan2Select = document.getElementById('pilihan2');
-                    pilihan2Select.innerHTML = '<option value="" selected disabled>Pilih Pilihan 1 terlebih dahulu</option>';
-                    pilihan2Select.disabled = true;
-                    
-                    const pilihan3Select = document.getElementById('pilihan3');
-                    pilihan3Select.innerHTML = '<option value="" selected disabled>Pilih Pilihan 2 terlebih dahulu</option>';
-                    pilihan3Select.disabled = true;
                 }
             } catch (error) {
                 console.error('Error loading sekolah data:', error);
+                showError('Gagal memuat data sekolah. Silahkan coba lagi.');
             }
         }
         
-        // Enable pilihan 2 when pilihan 1 is selected
-        function enablePilihan2() {
-            const pilihan1 = document.getElementById('pilihan1').value;
-            const pilihan2Select = document.getElementById('pilihan2');
-            
-            if (pilihan1) {
-                // Clone pilihan1 options but exclude the selected one
-                const pilihan1Select = document.getElementById('pilihan1');
-                pilihan2Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
-                
-                for (let i = 1; i < pilihan1Select.options.length; i++) {
-                    const option = pilihan1Select.options[i].cloneNode(true);
-                    pilihan2Select.appendChild(option);
-                }
-                
-                pilihan2Select.disabled = false;
-            } else {
-                pilihan2Select.innerHTML = '<option value="" selected disabled>Pilih Pilihan 1 terlebih dahulu</option>';
-                pilihan2Select.disabled = true;
-            }
-            
-            // Reset pilihan3
-            const pilihan3Select = document.getElementById('pilihan3');
-            pilihan3Select.innerHTML = '<option value="" selected disabled>Pilih Pilihan 2 terlebih dahulu</option>';
-            pilihan3Select.disabled = true;
-        }
-        
-        // Enable pilihan 3 when pilihan 2 is selected
-        function enablePilihan3() {
-            const pilihan1 = document.getElementById('pilihan1').value;
-            const pilihan2 = document.getElementById('pilihan2').value;
-            const pilihan3Select = document.getElementById('pilihan3');
-            
-            if (pilihan2) {
-                // Clone pilihan1 options but exclude pilihan1 and pilihan2
-                const pilihan1Select = document.getElementById('pilihan1');
-                pilihan3Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
-                
-                for (let i = 1; i < pilihan1Select.options.length; i++) {
-                    const optionValue = pilihan1Select.options[i].value;
-                    if (optionValue !== pilihan1 && optionValue !== pilihan2) {
-                        const option = pilihan1Select.options[i].cloneNode(true);
-                        pilihan3Select.appendChild(option);
-                    }
-                }
-                
-                pilihan3Select.disabled = false;
-            } else {
-                pilihan3Select.innerHTML = '<option value="" selected disabled>Pilih Pilihan 2 terlebih dahulu</option>';
-                pilihan3Select.disabled = true;
-            }
+        // Show error modal with custom message
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+            errorModal.show();
         }
         
         // Save form data to Google Sheets
@@ -367,37 +387,58 @@
                     formData.pilihan1,
                     formData.pilihan2,
                     formData.pilihan3,
-                    new Date().toLocaleString('id-ID') // Timestamp
+                    new Date().toLocaleString('id-ID', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    })
                 ];
                 
-                // First, we need to get the last row with data to determine where to append
-                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Respon!A1:M?key=${API_KEY}`);
-                const data = await response.json();
+                // First, check if the response sheet exists and has headers
+                const headersResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Respon!A1:1?key=${API_KEY}`);
+                const headersData = await headersResponse.json();
                 
-                let nextRow = 1; // Default to row 1 if sheet is empty
-                if (data.values && data.values.length > 0) {
-                    nextRow = data.values.length + 1;
+                // If no headers exist, create them
+                if (!headersData.values || headersData.values.length === 0) {
+                    const headers = [
+                        "NIK", "Nama", "Tempat Lahir", "Tanggal Lahir", "Nama Ibu", 
+                        "Kategori KK", "Nomor KK", "Tanggal Terbit KK", "Banjar", 
+                        "Pilihan Sekolah 1", "Pilihan Sekolah 2", "Pilihan Sekolah 3", "Timestamp"
+                    ];
+                    
+                    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Respon!A1:1?valueInputOption=USER_ENTERED&key=${API_KEY}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            values: [headers]
+                        })
+                    });
                 }
                 
-                // Prepare the request body
-                const requestBody = {
-                    values: [values]
-                };
-                
-                // Make the append request
-                const appendResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Respon!A${nextRow}:append?valueInputOption=USER_ENTERED&key=${API_KEY}`, {
+                // Append the new data
+                const appendResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Respon!A:A?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS&key=${API_KEY}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(requestBody)
+                    body: JSON.stringify({
+                        values: [values]
+                    })
                 });
                 
-                const result = await appendResponse.json();
-                return appendResponse.ok;
+                if (!appendResponse.ok) {
+                    throw new Error('Failed to append data');
+                }
+                
+                return true;
             } catch (error) {
                 console.error('Error saving to Google Sheets:', error);
-                return false;
+                throw error;
             }
         }
         
@@ -407,7 +448,7 @@
             const doc = new jsPDF();
             
             // Add logo
-            const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Coat_of_arms_of_Denpasar.svg/1200px-Coat_of_arms_of_Denpasar.svg.png';
+            const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png';
             
             // Create a temporary image element to get dimensions
             const img = new Image();
@@ -518,24 +559,38 @@
                 loadSekolahOptions(this.value);
             });
             
-            document.getElementById('pilihan1').addEventListener('change', enablePilihan2);
-            document.getElementById('pilihan2').addEventListener('change', enablePilihan3);
+            document.getElementById('pilihan1').addEventListener('change', function() {
+                // Validate pilihan 2 and 3 are not the same as pilihan 1
+                const pilihan1 = this.value;
+                const pilihan2 = document.getElementById('pilihan2');
+                const pilihan3 = document.getElementById('pilihan3');
+                
+                if (pilihan2.value === pilihan1) {
+                    pilihan2.value = '';
+                }
+                if (pilihan3.value === pilihan1) {
+                    pilihan3.value = '';
+                }
+            });
             
             document.getElementById('registrationForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 
-                // Validate form
                 const form = e.target;
                 if (!form.checkValidity()) {
-                    e.stopPropagation();
                     form.classList.add('was-validated');
                     return;
                 }
                 
                 // Disable submit button to prevent multiple submissions
                 const submitButton = document.getElementById('submitButton');
+                const submitText = document.getElementById('submitText');
+                const submitSpinner = document.getElementById('submitSpinner');
+                
                 submitButton.disabled = true;
-                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...';
+                submitText.textContent = 'Menyimpan...';
+                submitSpinner.classList.remove('d-none');
                 
                 // Collect form data
                 const formData = {
@@ -557,38 +612,44 @@
                 if (formData.pilihan1 === formData.pilihan2 || 
                     formData.pilihan1 === formData.pilihan3 || 
                     formData.pilihan2 === formData.pilihan3) {
-                    alert('Pilihan sekolah harus berbeda!');
+                    showError('Pilihan sekolah harus berbeda!');
+                    
                     submitButton.disabled = false;
-                    submitButton.innerHTML = 'Submit Pendaftaran';
+                    submitText.textContent = 'Submit Pendaftaran';
+                    submitSpinner.classList.add('d-none');
                     return;
                 }
                 
                 try {
                     // Save to Google Sheets
-                    const success = await saveToGoogleSheets(formData);
+                    await saveToGoogleSheets(formData);
                     
-                    if (success) {
-                        // Show success modal
-                        const modal = new bootstrap.Modal(document.getElementById('successModal'));
-                        modal.show();
+                    // Show success modal
+                    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+                    modal.show();
+                    
+                    // Set up download button
+                    document.getElementById('downloadBtn').onclick = function() {
+                        generatePDF(formData);
+                        modal.hide();
                         
-                        // Set up download button
-                        document.getElementById('downloadBtn').onclick = function() {
-                            generatePDF(formData);
-                            modal.hide();
-                            submitButton.disabled = false;
-                            submitButton.innerHTML = 'Submit Pendaftaran';
-                        };
-                    } else {
-                        alert('Terjadi kesalahan saat menyimpan data. Silahkan coba lagi.');
+                        // Reset form and button
+                        form.reset();
+                        form.classList.remove('was-validated');
+                        document.getElementById('pilihan1').disabled = true;
+                        document.getElementById('pilihan1').innerHTML = '<option value="" selected disabled>Pilih Banjar terlebih dahulu</option>';
+                        
                         submitButton.disabled = false;
-                        submitButton.innerHTML = 'Submit Pendaftaran';
-                    }
+                        submitText.textContent = 'Submit Pendaftaran';
+                        submitSpinner.classList.add('d-none');
+                    };
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menyimpan data. Silahkan coba lagi.');
+                    showError('Terjadi kesalahan saat menyimpan data. Silahkan coba lagi atau hubungi administrator.');
+                    
                     submitButton.disabled = false;
-                    submitButton.innerHTML = 'Submit Pendaftaran';
+                    submitText.textContent = 'Submit Pendaftaran';
+                    submitSpinner.classList.add('d-none');
                 }
             });
         });
