@@ -352,22 +352,15 @@
                     // Skip header jika ada
                     const startRow = data.values[0][0] === "Banjar" ? 1 : 0;
                     
-                    // Simpan semua banjar untuk menghindari duplikat
-                    const uniqueBanjar = new Set();
-                    
                     for (let i = startRow; i < data.values.length; i++) {
-                        const banjar = data.values[i][0]?.trim();
-                        if (banjar && !uniqueBanjar.has(banjar)) {
-                            uniqueBanjar.add(banjar);
+                        const banjar = data.values[i][0];
+                        if (banjar) {
                             const option = document.createElement('option');
                             option.value = banjar;
                             option.textContent = banjar;
                             banjarSelect.appendChild(option);
                         }
                     }
-                    
-                    // Initialize Select2 setelah data dimuat
-                    $('#banjar').select2();
                     
                     // Load all sekolah options for pilihan 2 and 3
                     loadAllSekolahOptions();
