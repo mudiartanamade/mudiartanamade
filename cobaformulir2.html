@@ -6,8 +6,6 @@
     <title>Penerimaan Murid Baru - Formulir Pendaftaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -73,13 +71,6 @@
         .invalid-feedback {
             color: #dc3545;
             font-size: 0.875em;
-        }
-        .select2-container--bootstrap-5 .select2-selection--single {
-            height: 38px;
-            padding: 6px 12px;
-        }
-        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-            padding-left: 0;
         }
     </style>
 </head>
@@ -171,7 +162,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="banjar" class="form-label required-field">Banjar</label>
-                                    <select class="form-select select2" id="banjar" required>
+                                    <select class="form-select" id="banjar" required>
                                         <option value="" selected disabled>Pilih Banjar</option>
                                         <!-- Options will be loaded dynamically -->
                                     </select>
@@ -181,7 +172,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="pilihan1" class="form-label required-field">Pilihan Sekolah 1</label>
-                                    <select class="form-select select2" id="pilihan1" required disabled>
+                                    <select class="form-select" id="pilihan1" required disabled>
                                         <option value="" selected disabled>Pilih Banjar terlebih dahulu</option>
                                     </select>
                                     <div class="invalid-feedback">Harap pilih sekolah pertama</div>
@@ -189,20 +180,22 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="pilihan2" class="form-label">Pilihan Sekolah 2</label>
-                                    <select class="form-select select2" id="pilihan2">
-                                        <option value="" selected>Pilih Sekolah (Opsional)</option>
+                                    <label for="pilihan2" class="form-label required-field">Pilihan Sekolah 2</label>
+                                    <select class="form-select" id="pilihan2" required>
+                                        <option value="" selected disabled>Pilih Sekolah</option>
                                         <!-- Options will be loaded dynamically -->
                                     </select>
+                                    <div class="invalid-feedback">Harap pilih sekolah kedua</div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="pilihan3" class="form-label">Pilihan Sekolah 3</label>
-                                    <select class="form-select select2" id="pilihan3">
-                                        <option value="" selected>Pilih Sekolah (Opsional)</option>
+                                    <label for="pilihan3" class="form-label required-field">Pilihan Sekolah 3</label>
+                                    <select class="form-select" id="pilihan3" required>
+                                        <option value="" selected disabled>Pilih Sekolah</option>
                                         <!-- Options will be loaded dynamically -->
                                     </select>
+                                    <div class="invalid-feedback">Harap pilih sekolah ketiga</div>
                                 </div>
                             </div>
                         </div>
@@ -260,8 +253,12 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        // Ganti dengan API KEY dan Sheet ID Anda
+        const API_KEY = "AIzaSyDB77XJY5CTvQxnbRt42GAf06VT2ePTvXc";
+        const SHEET_ID = "1BmrdLDtOAjlmTvR3fQUnuK5nkbWucyhgMGx1SZPEoI8";
+        const SHEET_NAME = "Respon";
+        
         // Initialize date pickers
         flatpickr("#tanggalLahir", {
             dateFormat: "d/m/Y",
@@ -273,24 +270,6 @@
             dateFormat: "d/m/Y",
             locale: "id",
             maxDate: "today"
-        });
-
-        // Initialize Select2 for all select elements with class 'select2'
-        $(document).ready(function() {
-            $('.select2').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: $(this).data('placeholder'),
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "Tidak ditemukan";
-                    },
-                    searching: function() {
-                        return "Mencari...";
-                    }
-                }
-            });
         });
 
         // Show error modal with custom message
@@ -350,29 +329,24 @@
                 const data = await response.json();
                 
                 if (data.values) {
-                    const banjarSelect = $('#banjar');
-                    banjarSelect.empty();
-                    banjarSelect.append('<option value="" selected disabled>Pilih Banjar</option>');
+                    const banjarSelect = document.getElementById('banjar');
+                    banjarSelect.innerHTML = '<option value="" selected disabled>Pilih Banjar</option>';
                     
                     // Skip header jika ada
                     const startRow = data.values[0][0] === "Banjar" ? 1 : 0;
                     
-                    // Use Set to store unique banjar names
-                    const uniqueBanjar = new Set();
-                    
                     for (let i = startRow; i < data.values.length; i++) {
                         const banjar = data.values[i][0];
-                        if (banjar && !uniqueBanjar.has(banjar)) {
-                            uniqueBanjar.add(banjar);
-                            banjarSelect.append(`<option value="${banjar}">${banjar}</option>`);
+                        if (banjar) {
+                            const option = document.createElement('option');
+                            option.value = banjar;
+                            option.textContent = banjar;
+                            banjarSelect.appendChild(option);
                         }
                     }
                     
                     // Load all sekolah options for pilihan 2 and 3
                     loadAllSekolahOptions();
-                    
-                    // Trigger Select2 update
-                    banjarSelect.trigger('change');
                 } else {
                     showError('Gagal memuat data banjar. Silahkan refresh halaman.');
                 }
@@ -392,35 +366,31 @@
                 const data = await response.json();
                 
                 if (data.values) {
-                    const pilihan2Select = $('#pilihan2');
-                    const pilihan3Select = $('#pilihan3');
+                    const pilihan2Select = document.getElementById('pilihan2');
+                    const pilihan3Select = document.getElementById('pilihan3');
                     
-                    // Clear existing options
-                    pilihan2Select.empty();
-                    pilihan3Select.empty();
-                    
-                    pilihan2Select.append('<option value="" selected>Pilih Sekolah (Opsional)</option>');
-                    pilihan3Select.append('<option value="" selected>Pilih Sekolah (Opsional)</option>');
+                    // Clear existing options except the first one
+                    pilihan2Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
+                    pilihan3Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
                     
                     // Skip header jika ada
                     const startRow = data.values[0][0] === "Sekolah" ? 1 : 0;
                     
-                    // Use Set to store unique sekolah names
-                    const uniqueSekolah = new Set();
-                    
                     // Add all sekolah options
                     for (let i = startRow; i < data.values.length; i++) {
                         const sekolah = data.values[i][0];
-                        if (sekolah && !uniqueSekolah.has(sekolah)) {
-                            uniqueSekolah.add(sekolah);
-                            pilihan2Select.append(`<option value="${sekolah}">${sekolah}</option>`);
-                            pilihan3Select.append(`<option value="${sekolah}">${sekolah}</option>`);
+                        if (sekolah) {
+                            const option2 = document.createElement('option');
+                            option2.value = sekolah;
+                            option2.textContent = sekolah;
+                            pilihan2Select.appendChild(option2);
+                            
+                            const option3 = document.createElement('option');
+                            option3.value = sekolah;
+                            option3.textContent = sekolah;
+                            pilihan3Select.appendChild(option3);
                         }
                     }
-                    
-                    // Trigger Select2 update
-                    pilihan2Select.trigger('change');
-                    pilihan3Select.trigger('change');
                 }
             } catch (error) {
                 console.error('Error loading all sekolah data:', error);
@@ -438,29 +408,26 @@
                 const data = await response.json();
                 
                 if (data.values) {
-                    const pilihan1Select = $('#pilihan1');
-                    pilihan1Select.empty();
-                    pilihan1Select.append('<option value="" selected disabled>Pilih Sekolah</option>');
+                    const pilihan1Select = document.getElementById('pilihan1');
+                    pilihan1Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
                     
                     // Skip header jika ada
                     const startRow = data.values[0][0] === "Sekolah" ? 1 : 0;
-                    
-                    // Use Set to store unique sekolah names for this banjar
-                    const uniqueSekolah = new Set();
                     
                     // Filter sekolah berdasarkan banjar
                     for (let i = startRow; i < data.values.length; i++) {
                         const sekolah = data.values[i][0];
                         const sekolahBanjar = data.values[i][1];
                         
-                        if (sekolah && sekolahBanjar === banjar && !uniqueSekolah.has(sekolah)) {
-                            uniqueSekolah.add(sekolah);
-                            pilihan1Select.append(`<option value="${sekolah}">${sekolah}</option>`);
+                        if (sekolah && sekolahBanjar === banjar) {
+                            const option = document.createElement('option');
+                            option.value = sekolah;
+                            option.textContent = sekolah;
+                            pilihan1Select.appendChild(option);
                         }
                     }
                     
-                    pilihan1Select.prop('disabled', false);
-                    pilihan1Select.trigger('change');
+                    pilihan1Select.disabled = false;
                 }
             } catch (error) {
                 console.error('Error loading sekolah data:', error);
@@ -484,8 +451,8 @@
                     formData.tanggalTerbitKK,
                     formData.banjar,
                     formData.pilihan1,
-                    formData.pilihan2 || '', // Optional field
-                    formData.pilihan3 || ''  // Optional field
+                    formData.pilihan2,
+                    formData.pilihan3
                 ];
                 
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A:append?valueInputOption=USER_ENTERED&key=${API_KEY}`;
@@ -503,22 +470,10 @@
                 });
                 
                 const result = await response.json();
-                
-                if (response.ok) {
-                    return { success: true, data: result };
-                } else {
-                    console.error('Google Sheets API Error:', result.error);
-                    return { 
-                        success: false, 
-                        message: result.error.message || 'Terjadi kesalahan saat menyimpan data.' 
-                    };
-                }
+                return { success: true, data: result };
             } catch (error) {
                 console.error('Error saving data:', error);
-                return { 
-                    success: false, 
-                    message: error.message || 'Terjadi kesalahan saat menyimpan data.' 
-                };
+                return { success: false, message: error.message };
             }
         }
         
@@ -607,16 +562,10 @@
                 doc.text(`Pilihan Sekolah 1: ${formData.pilihan1}`, 20, y);
                 y += 7;
                 
-                if (formData.pilihan2) {
-                    doc.text(`Pilihan Sekolah 2: ${formData.pilihan2}`, 20, y);
-                    y += 7;
-                }
+                doc.text(`Pilihan Sekolah 2: ${formData.pilihan2}`, 20, y);
+                y += 7;
                 
-                if (formData.pilihan3) {
-                    doc.text(`Pilihan Sekolah 3: ${formData.pilihan3}`, 20, y);
-                    y += 7;
-                }
-                
+                doc.text(`Pilihan Sekolah 3: ${formData.pilihan3}`, 20, y);
                 y += 20;
                 
                 // Footer with signatures
@@ -639,58 +588,23 @@
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Ganti dengan API KEY dan Sheet ID Anda
-            const API_KEY = "AIzaSyDB77XJY5CTvQxnbRt42GAf06VT2ePTvXc";
-            const SHEET_ID = "1BmrdLDtOAjlmTvR3fQUnuK5nkbWucyhgMGx1SZPEoI8";
-            const SHEET_NAME = "Respon";
-            
             loadBanjarData();
             
-            $('#banjar').on('change', function() {
+            document.getElementById('banjar').addEventListener('change', function() {
                 loadSekolahOptions(this.value);
             });
             
-            $('#pilihan1').on('change', function() {
+            document.getElementById('pilihan1').addEventListener('change', function() {
                 // Validate pilihan 2 and 3 are not the same as pilihan 1
                 const pilihan1 = this.value;
-                const pilihan2 = $('#pilihan2');
-                const pilihan3 = $('#pilihan3');
+                const pilihan2 = document.getElementById('pilihan2');
+                const pilihan3 = document.getElementById('pilihan3');
                 
-                if (pilihan2.val() === pilihan1) {
-                    pilihan2.val('').trigger('change');
+                if (pilihan2.value === pilihan1) {
+                    pilihan2.value = '';
                 }
-                if (pilihan3.val() === pilihan1) {
-                    pilihan3.val('').trigger('change');
-                }
-            });
-            
-            $('#pilihan2').on('change', function() {
-                // Validate pilihan 2 is not the same as pilihan 1 or 3
-                const pilihan2 = this.value;
-                const pilihan1 = $('#pilihan1').val();
-                const pilihan3 = $('#pilihan3').val();
-                
-                if (pilihan2 === pilihan1) {
-                    showError('Pilihan sekolah 2 tidak boleh sama dengan pilihan 1');
-                    $(this).val('').trigger('change');
-                } else if (pilihan2 === pilihan3) {
-                    showError('Pilihan sekolah 2 tidak boleh sama dengan pilihan 3');
-                    $(this).val('').trigger('change');
-                }
-            });
-            
-            $('#pilihan3').on('change', function() {
-                // Validate pilihan 3 is not the same as pilihan 1 or 2
-                const pilihan3 = this.value;
-                const pilihan1 = $('#pilihan1').val();
-                const pilihan2 = $('#pilihan2').val();
-                
-                if (pilihan3 === pilihan1) {
-                    showError('Pilihan sekolah 3 tidak boleh sama dengan pilihan 1');
-                    $(this).val('').trigger('change');
-                } else if (pilihan3 === pilihan2) {
-                    showError('Pilihan sekolah 3 tidak boleh sama dengan pilihan 2');
-                    $(this).val('').trigger('change');
+                if (pilihan3.value === pilihan1) {
+                    pilihan3.value = '';
                 }
             });
             
@@ -729,6 +643,18 @@
                     pilihan3: document.getElementById('pilihan3').value
                 };
                 
+                // Validate school choices are unique
+                if (formData.pilihan1 === formData.pilihan2 || 
+                    formData.pilihan1 === formData.pilihan3 || 
+                    formData.pilihan2 === formData.pilihan3) {
+                    showError('Pilihan sekolah harus berbeda!');
+                    
+                    submitButton.disabled = false;
+                    submitText.textContent = 'Submit Pendaftaran';
+                    submitSpinner.classList.add('d-none');
+                    return;
+                }
+                
                 try {
                     // Save data via Google Sheets API
                     const result = await saveData(formData);
@@ -746,9 +672,8 @@
                             // Reset form and button
                             form.reset();
                             form.classList.remove('was-validated');
-                            $('#pilihan1').empty().append('<option value="" selected disabled>Pilih Banjar terlebih dahulu</option>').prop('disabled', true).trigger('change');
-                            $('#pilihan2').val('').trigger('change');
-                            $('#pilihan3').val('').trigger('change');
+                            document.getElementById('pilihan1').disabled = true;
+                            document.getElementById('pilihan1').innerHTML = '<option value="" selected disabled>Pilih Banjar terlebih dahulu</option>';
                             
                             submitButton.disabled = false;
                             submitText.textContent = 'Submit Pendaftaran';
