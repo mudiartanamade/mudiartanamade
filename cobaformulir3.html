@@ -407,27 +407,35 @@
             }
         }
         
-        // Save form data via Google Apps Script
-        async function saveData(formData) {
-            try {
-                const response = await fetch(APP_SCRIPT_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                const result = await response.json();
-                return result;
-            } catch (error) {
-                console.error('Error saving data:', error);
-                return { 
-                    success: false, 
-                    message: error.message || 'Terjadi kesalahan saat menyimpan data' 
-                };
-            }
-        }
+// Save form data via Google Apps Script
+async function saveData(formData) {
+  try {
+    const response = await fetch(APP_SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData),
+      redirect: "follow" // Penting untuk Apps Script
+    });
+
+    // Handle redirect (Apps Script akan redirect)
+    if (response.redirected) {
+      const redirectedResponse = await fetch(response.url);
+      const result = await redirectedResponse.json();
+      return result;
+    }
+    
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Error saving data:', error);
+    return { 
+      success: false, 
+      message: error.message || 'Terjadi kesalahan saat menyimpan data' 
+    };
+  }
+}
         
         // Generate PDF receipt
         function generatePDF(formData) {
