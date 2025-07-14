@@ -5,91 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
     <style>
-        /* Gaya Dasar untuk Body */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-
-        /* Container Utama Formulir */
-        .form-container {
-            max-width: 700px;
-            margin: auto;
-            background-color: #ffffff;
-            padding: 25px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-top: 5px solid #007bff;
-        }
-
-        /* Judul Formulir */
-        .form-container h1 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        /* Grup Input */
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        /* Input, Select, Textarea */
-        .input-group input[type="text"],
-        .input-group input[type="number"],
-        .input-group input[type="date"],
-        .input-group input[type="tel"],
-        .input-group input[type="email"],
-        .input-group select,
-        .input-group textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box; /* Penting untuk padding */
-            font-size: 16px;
-        }
-
-        .input-group textarea {
-            resize: vertical;
-            height: 90px;
-        }
-
-        /* Tombol Submit */
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Untuk notifikasi setelah submit */
-        #status {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f7f6;margin:0;padding:20px;color:#333}
+        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid #007bff}
+        .form-container h1{text-align:center;color:#007bff;margin-bottom:20px;font-size:24px}
+        fieldset{border:1px solid #ddd;padding:15px;margin-bottom:20px;border-radius:5px}
+        legend{font-weight:700;color:#0056b3;padding:0 10px}
+        .input-group{margin-bottom:15px}
+        .input-group label{display:block;margin-bottom:8px;font-weight:600;color:#555}
+        .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group select,.input-group textarea{width:100%;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;font-size:16px}
+        .input-group textarea{resize:vertical;height:90px}
+        .input-group select:disabled{background-color:#e9ecef;cursor:not-allowed}
+        .submit-btn{width:100%;padding:12px;background-color:#007bff;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease}
+        .submit-btn:hover{background-color:#0056b3}
+        #status{text-align:center;margin-top:15px;font-weight:700}
     </style>
 </head>
 <body>
@@ -102,76 +30,45 @@
 
             <fieldset>
                 <legend><strong>A. Data Diri Calon Siswa</strong></legend>
-                <div class="input-group">
-                    <label for="namaLengkap">Nama Lengkap</label>
-                    <input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required>
-                </div>
-                <div class="input-group">
-                    <label for="nik">Nomor Induk Kependudukan (NIK)</label>
-                    <input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required>
-                </div>
-                <div class="input-group">
-                    <label for="nisn">Nomor Induk Siswa Nasional (NISN)</label>
-                    <input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada">
-                </div>
-                <div class="input-group">
-                    <label for="jenisKelamin">Jenis Kelamin</label>
-                    <select id="jenisKelamin" name="jenisKelamin" required>
-                        <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="tempatLahir">Tempat Lahir</label>
-                    <input type="text" id="tempatLahir" name="tempatLahir" required>
-                </div>
-                <div class="input-group">
-                    <label for="tanggalLahir">Tanggal Lahir</label>
-                    <input type="date" id="tanggalLahir" name="tanggalLahir" required>
-                </div>
+                <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
+                <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
+                <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
+                <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" required></div>
+                <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
             </fieldset>
 
             <fieldset>
                 <legend><strong>B. Alamat Tinggal (Sesuai KK)</strong></legend>
-                <div class="input-group">
-                    <label for="alamat">Alamat Lengkap Jalan</label>
-                    <textarea id="alamat" name="alamat" placeholder="Contoh: Jl. Hayam Wuruk No. 10" required></textarea>
-                </div>
-                <div class="input-group">
-                    <label for="kecamatan">Kecamatan</label>
-                    <select id="kecamatan" name="kecamatan" required>
-                        <option value="" disabled selected>Pilih Kecamatan</option>
-                        <option value="Denpasar Barat">Denpasar Barat</option>
-                        <option value="Denpasar Selatan">Denpasar Selatan</option>
-                        <option value="Denpasar Timur">Denpasar Timur</option>
-                        <option value="Denpasar Utara">Denpasar Utara</option>
-                    </select>
-                </div>
-                 <div class="input-group">
-                    <label for="kelurahan">Kelurahan/Desa</label>
-                    <input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Sumerta Kelod" required>
-                </div>
+                <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jl. Hayam Wuruk No. 10" required></textarea></div>
+                <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option value="" disabled selected>Pilih Kecamatan</option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
+                <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Sumerta Kelod" required></div>
+                <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><input type="text" id="banjar" name="banjar" placeholder="Ketik nama banjar Anda" required></div>
             </fieldset>
 
+             <fieldset>
+                <legend><strong>D. Pilihan Sekolah</strong></legend>
+                <p style="font-size: 14px; color: #666; margin-top: -5px;">Pilihan 1 akan muncul setelah Anda mengisi Banjar. Pilihan 2 & 3 adalah alternatif.</p>
+                <div class="input-group">
+                    <label for="pilihanSekolah1">Pilihan Sekolah 1 (Sesuai Banjar)</label>
+                    <select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option value="" selected>Isi Banjar terlebih dahulu</option></select>
+                </div>
+                <div class="input-group">
+                    <label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label>
+                    <select id="pilihanSekolah2" name="pilihanSekolah2" required disabled><option value="" selected>Memuat data sekolah...</option></select>
+                </div>
+                <div class="input-group">
+                    <label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label>
+                    <select id="pilihanSekolah3" name="pilihanSekolah3" required disabled><option value="" selected>Memuat data sekolah...</option></select>
+                </div>
+            </fieldset>
+            
             <fieldset>
                 <legend><strong>C. Data Orang Tua / Wali</strong></legend>
-                <div class="input-group">
-                    <label for="namaAyah">Nama Ayah</label>
-                    <input type="text" id="namaAyah" name="namaAyah" required>
-                </div>
-                <div class="input-group">
-                    <label for="namaIbu">Nama Ibu</label>
-                    <input type="text" id="namaIbu" name="namaIbu" required>
-                </div>
-                <div class="input-group">
-                    <label for="noHP">Nomor HP/WhatsApp Aktif</label>
-                    <input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required>
-                </div>
-                <div class="input-group">
-                    <label for="email">Alamat Email</label>
-                    <input type="email" id="email" name="email" placeholder="Contoh: orangtua@email.com">
-                </div>
+                <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
+                <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
+                <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
+                <div class="input-group"><label for="email">Alamat Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@email.com"></div>
             </fieldset>
 
             <button type="submit" class="submit-btn">Kirim Pendaftaran</button>
@@ -180,23 +77,101 @@
     </div>
 
     <script>
+        // === KONFIGURASI ===
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzfEevryVtWbCqcpsoGfbXuBo-BURT1iuqq8Z1yiwab50VG94pQ9F9OiHG5A-m3pkvl_Q/exec';
+        
+        // === ELEMEN FORM ===
         const form = document.getElementById('pendaftaranForm');
         const statusDiv = document.getElementById('status');
         const submitButton = form.querySelector('.submit-btn');
+        const banjarInput = document.getElementById('banjar');
+        const pilihan1Select = document.getElementById('pilihanSekolah1');
+        const pilihan2Select = document.getElementById('pilihanSekolah2');
+        const pilihan3Select = document.getElementById('pilihanSekolah3');
+        
+        let allSchools = [];
 
+        // === FUNGSI-FUNGSI ===
+        function populateDropdown(selectElement, items, defaultOptionText) {
+            selectElement.innerHTML = `<option value="" disabled selected>${defaultOptionText}</option>`;
+            const uniqueItems = [...new Set(items)]; // Menjamin nama sekolah unik
+            uniqueItems.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                selectElement.appendChild(option);
+            });
+            selectElement.disabled = false;
+        }
+
+        function updatePilihan1() {
+            const banjarValue = banjarInput.value.trim().toLowerCase();
+            if (banjarValue.length < 3) { // Hanya filter jika user mengetik min 3 huruf
+                pilihan1Select.innerHTML = '<option value="">Ketik nama Banjar (min. 3 huruf)</option>';
+                pilihan1Select.disabled = true;
+                return;
+            }
+
+            const filteredSchools = allSchools
+                .filter(school => school.banjar.toLowerCase().includes(banjarValue))
+                .map(school => school.nama);
+
+            if (filteredSchools.length > 0) {
+                populateDropdown(pilihan1Select, filteredSchools, 'Pilih Sekolah');
+            } else {
+                pilihan1Select.innerHTML = '<option value="">Tidak ada sekolah ditemukan di Banjar ini</option>';
+                pilihan1Select.disabled = true;
+            }
+        }
+        
+        // === EVENT LISTENERS ===
+
+        // 1. Ambil data sekolah saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(scriptURL) // Memanggil doGet di Apps Script
+                .then(res => res.json())
+                .then(response => {
+                    if (response.result === 'success') {
+                        allSchools = response.data;
+                        const allSchoolNames = allSchools.map(school => school.nama);
+                        
+                        // Isi Pilihan 2 & 3 dengan semua sekolah
+                        populateDropdown(pilihan2Select, allSchoolNames, 'Pilih Sekolah Alternatif');
+                        populateDropdown(pilihan3Select, allSchoolNames, 'Pilih Sekolah Alternatif');
+                    } else {
+                        throw new Error('Gagal memuat data sekolah.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching school data!', error);
+                    pilihan1Select.innerHTML = '<option value="">Gagal muat data</option>';
+                    pilihan2Select.innerHTML = '<option value="">Gagal muat data</option>';
+                    pilihan3Select.innerHTML = '<option value="">Gagal muat data</option>';
+                });
+        });
+
+        // 2. Filter Pilihan 1 saat pengguna mengetik di kolom Banjar
+        banjarInput.addEventListener('input', updatePilihan1);
+
+        // 3. Kirim data formulir saat disubmit
         form.addEventListener('submit', e => {
             e.preventDefault();
             submitButton.disabled = true;
             submitButton.innerText = 'Mengirim...';
             
-            // GANTI DENGAN URL WEB APP ANDA DARI GOOGLE APPS SCRIPT
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwuD1LppQCknbDETEIPi8q1xyQDvwejTS-y5bqcPjHvwcGTXqWJIuZDQtdNlqMFRKTOXA/exec';
-
             fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(response => {
-                    statusDiv.textContent = '✅ Pendaftaran berhasil terkirim! Terima kasih.';
-                    statusDiv.style.color = 'green';
-                    form.reset();
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                         statusDiv.textContent = '✅ Pendaftaran berhasil terkirim! Terima kasih.';
+                         statusDiv.style.color = 'green';
+                         form.reset();
+                         // Reset dropdown sekolah ke kondisi awal
+                         pilihan1Select.innerHTML = '<option value="">Isi Banjar terlebih dahulu</option>';
+                         pilihan1Select.disabled = true;
+                    } else {
+                        throw new Error(data.error || 'Unknown error');
+                    }
                 })
                 .catch(error => {
                     statusDiv.textContent = '❌ Terjadi kesalahan! Silakan coba lagi.';
