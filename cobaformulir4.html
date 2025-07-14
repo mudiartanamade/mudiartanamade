@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
+    <style>
+        /* Gaya Dasar untuk Body */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Container Utama Formulir */
+        .form-container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #007bff;
+        }
+
+        /* Judul Formulir */
+        .form-container h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        /* Grup Input */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Input, Select, Textarea */
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group input[type="date"],
+        .input-group input[type="tel"],
+        .input-group input[type="email"],
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Penting untuk padding */
+            font-size: 16px;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            height: 90px;
+        }
+
+        /* Tombol Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Untuk notifikasi setelah submit */
+        #status {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>📝 Formulir Pendaftaran Murid Baru SD</h1>
+        <p style="text-align:center; margin-top:-15px; margin-bottom: 25px;">Tahun Ajaran 2026/2027 - Kota Denpasar</p>
+
+        <form name="form-pendaftaran-sd" id="pendaftaranForm">
+
+            <fieldset>
+                <legend><strong>A. Data Diri Calon Siswa</strong></legend>
+                <div class="input-group">
+                    <label for="namaLengkap">Nama Lengkap</label>
+                    <input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required>
+                </div>
+                <div class="input-group">
+                    <label for="nik">Nomor Induk Kependudukan (NIK)</label>
+                    <input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required>
+                </div>
+                <div class="input-group">
+                    <label for="nisn">Nomor Induk Siswa Nasional (NISN)</label>
+                    <input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada">
+                </div>
+                <div class="input-group">
+                    <label for="jenisKelamin">Jenis Kelamin</label>
+                    <select id="jenisKelamin" name="jenisKelamin" required>
+                        <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="tempatLahir">Tempat Lahir</label>
+                    <input type="text" id="tempatLahir" name="tempatLahir" required>
+                </div>
+                <div class="input-group">
+                    <label for="tanggalLahir">Tanggal Lahir</label>
+                    <input type="date" id="tanggalLahir" name="tanggalLahir" required>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend><strong>B. Alamat Tinggal (Sesuai KK)</strong></legend>
+                <div class="input-group">
+                    <label for="alamat">Alamat Lengkap Jalan</label>
+                    <textarea id="alamat" name="alamat" placeholder="Contoh: Jl. Hayam Wuruk No. 10" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="kecamatan">Kecamatan</label>
+                    <select id="kecamatan" name="kecamatan" required>
+                        <option value="" disabled selected>Pilih Kecamatan</option>
+                        <option value="Denpasar Barat">Denpasar Barat</option>
+                        <option value="Denpasar Selatan">Denpasar Selatan</option>
+                        <option value="Denpasar Timur">Denpasar Timur</option>
+                        <option value="Denpasar Utara">Denpasar Utara</option>
+                    </select>
+                </div>
+                 <div class="input-group">
+                    <label for="kelurahan">Kelurahan/Desa</label>
+                    <input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Sumerta Kelod" required>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend><strong>C. Data Orang Tua / Wali</strong></legend>
+                <div class="input-group">
+                    <label for="namaAyah">Nama Ayah</label>
+                    <input type="text" id="namaAyah" name="namaAyah" required>
+                </div>
+                <div class="input-group">
+                    <label for="namaIbu">Nama Ibu</label>
+                    <input type="text" id="namaIbu" name="namaIbu" required>
+                </div>
+                <div class="input-group">
+                    <label for="noHP">Nomor HP/WhatsApp Aktif</label>
+                    <input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Alamat Email</label>
+                    <input type="email" id="email" name="email" placeholder="Contoh: orangtua@email.com">
+                </div>
+            </fieldset>
+
+            <button type="submit" class="submit-btn">Kirim Pendaftaran</button>
+            <div id="status"></div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('pendaftaranForm');
+        const statusDiv = document.getElementById('status');
+        const submitButton = form.querySelector('.submit-btn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            submitButton.disabled = true;
+            submitButton.innerText = 'Mengirim...';
+            
+            // GANTI DENGAN URL WEB APP ANDA DARI GOOGLE APPS SCRIPT
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwuD1LppQCknbDETEIPi8q1xyQDvwejTS-y5bqcPjHvwcGTXqWJIuZDQtdNlqMFRKTOXA/exec';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    statusDiv.textContent = '✅ Pendaftaran berhasil terkirim! Terima kasih.';
+                    statusDiv.style.color = 'green';
+                    form.reset();
+                })
+                .catch(error => {
+                    statusDiv.textContent = '❌ Terjadi kesalahan! Silakan coba lagi.';
+                    statusDiv.style.color = 'red';
+                    console.error('Error!', error.message);
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerText = 'Kirim Pendaftaran';
+                });
+        });
+    </script>
+
+</body>
+</html>
