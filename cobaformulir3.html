@@ -3,666 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penerimaan Murid Baru - Formulir Pendaftaran</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .logo-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo {
-            height: 100px;
-        }
-        .form-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-        .form-header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .form-title {
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #2c3e50;
-            padding-bottom: 10px;
-        }
-        .form-section {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .section-title {
-            color: #2c3e50;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        .btn-submit {
-            background-color: #2c3e50;
-            border: none;
-            padding: 10px 25px;
-            font-weight: 600;
-        }
-        .btn-submit:hover {
-            background-color: #1a252f;
-        }
-        .required-field::after {
-            content: " *";
-            color: red;
-        }
-        .form-control:focus {
-            border-color: #2c3e50;
-            box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
-        }
-        .invalid-feedback {
-            color: #dc3545;
-            font-size: 0.875em;
-        }
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f7f6;margin:0;padding:20px;color:#333}
+        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid #007bff}
+        .form-header img{width:100px;height:auto;margin-bottom:10px}
+        .form-header h2{color:#007bff;font-size:24px;margin:0}
+        fieldset{border:1px solid #ddd;padding:15px;margin-bottom:20px;border-radius:5px}
+        legend{font-weight:700;color:#0056b3;padding:0 10px}
+        .input-group{margin-bottom:15px}
+        .input-group label{display:block;margin-bottom:8px;font-weight:600;color:#555}
+        .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group select,.input-group textarea{width:100%;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;font-size:16px}
+        .input-group select:disabled{background-color:#e9ecef;cursor:not-allowed}
+        .button-group{display:flex;gap:10px;margin-top:20px}
+        .submit-btn, .edit-btn{flex-grow:1;padding:12px;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease}
+        .submit-btn{background-color:#007bff}
+        .edit-btn{background-color:#6c757d}
+        .submit-btn:hover{background-color:#0056b3}
+        .edit-btn:hover{background-color:#5a6268}
+        .submit-btn:disabled{background-color:#5a9eeb;cursor:wait}
+        #status{text-align:center;margin-top:20px;font-weight:700;padding:15px;border-radius:5px;display:none}
+        #status.success{background-color:#e9f7ef;color:#1d6c43;border:1px solid #a3e0c0}
+        #status.error{background-color:#fdeeee;color:#b02a2a;border:1px solid #f8c2c2}
+        #status a{color:#0056b3;font-weight:700;text-decoration:underline}
+        /* Style untuk Select2 */
+        .select2-container .select2-selection--single{height:40px!important;padding:4px 0}
+        .select2-container--default .select2-selection--single .select2-selection__arrow{height:38px!important}
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Logo Header -->
-        <div class="logo-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar" class="logo">
-        </div>
-
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="form-container">
-                    <div class="form-header">
-                        <h4>PEMERINTAH KOTA DENPASAR</h4>
-                        <h5>DINAS PENDIDIKAN</h5>
-                        <h6>FORMULIR PENDAFTARAN MURID BARU</h6>
-                    </div>
-
-                    <form id="registrationForm" novalidate>
-                        <!-- Data Calon Murid -->
-                        <div class="form-section">
-                            <h5 class="section-title">DATA CALON MURID</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nik" class="form-label required-field">NIK Calon Murid Baru</label>
-                                    <input type="text" class="form-control" id="nik" maxlength="16" pattern="[0-9]{16}" required>
-                                    <div class="invalid-feedback">Harap isi NIK dengan 16 digit angka</div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="nama" class="form-label required-field">Nama Calon Murid Baru</label>
-                                    <input type="text" class="form-control" id="nama" required>
-                                    <div class="invalid-feedback">Harap isi nama lengkap</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="tempatLahir" class="form-label required-field">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempatLahir" required>
-                                    <div class="invalid-feedback">Harap isi tempat lahir</div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="tanggalLahir" class="form-label required-field">Tanggal Lahir</label>
-                                    <input type="text" class="form-control" id="tanggalLahir" placeholder="Pilih tanggal" required>
-                                    <div class="invalid-feedback">Harap pilih tanggal lahir</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="namaIbu" class="form-label required-field">Nama Ibu Kandung</label>
-                                    <input type="text" class="form-control" id="namaIbu" required>
-                                    <div class="invalid-feedback">Harap isi nama ibu kandung</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Data Kartu Keluarga -->
-                        <div class="form-section">
-                            <h5 class="section-title">DATA KARTU KELUARGA</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="kategoriKK" class="form-label required-field">Kategori Kartu Keluarga</label>
-                                    <select class="form-select" id="kategoriKK" required>
-                                        <option value="" selected disabled>Pilih Kategori</option>
-                                        <option value="KK Dalam Kota">KK Dalam Kota</option>
-                                        <option value="KK Luar Kota">KK Luar Kota</option>
-                                        <option value="KK Luar Provinsi">KK Luar Provinsi</option>
-                                    </select>
-                                    <div class="invalid-feedback">Harap pilih kategori KK</div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="nomorKK" class="form-label required-field">Nomor Kartu Keluarga</label>
-                                    <input type="text" class="form-control" id="nomorKK" maxlength="16" pattern="[0-9]{16}" required>
-                                    <div class="invalid-feedback">Harap isi nomor KK dengan 16 digit angka</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="tanggalTerbitKK" class="form-label required-field">Tanggal Terbit KK</label>
-                                    <input type="text" class="form-control" id="tanggalTerbitKK" placeholder="Pilih tanggal" required>
-                                    <div class="invalid-feedback">Harap pilih tanggal terbit KK</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pilihan Sekolah -->
-                        <div class="form-section">
-                            <h5 class="section-title">PILIHAN SEKOLAH</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="banjar" class="form-label required-field">Banjar</label>
-                                    <select class="form-select" id="banjar" required>
-                                        <option value="" selected disabled>Pilih Banjar</option>
-                                        <!-- Options will be loaded dynamically -->
-                                    </select>
-                                    <div class="invalid-feedback">Harap pilih banjar</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="pilihan1" class="form-label required-field">Pilihan Sekolah 1</label>
-                                    <select class="form-select" id="pilihan1" required disabled>
-                                        <option value="" selected disabled>Pilih Banjar terlebih dahulu</option>
-                                    </select>
-                                    <div class="invalid-feedback">Harap pilih sekolah pertama</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="pilihan2" class="form-label">Pilihan Sekolah 2</label>
-                                    <select class="form-select" id="pilihan2">
-                                        <option value="" selected>Tidak memilih</option>
-                                        <!-- Options will be loaded dynamically -->
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="pilihan3" class="form-label">Pilihan Sekolah 3</label>
-                                    <select class="form-select" id="pilihan3">
-                                        <option value="" selected>Tidak memilih</option>
-                                        <!-- Options will be loaded dynamically -->
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <button type="submit" class="btn btn-primary btn-submit" id="submitButton">
-                                <span id="submitText">Submit Pendaftaran</span>
-                                <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+    <div class="form-container">
+        <center class="form-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
+            <div>
+                <h2>Formulir Pendaftaran Murid Baru SD Negeri Kota Denpasar</h2>
+                <p style="text-align:center; margin-top:5px; margin-bottom: 25px;">Tahun Ajaran 2026/2027</p>
             </div>
-        </div>
+        </center>
+        
+        <form name="form-pendaftaran-sd" id="pendaftaranForm">
+            <input type="hidden" name="editNik" id="editNik">
+            
+            <fieldset>
+                <legend><strong>A. Data Diri Calon Siswa</strong></legend>
+                <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
+                <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
+                <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
+                <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
+                <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
+            </fieldset>
+
+            <fieldset>
+                <legend><strong>B. Alamat Tinggal (Sesuai KK)</strong></legend>
+                 <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
+                <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
+                <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
+                <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
+                <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
+            </fieldset>
+
+            <fieldset>
+                <legend><strong>C. Data Orang Tua / Wali</strong></legend>
+                <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
+                <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
+                <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
+                <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend><strong>D. Pilihan Sekolah</strong></legend>
+                 <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
+                <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Sesuai Banjar)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
+                <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" required disabled><option></option></select></div>
+                <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" required disabled><option></option></select></div>
+            </fieldset>
+            
+            <div class="button-group">
+                <button type="button" class="edit-btn" id="editBtn">✏️ Edit Data</button>
+                <button type="submit" class="submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
+            </div>
+            <div id="status"></div>
+        </form>
     </div>
 
-    <!-- Modal Success -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Pendaftaran Berhasil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Data pendaftaran telah berhasil disimpan. Silahkan unduh bukti pendaftaran.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="downloadBtn">Unduh Bukti</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Error -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Terjadi Kesalahan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="errorMessage">Terjadi kesalahan saat menyimpan data. Silahkan coba lagi.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
     <script>
-        // Ganti dengan URL Apps Script Anda
-        const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_sh1yg-RdkrTnIy5XMtUBte0jibUjMKwi-MbdRaYFmxxGFE_XcFSEiEhFNsqUdlm7/exec";
+        // GANTI DENGAN URL WEB APP ANDA
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxrlV9KNqnxpMJhuZs9AsYmzKTpZIWkG4spq248ERupmeE5XiF1KsPf0Ul2vHiIevKf/exec'; 
         
-        // Initialize date pickers
-        flatpickr("#tanggalLahir", {
-            dateFormat: "d/m/Y",
-            locale: "id",
-            maxDate: "today"
-        });
+        const form = document.getElementById('pendaftaranForm');
+        const statusDiv = document.getElementById('status');
+        const submitButton = form.querySelector('.submit-btn');
+        const editButton = document.getElementById('editBtn');
+        let allSchools = [];
 
-        flatpickr("#tanggalTerbitKK", {
-            dateFormat: "d/m/Y",
-            locale: "id",
-            maxDate: "today"
-        });
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
+            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK" });
+            $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
+            const banjarSelect = $('#banjar').select2({ placeholder: "Memuat data banjar..." });
+            const pilihan1 = $('#pilihanSekolah1').select2({ placeholder: "Pilih banjar terlebih dahulu" });
+            const pilihan2 = $('#pilihanSekolah2').select2({ placeholder: "Memuat data sekolah..." });
+            const pilihan3 = $('#pilihanSekolah3').select2({ placeholder: "Memuat data sekolah..." });
 
-        // Show error modal with custom message
-        function showError(message) {
-            document.getElementById('errorMessage').textContent = message;
-            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-            errorModal.show();
-        }
-        
-        // Load banjar data from Google Sheet via Apps Script
-        async function loadBanjarData() {
-            try {
-                const url = `${APP_SCRIPT_URL}?sheet=Banjar`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data && data.length > 0) {
-                    const banjarSelect = document.getElementById('banjar');
-                    banjarSelect.innerHTML = '<option value="" selected disabled>Pilih Banjar</option>';
-                    
-                    // Skip header if exists
-                    const startRow = data[0][0] === "Banjar" ? 1 : 0;
-                    
-                    for (let i = startRow; i < data.length; i++) {
-                        const banjar = data[i][0];
-                        if (banjar) {
-                            const option = document.createElement('option');
-                            option.value = banjar;
-                            option.textContent = banjar;
-                            banjarSelect.appendChild(option);
-                        }
-                    }
-                    
-                    // Load all sekolah options for pilihan 2 and 3
-                    loadAllSekolahOptions();
-                } else {
-                    showError('Gagal memuat data banjar. Silahkan refresh halaman.');
-                }
-            } catch (error) {
-                console.error('Error loading banjar data:', error);
-                showError('Gagal memuat data banjar. Silahkan refresh halaman.');
-            }
-        }
-        
-        // Load all sekolah options for pilihan 2 and 3 (unique values)
-        async function loadAllSekolahOptions() {
-            try {
-                const url = `${APP_SCRIPT_URL}?sheet=Sekolah`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data && data.length > 0) {
-                    const pilihan2Select = document.getElementById('pilihan2');
-                    const pilihan3Select = document.getElementById('pilihan3');
-                    
-                    // Clear existing options except the first one
-                    pilihan2Select.innerHTML = '<option value="" selected>Tidak memilih</option>';
-                    pilihan3Select.innerHTML = '<option value="" selected>Tidak memilih</option>';
-                    
-                    // Skip header if exists
-                    const startRow = data[0][0] === "Sekolah" ? 1 : 0;
-                    
-                    // Use Set to ensure unique values
-                    const sekolahSet = new Set();
-                    
-                    // Add all sekolah options
-                    for (let i = startRow; i < data.length; i++) {
-                        const sekolah = data[i][0];
-                        if (sekolah) {
-                            sekolahSet.add(sekolah);
-                        }
-                    }
-                    
-                    // Convert Set to array and sort alphabetically
-                    const sekolahArray = Array.from(sekolahSet).sort();
-                    
-                    // Add options to selects
-                    sekolahArray.forEach(sekolah => {
-                        const option2 = document.createElement('option');
-                        option2.value = sekolah;
-                        option2.textContent = sekolah;
-                        pilihan2Select.appendChild(option2);
+            // Ambil data dari Apps Script
+            fetch(scriptURL + '?action=getInitialData')
+                .then(res => res.json())
+                .then(response => {
+                    if (response.result === 'success') {
+                        allSchools = response.schools;
+                        const allSchoolNames = [...new Set(allSchools.map(s => s.nama))];
+                        const allBanjars = response.banjars;
+
+                        banjarSelect.empty().append(new Option());
+                        allBanjars.forEach(b => banjarSelect.append(new Option(b, b, false, false)));
+                        banjarSelect.attr('disabled', false).select2({ placeholder: "Cari & pilih banjar" });
                         
-                        const option3 = document.createElement('option');
-                        option3.value = sekolah;
-                        option3.textContent = sekolah;
-                        pilihan3Select.appendChild(option3);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading all sekolah data:', error);
-                showError('Gagal memuat data sekolah. Silahkan coba lagi.');
-            }
-        }
-        
-        // Load sekolah options based on selected banjar for pilihan 1
-        async function loadSekolahOptions(banjar) {
-            try {
-                const url = `${APP_SCRIPT_URL}?sheet=Sekolah`;
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data && data.length > 0) {
-                    const pilihan1Select = document.getElementById('pilihan1');
-                    pilihan1Select.innerHTML = '<option value="" selected disabled>Pilih Sekolah</option>';
-                    
-                    // Skip header if exists
-                    const startRow = data[0][0] === "Sekolah" ? 1 : 0;
-                    
-                    // Use Set to ensure unique values
-                    const sekolahSet = new Set();
-                    
-                    // Filter sekolah berdasarkan banjar
-                    for (let i = startRow; i < data.length; i++) {
-                        const sekolah = data[i][0];
-                        const sekolahBanjar = data[i][1];
-                        
-                        if (sekolah && sekolahBanjar === banjar) {
-                            sekolahSet.add(sekolah);
-                        }
-                    }
-                    
-                    // Convert Set to array and sort alphabetically
-                    const sekolahArray = Array.from(sekolahSet).sort();
-                    
-                    // Add options to select
-                    sekolahArray.forEach(sekolah => {
-                        const option = document.createElement('option');
-                        option.value = sekolah;
-                        option.textContent = sekolah;
-                        pilihan1Select.appendChild(option);
-                    });
-                    
-                    pilihan1Select.disabled = false;
-                }
-            } catch (error) {
-                console.error('Error loading sekolah data:', error);
-                showError('Gagal memuat data sekolah. Silahkan coba lagi.');
-            }
-        }
-        
-        // Save form data via Google Apps Script
-        async function saveData(formData) {
-            try {
-                const response = await fetch(APP_SCRIPT_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
+                        [pilihan2, pilihan3].forEach(sel => {
+                            sel.empty().append(new Option());
+                            allSchoolNames.forEach(s => sel.append(new Option(s, s, false, false)));
+                            sel.attr('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
+                        });
+                    } else { throw new Error('Gagal memuat data awal.'); }
+                }).catch(err => {
+                    console.error('Error fetching data:', err);
+                    statusDiv.textContent = 'Gagal memuat data dropdown. Coba refresh halaman.';
+                    statusDiv.className = 'error';
+                    statusDiv.style.display = 'block';
                 });
-                
-                const result = await response.json();
-                return result;
-            } catch (error) {
-                console.error('Error saving data:', error);
-                return { 
-                    success: false, 
-                    message: error.message || 'Terjadi kesalahan saat menyimpan data' 
-                };
+
+            // Event saat Kategori KK dipilih
+            $('#kategoriKK').on('change', function() {
+                const kategori = $(this).val();
+                const jalurSelect = $('#jalurPmb');
+                jalurSelect.empty().append(new Option());
+
+                if (kategori === 'KK Denpasar') {
+                    ['Afirmasi', 'Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
+                    jalurSelect.attr('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
+                } else if (kategori === 'KK Luar Denpasar') {
+                    ['Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
+                    jalurSelect.attr('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
+                } else {
+                    jalurSelect.attr('disabled', true).select2({ placeholder: "Pilih kategori KK dahulu" });
+                }
+            });
+            
+            // Event saat Banjar dipilih
+            banjarSelect.on('change', function() {
+                const selectedBanjar = $(this).val();
+                pilihan1.empty().append(new Option()).trigger('change');
+                if (selectedBanjar) {
+                    const filteredSchools = allSchools.filter(s => s.banjar === selectedBanjar).map(s => s.nama);
+                    filteredSchools.forEach(s => pilihan1.append(new Option(s, s, false, false)));
+                    pilihan1.attr('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
+                } else {
+                    pilihan1.attr('disabled', true).select2({ placeholder: "Pilih banjar terlebih dahulu" });
+                }
+            });
+        });
+        
+        // Event tombol Edit Data
+        editButton.addEventListener('click', () => {
+            const nikToEdit = prompt("Untuk mengedit data, masukkan NIK 16 digit yang terdaftar:");
+            if (!nikToEdit || !/^\d{16}$/.test(nikToEdit)) {
+                if(nikToEdit) alert("NIK tidak valid. Harap masukkan 16 digit angka.");
+                return;
             }
-        }
-        
-        // Generate PDF receipt
-        function generatePDF(formData) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
             
-            // Add logo
-            const logoUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png';
-            
-            // Create a temporary image element to get dimensions
-            const img = new Image();
-            img.src = logoUrl;
-            
-            img.onload = function() {
-                const logoWidth = 30;
-                const logoHeight = (logoWidth * img.height) / img.width;
-                
-                // Add logo and header
-                doc.addImage(logoUrl, 'PNG', 15, 15, logoWidth, logoHeight);
-                doc.setFontSize(14);
-                doc.setTextColor(40, 40, 40);
-                doc.setFont('helvetica', 'bold');
-                doc.text('PEMERINTAH KOTA DENPASAR', 50, 20);
-                doc.text('DINAS PENDIDIKAN', 50, 27);
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'normal');
-                doc.text('Jl. Gatot Subroto Barat, Denpasar, Bali - 80231', 50, 34);
-                
-                // Title
-                doc.setFontSize(16);
-                doc.setFont('helvetica', 'bold');
-                doc.text('BUKTI PENDAFTARAN MURID BARU', 105, 50, null, null, 'center');
-                
-                // Line separator
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.5);
-                doc.line(20, 55, 190, 55);
-                
-                // Form data
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'normal');
-                let y = 70;
-                
-                // Student data
-                doc.setFont('helvetica', 'bold');
-                doc.text('DATA CALON MURID', 20, y);
-                y += 10;
-                
-                doc.setFont('helvetica', 'normal');
-                doc.text(`NIK: ${formData.nik}`, 20, y);
-                doc.text(`Nama: ${formData.nama}`, 100, y);
-                y += 7;
-                
-                doc.text(`Tempat/Tanggal Lahir: ${formData.tempatLahir}, ${formData.tanggalLahir}`, 20, y);
-                y += 7;
-                
-                doc.text(`Nama Ibu Kandung: ${formData.namaIbu}`, 20, y);
-                y += 15;
-                
-                // KK data
-                doc.setFont('helvetica', 'bold');
-                doc.text('DATA KARTU KELUARGA', 20, y);
-                y += 10;
-                
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Kategori KK: ${formData.kategoriKK}`, 20, y);
-                y += 7;
-                
-                doc.text(`Nomor KK: ${formData.nomorKK}`, 20, y);
-                y += 7;
-                
-                doc.text(`Tanggal Terbit KK: ${formData.tanggalTerbitKK}`, 20, y);
-                y += 15;
-                
-                // School choices
-                doc.setFont('helvetica', 'bold');
-                doc.text('PILIHAN SEKOLAH', 20, y);
-                y += 10;
-                
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Banjar: ${formData.banjar}`, 20, y);
-                y += 7;
-                
-                doc.text(`Pilihan Sekolah 1: ${formData.pilihan1}`, 20, y);
-                y += 7;
-                
-                if (formData.pilihan2) {
-                    doc.text(`Pilihan Sekolah 2: ${formData.pilihan2}`, 20, y);
-                    y += 7;
-                }
-                
-                if (formData.pilihan3) {
-                    doc.text(`Pilihan Sekolah 3: ${formData.pilihan3}`, 20, y);
-                    y += 7;
-                }
-                
-                y += 10;
-                
-                // Footer with signatures
-                doc.text('Denpasar, ' + new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }), 140, y);
-                y += 25;
-                
-                // Signature placeholders
-                doc.text('Orang Tua/Wali', 40, y);
-                doc.text('Kepala Sekolah', 140, y);
-                y += 5;
-                
-                // Signature lines
-                doc.line(30, y, 80, y);
-                doc.line(130, y, 180, y);
-                
-                // Save the PDF
-                doc.save(`Bukti Pendaftaran - ${formData.nama}.pdf`);
-            };
-        }
-        
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            loadBanjarData();
-            
-            document.getElementById('banjar').addEventListener('change', function() {
-                loadSekolahOptions(this.value);
-            });
-            
-            document.getElementById('pilihan1').addEventListener('change', function() {
-                // Validate pilihan 2 and 3 are not the same as pilihan 1
-                const pilihan1 = this.value;
-                const pilihan2 = document.getElementById('pilihan2');
-                const pilihan3 = document.getElementById('pilihan3');
-                
-                if (pilihan2.value === pilihan1) {
-                    pilihan2.value = '';
-                }
-                if (pilihan3.value === pilihan1) {
-                    pilihan3.value = '';
-                }
-            });
-            
-            // Validasi input nomor KK (16 digit angka)
-            document.getElementById('nomorKK').addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '').slice(0, 16);
-            });
-            
-            // Validasi input NIK (16 digit angka)
-            document.getElementById('nik').addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '').slice(0, 16);
-            });
-            
-            document.getElementById('registrationForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const form = e.target;
-                if (!form.checkValidity()) {
-                    form.classList.add('was-validated');
-                    return;
-                }
-                
-                // Disable submit button to prevent multiple submissions
-                const submitButton = document.getElementById('submitButton');
-                const submitText = document.getElementById('submitText');
-                const submitSpinner = document.getElementById('submitSpinner');
-                
-                submitButton.disabled = true;
-                submitText.textContent = 'Menyimpan...';
-                submitSpinner.classList.remove('d-none');
-                
-                // Collect form data
-                const formData = {
-                    nik: document.getElementById('nik').value,
-                    nama: document.getElementById('nama').value,
-                    tempatLahir: document.getElementById('tempatLahir').value,
-                    tanggalLahir: document.getElementById('tanggalLahir').value,
-                    namaIbu: document.getElementById('namaIbu').value,
-                    kategoriKK: document.getElementById('kategoriKK').value,
-                    nomorKK: document.getElementById('nomorKK').value,
-                    tanggalTerbitKK: document.getElementById('tanggalTerbitKK').value,
-                    banjar: document.getElementById('banjar').value,
-                    pilihan1: document.getElementById('pilihan1').value,
-                    pilihan2: document.getElementById('pilihan2').value || null,
-                    pilihan3: document.getElementById('pilihan3').value || null
-                };
-                
-                // Validate school choices are unique if provided
-                if ((formData.pilihan2 && formData.pilihan1 === formData.pilihan2) || 
-                    (formData.pilihan3 && formData.pilihan1 === formData.pilihan3) || 
-                    (formData.pilihan2 && formData.pilihan3 && formData.pilihan2 === formData.pilihan3)) {
-                    showError('Pilihan sekolah harus berbeda!');
-                    
-                    submitButton.disabled = false;
-                    submitText.textContent = 'Submit Pendaftaran';
-                    submitSpinner.classList.add('d-none');
-                    return;
-                }
-                
-                try {
-                    // Save data via Google Apps Script
-                    const result = await saveData(formData);
-                    
-                    if (result.success) {
-                        // Show success modal
-                        const modal = new bootstrap.Modal(document.getElementById('successModal'));
-                        modal.show();
-                        
-                        // Set up download button
-                        document.getElementById('downloadBtn').onclick = function() {
-                            generatePDF(formData);
-                            modal.hide();
-                            
-                            // Reset form and button
-                            form.reset();
-                            form.classList.remove('was-validated');
-                            document.getElementById('pilihan1').disabled = true;
-                            document.getElementById('pilihan1').innerHTML = '<option value="" selected disabled>Pilih Banjar terlebih dahulu</option>';
-                            
-                            submitButton.disabled = false;
-                            submitText.textContent = 'Submit Pendaftaran';
-                            submitSpinner.classList.add('d-none');
-                        };
+            statusDiv.innerHTML = "Mencari data...";
+            statusDiv.className = '';
+            statusDiv.style.display = 'block';
+
+            fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
+                .then(res => res.json())
+                .then(response => {
+                    if(response.result === 'success' && response.data) {
+                        const data = response.data;
+                        // Isi semua field form
+                        Object.keys(data).forEach(key => {
+                            const el = form.elements[key];
+                            if (el) {
+                                if (el.tagName === 'SELECT') {
+                                    $(`#${el.id}`).val(data[key]).trigger('change'); // Trigger change untuk select2
+                                } else {
+                                    el.value = data[key];
+                                }
+                            }
+                        });
+                        $('#editNik').val(nikToEdit); // Set hidden input untuk mode edit
+                        $('#nik').prop('readonly', true); // Kunci NIK agar tidak bisa diubah
+                        statusDiv.innerHTML = "✅ Data ditemukan. Silakan edit dan kirim ulang.";
+                        statusDiv.className = 'success';
                     } else {
-                        showError(result.message || 'Terjadi kesalahan saat menyimpan data.');
-                        
-                        submitButton.disabled = false;
-                        submitText.textContent = 'Submit Pendaftaran';
-                        submitSpinner.classList.add('d-none');
+                        statusDiv.innerHTML = `❌ Data dengan NIK ${nikToEdit} tidak ditemukan.`;
+                        statusDiv.className = 'error';
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                    showError('Terjadi kesalahan saat menyimpan data. Silahkan coba lagi atau hubungi administrator.');
-                    
+                })
+                .catch(err => {
+                    console.error("Error fetching edit data:", err);
+                    statusDiv.innerHTML = "❌ Terjadi kesalahan saat mengambil data.";
+                    statusDiv.className = 'error';
+                });
+        });
+
+        // Event saat form disubmit
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+
+            // Validasi Pilihan Sekolah tidak boleh sama
+            const s1 = $('#pilihanSekolah1').val();
+            const s2 = $('#pilihanSekolah2').val();
+            const s3 = $('#pilihanSekolah3').val();
+            if (s1 && s2 && s1 === s2) { alert('Pilihan Sekolah 1 dan 2 tidak boleh sama.'); return; }
+            if (s1 && s3 && s1 === s3) { alert('Pilihan Sekolah 1 dan 3 tidak boleh sama.'); return; }
+            if (s2 && s3 && s2 === s3) { alert('Pilihan Sekolah 2 dan 3 tidak boleh sama.'); return; }
+
+            submitButton.disabled = true;
+            submitButton.innerText = 'MEMPROSES... ⏳';
+            statusDiv.style.display = 'none';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(res => res.json())
+                .then(data => {
+                    if (data.result === 'success' && data.pdfUrl) {
+                        const actionText = $('#editNik').val() ? 'diperbarui' : 'didaftarkan';
+                        statusDiv.innerHTML = `✅ Data berhasil ${actionText}! <a href="${data.pdfUrl}" target="_blank">Klik di sini untuk mengunduh bukti.</a>`;
+                        statusDiv.className = 'success';
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = data.pdfUrl;
+                        downloadLink.target = '_blank';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        form.reset();
+                        $('select').val(null).trigger('change'); // Reset Select2
+                        $('#editNik').val(''); // Clear edit mode
+                        $('#nik').prop('readonly', false); // Buka kembali field NIK
+                    } else {
+                        throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
+                    }
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `❌ Terjadi kesalahan! ${error.message}. Silakan coba lagi.`;
+                    statusDiv.className = 'error';
+                })
+                .finally(() => {
+                    statusDiv.style.display = 'block';
                     submitButton.disabled = false;
-                    submitText.textContent = 'Submit Pendaftaran';
-                    submitSpinner.classList.add('d-none');
-                }
-            });
+                    submitButton.innerText = 'Kirim & Unduh Bukti Daftar 🚀';
+                });
         });
     </script>
 </body>
