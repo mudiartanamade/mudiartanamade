@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f7f6;margin:0;padding:20px;color:#333}
-        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid #007bff}
+        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid #007bff; overflow: hidden;}
         .form-header img{width:100px;height:auto;margin-bottom:10px}
         .form-header h2{color:#007bff;font-size:24px;margin:0}
         fieldset{border:1px solid #ddd;padding:15px;margin-bottom:20px;border-radius:5px}
@@ -15,31 +15,49 @@
         .input-group{margin-bottom:15px}
         .input-group label{display:block;margin-bottom:8px;font-weight:600;color:#555}
         .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group select,.input-group textarea{width:100%;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;font-size:16px}
-        .input-group input:read-only {background-color:#e9ecef}
+        .input-group input:read-only{background-color:#e9ecef}
         .input-group select:disabled{background-color:#e9ecef;cursor:not-allowed}
         .button-group{display:flex;gap:10px;margin-top:20px}
-        .submit-btn, .edit-btn{flex-grow:1;padding:12px;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease}
+        .submit-btn, .edit-btn, .next-btn {flex-grow:1;padding:12px;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease}
         .submit-btn{background-color:#007bff}
         .edit-btn{background-color:#6c757d}
         .submit-btn:hover{background-color:#0056b3}
         .edit-btn:hover{background-color:#5a6268}
         .submit-btn:disabled{background-color:#5a9eeb;cursor:not-allowed}
         
-        /* --- STYLE BARU: Untuk Pop-up Modal --- */
+        /* --- STYLE BARU: Tombol Selanjutnya --- */
+        .next-btn { background-color: #28a745; text-align: center;}
+        .next-btn:hover { background-color: #218838; }
+
+        /* --- STYLE BARU: Untuk Pop-up Modal yang Lebih Elegan --- */
         .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
         .popup-content{background:#fff;padding:30px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.2);text-align:center;max-width:450px;width:90%;position:relative;transform:scale(.9);opacity:0;transition:transform .3s ease, opacity .3s ease}
         .popup-content.show{transform:scale(1);opacity:1}
         .popup-content .close-btn{position:absolute;top:10px;right:15px;font-size:28px;font-weight:700;color:#aaa;cursor:pointer;line-height:1}
         .popup-content .close-btn:hover{color:#333}
-        #popup-message{margin-top:15px;font-size:16px;line-height:1.5}
+        #popup-message{margin-top:15px;font-size:16px;line-height:1.5; color: #555;}
         #popup-message a{color:#0056b3;font-weight:700;text-decoration:underline}
-        .popup-icon{font-size:48px;margin-bottom:15px}
-        .popup-icon.success{color:#28a745}
-        .popup-icon.error{color:#dc3545}
+        #popup-icon{margin-bottom:15px; min-height: 50px; display: flex; align-items: center; justify-content: center;}
+        
+        /* --- STYLE BARU: Animasi Spinner --- */
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         
         /* Style untuk Select2 */
         .select2-container .select2-selection--single{height:40px!important;padding:4px 0}
         .select2-container--default .select2-selection--single .select2-selection__arrow{height:38px!important}
+        .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px !important;}
+        .select2-results__option { padding: 8px;}
     </style>
 </head>
 <body>
@@ -55,7 +73,7 @@
         <form name="form-pendaftaran-sd" id="pendaftaranForm">
             <input type="hidden" name="editNik" id="editNik">
             
-            <fieldset>
+            <fieldset id="fieldset-a">
                 <legend><strong>A. Data Diri Calon Siswa</strong></legend>
                 <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
                 <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
@@ -63,45 +81,40 @@
                 <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
                 <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
                 <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
+                <button type="button" class="next-btn" data-current="fieldset-a" data-next="fieldset-b">Selanjutnya: Alamat Tinggal ➡️</button>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="fieldset-b" style="display:none;">
                 <legend><strong>B. Alamat Tinggal (Sesuai KK)</strong></legend>
                 <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
-                <div class="input-group" id="provinsi-group" style="display:none;">
-                    <label for="provinsi">Provinsi</label>
-                    <select id="provinsi" name="provinsi">
-                        <option value="" disabled selected>Pilih Provinsi Asal</option>
-                        <option value="Bali">Bali</option>
-                        <option value="Luar Bali">Luar Bali</option>
-                    </select>
-                </div>
+                <div class="input-group" id="provinsi-group" style="display:none;"><label for="provinsi">Provinsi</label><select id="provinsi" name="provinsi"><option value="" disabled selected>Pilih Provinsi Asal</option><option value="Bali">Bali</option><option value="Luar Bali">Luar Bali</option></select></div>
                 <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
                 <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
                 <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
                 <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
+                 <button type="button" class="next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya: Data Orang Tua ➡️</button>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="fieldset-c" style="display:none;">
                 <legend><strong>C. Data Orang Tua / Wali</strong></legend>
                 <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
                 <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
                 <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
                 <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
+                <button type="button" class="next-btn" data-current="fieldset-c" data-next="fieldset-d">Selanjutnya: Pilihan Sekolah ➡️</button>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="fieldset-d" style="display:none;">
                 <legend><strong>D. Pilihan Sekolah</strong></legend>
-                 <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
+                <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
                 <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Wajib)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
                 <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" disabled><option></option></select></div>
                 <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" disabled><option></option></select></div>
+                <div class="button-group">
+                    <button type="button" class="edit-btn" id="editBtn">✏️ Edit Data</button>
+                    <button type="submit" class="submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
+                </div>
             </fieldset>
-            
-            <div class="button-group">
-                <button type="button" class="edit-btn" id="editBtn">✏️ Edit Data</button>
-                <button type="submit" class="submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
-            </div>
         </form>
     </div>
 
@@ -125,22 +138,24 @@
         let allSchools = [];
         let allSchoolNames = [];
         
-        /* --- FUNGSI BARU: Untuk menampilkan notifikasi pop-up --- */
+        // --- DIUBAH: Logika Pop-up yang Lebih Elegan ---
         const popupModal = document.getElementById('popup-modal');
         const popupContentBox = document.getElementById('popup-content-box');
         const popupIcon = document.getElementById('popup-icon');
         const popupMessage = document.getElementById('popup-message');
         const popupCloseBtn = document.getElementById('popup-close-btn');
 
+        // SVG Icons untuk tampilan lebih profesional
+        const icons = {
+            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#28a745" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
+            error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
+            loading: `<div class="spinner"></div>`
+        };
+
         function showPopup(message, type = 'success') {
             popupMessage.innerHTML = message;
-            if (type === 'success') {
-                popupIcon.innerHTML = '✅';
-                popupIcon.className = 'popup-icon success';
-            } else { // error
-                popupIcon.innerHTML = '❌';
-                popupIcon.className = 'popup-icon error';
-            }
+            popupIcon.innerHTML = icons[type] || '';
+            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block'; // Sembunyikan tombol close saat loading
             popupModal.style.display = 'flex';
             setTimeout(() => popupContentBox.classList.add('show'), 10);
         }
@@ -152,12 +167,40 @@
 
         popupCloseBtn.addEventListener('click', hidePopup);
         popupModal.addEventListener('click', (e) => {
-            if (e.target === popupModal) {
+            if (e.target === popupModal && popupCloseBtn.style.display !== 'none') {
                 hidePopup();
             }
         });
+        
+        // --- FUNGSI BARU: Untuk validasi dan menampilkan fieldset selanjutnya ---
+        function validateSection(fieldsetId) {
+            const section = document.getElementById(fieldsetId);
+            const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+            for (let input of inputs) {
+                if (!input.value || (input.type === 'checkbox' && !input.checked)) {
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini sebelum melanjutkan. Kolom '${input.labels[0].innerText}' masih kosong.`, 'error');
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
 
-        // --- FUNGSI UNTUK MENGATUR OPSI SEKOLAH 1 ---
+        function handleNextStep(e) {
+            const currentFielsetId = e.target.dataset.current;
+            const nextFieldsetId = e.target.dataset.next;
+
+            if (validateSection(currentFielsetId)) {
+                $(`#${currentFielsetId}`).slideUp();
+                $(`#${nextFieldsetId}`).slideDown();
+            }
+        }
+        
+        document.querySelectorAll('.next-btn').forEach(button => {
+            button.addEventListener('click', handleNextStep);
+        });
+        
+        // --- FUNGSI LAMA (dengan sedikit modifikasi) ---
         function updatePilihanSekolah1() {
             const jalur = $('#jalurPmb').val();
             const selectedBanjar = $('#banjar').val();
@@ -185,6 +228,7 @@
 
         $(document).ready(function() {
             // Inisialisasi Select2
+            $('#jenisKelamin, #provinsi').select2();
             $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
             $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK" });
             $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
@@ -216,13 +260,11 @@
                     showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
                 });
 
-            // Event saat Kategori KK dipilih
             $('#kategoriKK').on('change', function() {
                 const kategori = $(this).val();
                 const jalurSelect = $('#jalurPmb');
                 jalurSelect.empty().append(new Option());
 
-                /* --- MODIFIKASI: Tampilkan/sembunyikan field Provinsi --- */
                 const provinsiGroup = $('#provinsi-group');
                 const provinsiInput = $('#provinsi');
                 if (kategori === 'KK Luar Denpasar') {
@@ -231,7 +273,7 @@
                 } else {
                     provinsiGroup.slideUp();
                     provinsiInput.prop('required', false);
-                    provinsiInput.val(''); // Kosongkan nilainya jika disembunyikan
+                    provinsiInput.val('').trigger('change');
                 }
 
                 if (kategori === 'KK Denpasar') {
@@ -258,18 +300,17 @@
                     return;
                 }
                 
-                submitButton.disabled = true;
-                showPopup('Memeriksa NIK...', 'info'); // Gunakan showPopup
+                showPopup('Memeriksa NIK...', 'loading');
 
                 fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
                     .then(res => res.json())
                     .then(response => {
+                        hidePopup();
                         if (response.result === 'success' && response.exists) {
                             const message = `NIK ${nik} sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh kembali bukti daftar</a> atau gunakan fitur 'Edit Data'.`;
                             showPopup(message, 'error');
                             submitButton.disabled = true; 
                         } else {
-                            hidePopup(); // Sembunyikan pop up jika NIK tersedia
                             submitButton.disabled = false;
                         }
                     })
@@ -288,7 +329,7 @@
                 return;
             }
             
-            showPopup('Mencari data...', 'info');
+            showPopup('Mencari data...', 'loading');
 
             fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
                 .then(res => res.json())
@@ -308,6 +349,11 @@
                         $('#editNik').val(nikToEdit);
                         $('#nik').prop('readonly', true);
                         submitButton.disabled = false;
+                        
+                        // DIUBAH: Tampilkan semua fieldset saat mode edit
+                        $('fieldset').slideDown();
+                        $('.next-btn').hide(); // Sembunyikan tombol 'Selanjutnya'
+                        
                         showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                     } else {
                         showPopup(`Data dengan NIK ${nikToEdit} tidak ditemukan.`, 'error');
@@ -322,15 +368,17 @@
         form.addEventListener('submit', e => {
             e.preventDefault();
 
+            // DIUBAH: Lakukan validasi terakhir untuk bagian D
+            if (!validateSection('fieldset-d')) return;
+
             const s1 = $('#pilihanSekolah1').val();
             const s2 = $('#pilihanSekolah2').val();
             const s3 = $('#pilihanSekolah3').val();
             if (s1 && s2 && s1 === s2) { showPopup('Pilihan Sekolah 1 dan 2 tidak boleh sama.', 'error'); return; }
             if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
             if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
-
-            submitButton.disabled = true;
-            submitButton.innerText = 'MEMPROSES... ⏳';
+            
+            showPopup('Memproses pendaftaran...', 'loading');
 
             fetch(scriptURL, { method: 'POST', body: new FormData(form)})
                 .then(res => res.json())
@@ -347,10 +395,15 @@
                         downloadLink.click();
                         document.body.removeChild(downloadLink);
                         
+                        // Reset form dan kembalikan ke tampilan awal
                         form.reset();
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
+                        $('fieldset').hide();
+                        $('#fieldset-a').show();
+                        $('.next-btn').show();
+
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
                     }
@@ -360,7 +413,6 @@
                 })
                 .finally(() => {
                     submitButton.disabled = false;
-                    submitButton.innerText = 'Kirim & Unduh Bukti Daftar 🚀';
                 });
         });
     </script>
