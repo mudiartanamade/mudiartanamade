@@ -305,7 +305,7 @@
                 fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
                     .then(res => res.json())
                     .then(response => {
-                        hidePopup();
+                        showPopup();
                         if (response.result === 'success' && response.exists) {
                             const message = `NIK ${nik} sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh kembali bukti daftar</a> atau gunakan fitur 'Edit Data'.`;
                             showPopup(message, 'error');
