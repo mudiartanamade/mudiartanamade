@@ -92,7 +92,7 @@
                 <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
                 <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
                 <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
-                 <button type="button" class="next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya: Data Orang Tua ➡️</button>
+                <button type="button" class="next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya: Data Orang Tua ➡️</button>
             </fieldset>
 
             <fieldset id="fieldset-c" style="display:none;">
@@ -138,14 +138,12 @@
         let allSchools = [];
         let allSchoolNames = [];
         
-        // --- DIUBAH: Logika Pop-up yang Lebih Elegan ---
         const popupModal = document.getElementById('popup-modal');
         const popupContentBox = document.getElementById('popup-content-box');
         const popupIcon = document.getElementById('popup-icon');
         const popupMessage = document.getElementById('popup-message');
         const popupCloseBtn = document.getElementById('popup-close-btn');
 
-        // SVG Icons untuk tampilan lebih profesional
         const icons = {
             success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#28a745" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
             error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
@@ -155,7 +153,7 @@
         function showPopup(message, type = 'success') {
             popupMessage.innerHTML = message;
             popupIcon.innerHTML = icons[type] || '';
-            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block'; // Sembunyikan tombol close saat loading
+            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block';
             popupModal.style.display = 'flex';
             setTimeout(() => popupContentBox.classList.add('show'), 10);
         }
@@ -172,13 +170,12 @@
             }
         });
         
-        // --- FUNGSI BARU: Untuk validasi dan menampilkan fieldset selanjutnya ---
         function validateSection(fieldsetId) {
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini sebelum melanjutkan. Kolom '${input.labels[0].innerText}' masih kosong.`, 'error');
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${input.labels[0].innerText}' masih kosong.`, 'error');
                     input.focus();
                     return false;
                 }
@@ -200,7 +197,6 @@
             button.addEventListener('click', handleNextStep);
         });
         
-        // --- FUNGSI LAMA (dengan sedikit modifikasi) ---
         function updatePilihanSekolah1() {
             const jalur = $('#jalurPmb').val();
             const selectedBanjar = $('#banjar').val();
@@ -227,7 +223,6 @@
         }
 
         $(document).ready(function() {
-            // Inisialisasi Select2
             $('#jenisKelamin, #provinsi').select2();
             $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
             $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK" });
@@ -305,7 +300,7 @@
                 fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
                     .then(res => res.json())
                     .then(response => {
-                        showPopup();
+                        hidePopup();
                         if (response.result === 'success' && response.exists) {
                             const message = `NIK ${nik} sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh kembali bukti daftar</a> atau gunakan fitur 'Edit Data'.`;
                             showPopup(message, 'error');
@@ -350,9 +345,8 @@
                         $('#nik').prop('readonly', true);
                         submitButton.disabled = false;
                         
-                        // DIUBAH: Tampilkan semua fieldset saat mode edit
                         $('fieldset').slideDown();
-                        $('.next-btn').hide(); // Sembunyikan tombol 'Selanjutnya'
+                        $('.next-btn').hide(); 
                         
                         showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                     } else {
@@ -368,7 +362,6 @@
         form.addEventListener('submit', e => {
             e.preventDefault();
 
-            // DIUBAH: Lakukan validasi terakhir untuk bagian D
             if (!validateSection('fieldset-d')) return;
 
             const s1 = $('#pilihanSekolah1').val();
@@ -395,7 +388,6 @@
                         downloadLink.click();
                         document.body.removeChild(downloadLink);
                         
-                        // Reset form dan kembalikan ke tampilan awal
                         form.reset();
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
