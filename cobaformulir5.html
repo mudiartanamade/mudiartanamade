@@ -7,29 +7,46 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:#f4f7f6;margin:0;padding:20px;color:#333}
-        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.1);border-top:5px solid #007bff; overflow: hidden;}
+        .form-container{max-width:700px;margin:auto;background-color:#fff;padding:25px 30px;border-radius:10px;box-shadow:0 4px M15px rgba(0,0,0,.1);border-top:5px solid #007bff; overflow: hidden;}
         .form-header img{width:100px;height:auto;margin-bottom:10px}
         .form-header h2{color:#007bff;font-size:24px;margin:0}
         fieldset{border:1px solid #ddd;padding:15px;margin-bottom:20px;border-radius:5px}
         legend{font-weight:700;color:#0056b3;padding:0 10px}
         .input-group{margin-bottom:15px}
         .input-group label{display:block;margin-bottom:8px;font-weight:600;color:#555}
-        .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group select,.input-group textarea{width:100%;padding:10px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;font-size:16px}
+        
+        /* BARU: Tanda bintang untuk isian wajib */
+        .is-required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* DIUBAH: Memastikan semua kotak isian sama panjang dan rapi */
+        .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group select,.input-group textarea, .select2-container {
+            width: 100% !important; /* Memastikan semua elemen, termasuk Select2, mengisi kontainer */
+            box-sizing: border-box; /* Konsistensi kalkulasi ukuran */
+        }
+        .input-group input[type=text],.input-group input[type=number],.input-group input[type=date],.input-group input[type=tel],.input-group input[type=email],.input-group textarea{
+            padding:10px;
+            border-radius:5px;
+            border:1px solid #ccc;
+            font-size:16px;
+        }
         .input-group input:read-only{background-color:#e9ecef}
-        .input-group select:disabled{background-color:#e9ecef;cursor:not-allowed}
+        .input-group select:disabled, .input-group input:disabled {background-color:#e9ecef;cursor:not-allowed}
+        
         .button-group{display:flex;gap:10px;margin-top:20px}
         .submit-btn, .edit-btn, .next-btn {flex-grow:1;padding:12px;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease}
         .submit-btn{background-color:#007bff}
         .edit-btn{background-color:#6c757d}
+        .next-btn { background-color: #28a745; text-align: center; margin-top: 10px;}
         .submit-btn:hover{background-color:#0056b3}
         .edit-btn:hover{background-color:#5a6268}
-        .submit-btn:disabled{background-color:#5a9eeb;cursor:not-allowed}
-        
-        /* --- STYLE BARU: Tombol Selanjutnya --- */
-        .next-btn { background-color: #28a745; text-align: center;}
         .next-btn:hover { background-color: #218838; }
+        .submit-btn:disabled{background-color:#5a9eeb;cursor:not-allowed}
 
-        /* --- STYLE BARU: Untuk Pop-up Modal yang Lebih Elegan --- */
+        /* --- Style Pop-up Modal --- */
         .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
         .popup-content{background:#fff;padding:30px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.2);text-align:center;max-width:450px;width:90%;position:relative;transform:scale(.9);opacity:0;transition:transform .3s ease, opacity .3s ease}
         .popup-content.show{transform:scale(1);opacity:1}
@@ -39,7 +56,7 @@
         #popup-message a{color:#0056b3;font-weight:700;text-decoration:underline}
         #popup-icon{margin-bottom:15px; min-height: 50px; display: flex; align-items: center; justify-content: center;}
         
-        /* --- STYLE BARU: Animasi Spinner --- */
+        /* --- Animasi Spinner --- */
         .spinner {
             width: 48px;
             height: 48px;
@@ -175,7 +192,7 @@
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${input.labels[0].innerText}' masih kosong.`, 'error');
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).prev('label').text()}' masih kosong.`, 'error');
                     input.focus();
                     return false;
                 }
@@ -183,13 +200,14 @@
             return true;
         }
 
+        // DIUBAH: Fungsi untuk menampilkan bagian selanjutnya tanpa menyembunyikan yang lama
         function handleNextStep(e) {
             const currentFielsetId = e.target.dataset.current;
             const nextFieldsetId = e.target.dataset.next;
 
             if (validateSection(currentFielsetId)) {
-                $(`#${currentFielsetId}`).slideUp();
-                $(`#${nextFieldsetId}`).slideDown();
+                $(`#${nextFieldsetId}`).slideDown(); // Hanya menampilkan bagian selanjutnya
+                $(e.target).hide(); // Sembunyikan tombol 'Selanjutnya' setelah diklik
             }
         }
         
@@ -223,6 +241,12 @@
         }
 
         $(document).ready(function() {
+            // BARU: Menambahkan tanda bintang (*) secara dinamis ke isian wajib
+            $('input[required], select[required], textarea[required]').each(function() {
+                $('label[for="' + this.id + '"]').addClass('is-required');
+            });
+
+            // Inisialisasi Select2
             $('#jenisKelamin, #provinsi').select2();
             $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
             $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK" });
@@ -264,10 +288,10 @@
                 const provinsiInput = $('#provinsi');
                 if (kategori === 'KK Luar Denpasar') {
                     provinsiGroup.slideDown();
-                    provinsiInput.prop('required', true);
+                    provinsiInput.prop('required', true).prev('label').addClass('is-required');
                 } else {
                     provinsiGroup.slideUp();
-                    provinsiInput.prop('required', false);
+                    provinsiInput.prop('required', false).prev('label').removeClass('is-required');
                     provinsiInput.val('').trigger('change');
                 }
 
@@ -287,6 +311,7 @@
                 updatePilihanSekolah1();
             });
 
+            // DIUBAH: Logika popup untuk pengecekan NIK
             $('#nik').on('blur', function() {
                 const nikInput = $(this);
                 const nik = nikInput.val();
@@ -300,18 +325,22 @@
                 fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
                     .then(res => res.json())
                     .then(response => {
-                        hidePopup();
-                        if (response.result === 'success' && response.exists) {
-                            const message = `NIK ${nik} sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh kembali bukti daftar</a> atau gunakan fitur 'Edit Data'.`;
-                            showPopup(message, 'error');
-                            submitButton.disabled = true; 
+                        if (response.result === 'success') {
+                           if (response.exists) {
+                                const message = `NIK sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh bukti daftar</a> atau klik tombol 'Edit Data' untuk melakukan perubahan.`;
+                                showPopup(message, 'error');
+                                submitButton.disabled = true; 
+                            } else {
+                                showPopup('NIK belum terdaftar, silakan lanjutkan pengisian formulir.', 'success');
+                                submitButton.disabled = false;
+                            }
                         } else {
-                            submitButton.disabled = false;
+                            throw new Error('Pemeriksaan NIK gagal.');
                         }
                     })
                     .catch(err => {
                         console.error("Error checking NIK:", err);
-                        showPopup('Gagal memeriksa NIK. Coba lagi.', 'error');
+                        showPopup('Gagal memeriksa NIK. Periksa koneksi dan coba lagi.', 'error');
                         submitButton.disabled = false;
                     });
             });
@@ -361,7 +390,6 @@
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-
             if (!validateSection('fieldset-d')) return;
 
             const s1 = $('#pilihanSekolah1').val();
@@ -392,7 +420,7 @@
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
-                        $('fieldset').hide();
+                        $('fieldset').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
                         $('.next-btn').show();
 
