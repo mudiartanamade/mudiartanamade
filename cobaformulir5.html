@@ -34,7 +34,6 @@
         .input-group input:read-only{background-color:#e9ecef}
         .input-group select:disabled, .input-group input:disabled {background-color:#e9ecef;cursor:not-allowed}
         
-        /* DIUBAH: Penyesuaian untuk button group */
         .button-group{display:flex;flex-wrap: wrap; gap:10px;margin-top:20px}
         .submit-btn, .edit-btn, .next-btn {flex-grow:1;padding:12px;border:none;border-radius:5px;color:#fff;font-size:18px;font-weight:700;cursor:pointer;transition:background-color .3s ease; min-width: 200px;}
         .submit-btn{background-color:#007bff}
@@ -238,7 +237,6 @@
             }
         }
         
-        // BARU: Fungsi untuk menjalankan proses edit data
         const handleEdit = () => {
              const nikToEdit = prompt("Untuk mengedit data, masukkan NIK 16 digit yang terdaftar:");
             if (!nikToEdit || !/^\d{16}$/.test(nikToEdit)) {
@@ -268,7 +266,10 @@
                         submitButton.disabled = false;
                         
                         $('fieldset').slideDown();
-                        $('.next-btn').hide(); 
+                        $('.next-btn').hide();
+                        
+                        // DIUBAH: Sembunyikan tombol Edit Data setelah data berhasil ditemukan
+                        $('.edit-trigger').hide(); 
                         
                         showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                     } else {
@@ -286,7 +287,6 @@
                 $('label[for="' + this.id + '"]').addClass('is-required');
             });
             
-            // DIUBAH: Menambahkan event listener ke semua tombol edit
             $('.edit-trigger').on('click', handleEdit);
 
             $('#jenisKelamin, #provinsi').select2();
@@ -422,6 +422,9 @@
                         $('fieldset').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
                         $('.next-btn').show();
+                        
+                        // DIUBAH: Tampilkan kembali tombol Edit setelah form di-reset
+                        $('.edit-trigger').show();
 
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
