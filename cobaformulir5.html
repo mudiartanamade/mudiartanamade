@@ -240,6 +240,10 @@
                                 }
                             }
                         });
+
+                        // PERUBAHAN: Kosongkan input token saat data berhasil dimuat
+                        $('#token').val('');
+                        
                         $('#editNik').val(nikToEdit);
                         $('#nik').prop('readonly', true);
                         submitButton.disabled = false;
@@ -302,11 +306,11 @@
                 const tokenInput = $(this);
                 const token = tokenInput.val().toUpperCase();
                 const nextBtn = $('#next-to-b');
-                const editBtn = $('.edit-trigger'); // Definisikan tombol edit
+                const editBtn = $('.edit-trigger'); 
                 
                 tokenInput.val(token);
                 nextBtn.prop('disabled', true);
-                editBtn.prop('disabled', true); // Pastikan tombol edit nonaktif saat pengecekan ulang
+                editBtn.prop('disabled', true); 
 
                 if (!tokenInput[0].checkValidity()) {
                     showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
@@ -320,7 +324,7 @@
                         if (response.result === 'success' && response.valid) {
                             showPopup('Token valid. Silakan lanjutkan pendaftaran.', 'success');
                             nextBtn.prop('disabled', false);
-                            editBtn.prop('disabled', false); // PERUBAHAN: Aktifkan tombol edit
+                            editBtn.prop('disabled', false); 
                         } else {
                             showPopup('Token tidak ditemukan. Pendaftaran hanya bisa dilakukan oleh pihak sekolah atau cek kembali token Anda.', 'error');
                         }
@@ -433,7 +437,7 @@
                         $('#fieldset-a').show();
                         $('.next-btn').show();
                         $('#next-to-b').prop('disabled', true);
-                        $('.edit-trigger').show().prop('disabled', true); // PERUBAHAN: Nonaktifkan lagi tombol edit
+                        $('.edit-trigger').show().prop('disabled', true);
 
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
