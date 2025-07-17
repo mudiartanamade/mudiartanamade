@@ -28,7 +28,8 @@
         .edit-btn:hover{background-color:#5a6268}
         .next-btn:hover { background-color: #218838; }
         .submit-btn:disabled{background-color:#a5d8ff;cursor:not-allowed;}
-        .next-btn:disabled, .edit-btn:disabled {background-color:#bdc3c7; cursor: not-allowed;}
+        .next-btn:disabled{background-color:#90d69b; cursor: not-allowed;}
+        .edit-btn:disabled{background-color:#c8cbcf; cursor: not-allowed;}
         .popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000}
         .popup-content{background:#fff;padding:30px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.2);text-align:center;max-width:450px;width:90%;position:relative;transform:scale(.9);opacity:0;transition:transform .3s ease, opacity .3s ease}
         .popup-content.show{transform:scale(1);opacity:1}
@@ -62,7 +63,7 @@
                 <legend><strong>A. Verifikasi Admin Sekolah</strong></legend>
                 <div class="input-group"><label for="token">Masukkan Token</label><input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required></div>
                 <div class="button-group">
-                    <button type="button" class="edit-btn edit-trigger" id="edit-btn-a" disabled>✏️ Edit Data</button>
+                    <button type="button" class="edit-btn edit-trigger" disabled>✏️ Edit Data</button>
                     <button type="button" class="next-btn" id="next-to-b" data-current="fieldset-a" data-next="fieldset-b" disabled>Selanjutnya ➡️</button>
                 </div>
             </fieldset>
@@ -123,7 +124,8 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
-        const scriptURL = 'MASUKKAN_URL_SCRIPT_WEB_APP_ANDA_DI_SINI'; 
+        // PENTING: Ganti dengan URL Web App Anda yang sudah di-deploy
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyYUlITBYNpKDAkbu1FAV6FCfK1BOi41HsDbdjDLmBNoH-nsvp5UhquePB81ZT3p7VK/exec'; 
         
         const form = document.getElementById('pendaftaranForm');
         const submitButton = form.querySelector('.submit-btn');
@@ -193,7 +195,9 @@
             const jalur = $('#jalurPmb').val();
             const selectedBanjar = $('#banjar').val();
             const pilihan1 = $('#pilihanSekolah1');
+
             pilihan1.empty().append(new Option()).trigger('change');
+
             if (jalur === 'Mutasi') {
                 allSchoolNames.forEach(s => pilihan1.append(new Option(s, s, false, false)));
                 pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah (Jalur Mutasi)" });
@@ -278,9 +282,11 @@
                         allSchools = response.schools;
                         allSchoolNames = [...new Set(allSchools.map(s => s.nama))];
                         const allBanjars = response.banjars;
+
                         banjarSelect.empty().append(new Option());
                         allBanjars.forEach(b => banjarSelect.append(new Option(b, b, false, false)));
                         banjarSelect.prop('disabled', false).select2({ placeholder: "Cari & pilih banjar" });
+                        
                         [pilihan2, pilihan3].forEach(sel => {
                             sel.empty().append(new Option());
                             allSchoolNames.forEach(s => sel.append(new Option(s, s, false, false)));
@@ -296,13 +302,14 @@
                 const tokenInput = $(this);
                 const token = tokenInput.val().toUpperCase();
                 const nextBtn = $('#next-to-b');
-                const editBtn = $('#edit-btn-a'); // Target tombol edit di bagian A
+                const editBtn = $('.edit-trigger'); // Definisikan tombol edit
                 
                 tokenInput.val(token);
                 nextBtn.prop('disabled', true);
-                editBtn.prop('disabled', true); // Pastikan tombol edit disable saat pengecekan
+                editBtn.prop('disabled', true); // Pastikan tombol edit nonaktif saat pengecekan ulang
 
                 if (!tokenInput[0].checkValidity()) {
+                    showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
                     return;
                 }
                 
@@ -311,9 +318,9 @@
                     .then(res => res.json())
                     .then(response => {
                         if (response.result === 'success' && response.valid) {
-                            showPopup('Token valid. Silakan lanjutkan pendaftaran atau edit data.', 'success');
+                            showPopup('Token valid. Silakan lanjutkan pendaftaran.', 'success');
                             nextBtn.prop('disabled', false);
-                            editBtn.prop('disabled', false); // Aktifkan tombol edit jika token valid
+                            editBtn.prop('disabled', false); // PERUBAHAN: Aktifkan tombol edit
                         } else {
                             showPopup('Token tidak ditemukan. Pendaftaran hanya bisa dilakukan oleh pihak sekolah atau cek kembali token Anda.', 'error');
                         }
@@ -328,6 +335,7 @@
                 const kategori = $(this).val();
                 const jalurSelect = $('#jalurPmb');
                 jalurSelect.empty().append(new Option());
+
                 const provinsiGroup = $('#provinsi-group');
                 const provinsiInput = $('#provinsi');
                 if (kategori === 'KK Luar Denpasar') {
@@ -338,6 +346,7 @@
                     provinsiInput.prop('required', false).prev('label').removeClass('is-required');
                     provinsiInput.val('').trigger('change');
                 }
+
                 if (kategori === 'KK Denpasar') {
                     ['Afirmasi', 'Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
                     jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
@@ -357,16 +366,19 @@
             $('#nik').on('blur', function() {
                 const nikInput = $(this);
                 const nik = nikInput.val();
+                
                 if (nikInput.prop('readonly') || !/^\d{16}$/.test(nik)) {
                     return;
                 }
+                
                 showPopup('Memeriksa NIK...', 'loading');
+
                 fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
                     .then(res => res.json())
                     .then(response => {
                         if (response.result === 'success') {
                            if (response.exists) {
-                                const message = `NIK sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh bukti daftar</a> atau gunakan fitur 'Edit Data' di halaman awal.`;
+                                const message = `NIK sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh bukti daftar</a> atau klik tombol 'Edit Data' untuk melakukan perubahan.`;
                                 showPopup(message, 'error');
                                 submitButton.disabled = true; 
                             } else {
@@ -420,10 +432,8 @@
                         $('fieldset').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
                         $('.next-btn').show();
-                        // DIUBAH: Reset tombol-tombol di bagian A ke keadaan semula
                         $('#next-to-b').prop('disabled', true);
-                        $('#edit-btn-a').prop('disabled', true);
-                        $('.edit-trigger').show();
+                        $('.edit-trigger').show().prop('disabled', true); // PERUBAHAN: Nonaktifkan lagi tombol edit
 
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
