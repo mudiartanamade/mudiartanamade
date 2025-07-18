@@ -13,7 +13,7 @@
             --bg-color: #ecf0f5;
             --card-bg: #ffffff;
             --text-dark: #333;
-            --text-light: #555;
+            --text-light: #666; /* Warna teks lebih lembut */
             --border-color: #ddd;
             --success-color: #00a65a;
             --success-hover: #008d4c;
@@ -37,30 +37,6 @@
             min-height: 100vh;
         }
 
-        .form-header {
-            text-align: center;
-            margin-bottom: 25px;
-            max-width: 800px;
-            width: 100%;
-        }
-        .form-header img {
-            width: 80px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .form-header h2 {
-            color: var(--primary-hover);
-            font-size: 24px;
-            margin: 0;
-            font-weight: 600;
-        }
-        .form-header p {
-            margin-top: 5px;
-            margin-bottom: 0;
-            font-size: 16px;
-            color: var(--text-light);
-        }
-
         #pendaftaranForm {
             width: 100%;
             max-width: 800px;
@@ -70,15 +46,48 @@
         .form-card {
             background: var(--card-bg);
             border-radius: 5px;
-            border-top: 3px solid var(--primary-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,.1);
+            box-shadow: 0 1px 4px rgba(0,0,0,.1);
             margin-bottom: 20px;
             width: 100%;
+            overflow: hidden; /* Penting agar border-top tidak terpisah */
         }
-        .card-header {
-            padding: 12px 20px;
+        
+        /* [BARU] Header yang terintegrasi di dalam kartu */
+        .card-form-header {
+            text-align: center;
+            padding: 20px 20px 15px 20px;
             border-bottom: 1px solid #f4f4f4;
         }
+        .card-form-header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .card-form-header h2 {
+            color: var(--primary-hover);
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .card-form-header p {
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        /* Header untuk tiap seksi kartu */
+        .card-header {
+            padding: 12px 20px;
+            background-color: #fafafa;
+            border-top: 1px solid #f4f4f4;
+            border-bottom: 1px solid #f4f4f4;
+        }
+        /* [BARU] Hilangkan border atas untuk card-header pertama */
+        #fieldset-a .card-header {
+            border-top: none; 
+        }
+
         .card-header .card-title {
             font-size: 18px;
             margin: 0;
@@ -92,8 +101,6 @@
             padding: 15px 20px;
             background-color: #f9f9f9;
             border-top: 1px solid #f4f4f4;
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
         }
         
         /* --- Form Elements --- */
@@ -153,28 +160,37 @@
         #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
         .spinner { width: 48px; height: 48px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* [BARU] Footer Styling */
+        .page-footer {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0 0 0;
+            color: var(--text-light);
+            font-size: 14px;
+        }
 
         /* --- Responsive Design --- */
         @media (max-width: 600px) {
             body { padding: 10px; }
-            .form-header h2 { font-size: 20px; }
-            .card-body, .card-footer, .card-header { padding: 15px; }
+            .card-form-header h2 { font-size: 20px; }
+            .card-body, .card-footer, .card-header, .card-form-header { padding: 15px; }
         }
     </style>
 </head>
 <body>
-    <div class="form-header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
-        <div>
-            <h2>Formulir Pendaftaran Murid Baru SD Negeri</h2>
-            <p>Kota Denpasar - Tahun Ajaran 2026/2027</p>
-        </div>
-    </div>
-        
     <form name="form-pendaftaran-sd" id="pendaftaranForm">
         <input type="hidden" name="editNik" id="editNik">
         
         <div class="form-card" id="fieldset-a">
+            <div class="card-form-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
+                <div>
+                    <h2>Formulir Pendaftaran Murid Baru SD Negeri</h2>
+                    <p>Kota Denpasar - Tahun Ajaran 2026/2027</p>
+                </div>
+            </div>
+            
             <div class="card-header">
                 <h3 class="card-title">A. Verifikasi Admin Sekolah</h3>
             </div>
@@ -259,6 +275,10 @@
             </div>
         </div>
     </form>
+    
+    <footer class="page-footer">
+        SPMB Online SD Negeri Kota Denpasar @2025
+    </footer>
     
     <div class="popup-overlay" id="popup-modal">
         <div class="popup-content" id="popup-content-box">
