@@ -73,6 +73,7 @@
                     <button type="button" class="next-btn" data-current="fieldset-a" data-next="fieldset-b">Selanjutnya ➡️</button>
                 </div>
             </fieldset>
+
             <fieldset id="fieldset-b" style="display:none;">
                 <legend><strong>B. Data Diri Calon Siswa</strong></legend>
                 <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
@@ -173,7 +174,6 @@
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
-                // Lewati validasi input token karena sudah diverifikasi
                 if (input.id === 'token') continue;
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
                     showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).prev('label').text() || $(input).parent().find('label').text()}' masih kosong.`, 'error');
@@ -184,13 +184,14 @@
             return true;
         }
 
+        // #### PERBAIKAN 1: Menyembunyikan tombol yang diklik saja ####
         function handleNextStep(e) {
             const currentFielsetId = e.target.dataset.current;
             const nextFieldsetId = e.target.dataset.next;
 
             if (validateSection(currentFielsetId)) {
                 $(`#${nextFieldsetId}`).slideDown();
-                $(e.target).closest('.button-group').hide();
+                $(e.target).hide(); // Hanya sembunyikan tombol "Selanjutnya" yang baru saja diklik
             }
         }
         
@@ -223,6 +224,7 @@
             }
         }
         
+        // #### PERBAIKAN 2: Menyembunyikan SEMUA tombol .next-btn saat mode edit ####
         const handleEdit = () => {
              const nikToEdit = prompt("Untuk mengedit data, masukkan NIK 16 digit yang terdaftar:");
             if (!nikToEdit || !/^\d{16}$/.test(nikToEdit)) {
@@ -253,8 +255,7 @@
                         submitButton.disabled = false;
                         
                         $('fieldset').slideDown();
-                        $('.next-btn').closest('.button-group').hide();
-                        $('#post-verification-group').hide(); 
+                        $('.next-btn').hide(); // <-- PERBAIKAN DI SINI: Menyembunyikan semua tombol "Selanjutnya"
                         
                         showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                     } else {
@@ -306,8 +307,6 @@
                     showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
                 });
             
-            // #### PERUBAHAN JAVASCRIPT DIMULAI DI SINI ####
-            // Mengganti event 'blur' dengan 'click' pada tombol baru
             $('#verify-token-btn').on('click', function() {
                 const tokenInput = $('#token');
                 const token = tokenInput.val().toUpperCase();
@@ -323,18 +322,14 @@
                 fetch(`${scriptURL}?action=checkToken&token=${token}`)
                     .then(res => res.json())
                     .then(response => {
-                        // Logika ini sesuai dengan script lama Anda, tidak perlu diubah di sisi server
                         if (response.result === 'success' && response.valid) {
-                            // Pesan sukses sesuai permintaan baru
                             showPopup('Token valid, silakan lanjutkan pendaftaran atau edit data!', 'success');
                             
-                            // Tampilkan tombol "Edit Data" & "Selanjutnya", sembunyikan tombol "Verifikasi"
                             $('#token-verification-group').hide();
-                            $('#post-verification-group').css('display', 'flex'); // Gunakan flex agar tombol sejajar
-                            tokenInput.prop('readonly', true); // Kunci input token agar tidak diubah
+                            $('#post-verification-group').css('display', 'flex');
+                            tokenInput.prop('readonly', true);
 
                         } else {
-                            // Pesan error sesuai permintaan baru
                             const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
                             showPopup(errorMessage, 'error');
                         }
@@ -344,7 +339,6 @@
                         showPopup('Gagal memeriksa token. Periksa koneksi dan coba lagi.', 'error');
                     });
             });
-            // #### PERUBAHAN JAVASCRIPT SELESAI ####
 
             $('#kategoriKK').on('change', function() {
                 const kategori = $(this).val();
@@ -448,17 +442,16 @@
                         downloadLink.click();
                         document.body.removeChild(downloadLink);
                         
-                        // Reset form ke kondisi awal yang benar
                         form.reset();
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
-                        $('#token').prop('readonly', false); // Buka kembali kunci token
+                        $('#token').prop('readonly', false);
                         $('fieldset').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
-                        $('.next-btn').closest('.button-group').show(); // Tampilkan kembali button group
-                        $('#post-verification-group').hide(); // Sembunyikan tombol edit/selanjutnya
-                        $('#token-verification-group').show(); // Tampilkan kembali tombol verifikasi
+                        $('.next-btn').show(); // Tampilkan kembali semua tombol next untuk pendaftaran baru
+                        $('#post-verification-group').hide();
+                        $('#token-verification-group').show();
                         
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
