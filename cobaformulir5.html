@@ -414,7 +414,32 @@
             
             showPopup('Memproses pendaftaran...', 'loading');
 
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            // ========================================================================= //
+            // == PERUBAHAN DIMULAI DI SINI UNTUK MEMPERTAHANKAN ANGKA NOL DI DEPAN == //
+            // ========================================================================= //
+            
+            // 1. Buat objek FormData dari form
+            const formData = new FormData(form);
+
+            // 2. Ambil nilai dari kolom yang berpotensi memiliki angka 0 di depan
+            const nikValue = formData.get('nik');
+            const nisnValue = formData.get('nisn');
+            const noHPValue = formData.get('noHP');
+
+            // 3. Tambahkan apostrof (') di awal nilai agar dibaca sebagai TEKS oleh Google Sheets
+            formData.set('nik', `'${nikValue}`);
+            if (nisnValue) { // Hanya proses jika NISN diisi
+                formData.set('nisn', `'${nisnValue}`);
+            }
+            formData.set('noHP', `'${noHPValue}`);
+
+            // ========================================================================= //
+            // ========================= PERUBAHAN SELESAI ========================= //
+            // ========================================================================= //
+
+
+            // 4. Kirim FormData yang sudah dimodifikasi
+            fetch(scriptURL, { method: 'POST', body: formData}) 
                 .then(res => res.json())
                 .then(data => {
                     if (data.result === 'success' && data.pdfUrl) {
