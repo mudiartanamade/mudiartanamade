@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
         :root {
             --primary-color: #3C8DBC;
             --primary-hover: #367FA9;
-            --bg-light: #f4f4f4;
-            --bg-dark: #222d32;
-            --text-light: #f1f1f1;
+            --bg-color: #ecf0f5;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-light: #555;
             --border-color: #ddd;
-            --box-shadow: 0 1px 3px rgba(0,0,0,.1);
+            --success-color: #00a65a;
+            --success-hover: #008d4c;
+            --secondary-color: #6c757d;
+            --secondary-hover: #5a6268;
         }
 
         *, *::before, *::after {
@@ -24,175 +27,96 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ecf0f5;
+            background-color: var(--bg-color);
             margin: 0;
-            color: #333;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .wrapper {
+            padding: 20px;
+            color: var(--text-dark);
             display: flex;
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
-        /* --- Header --- */
-        .main-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50px;
-            background-color: var(--primary-color);
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            z-index: 1030;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .main-header .logo {
-            width: 230px;
+        .form-header {
             text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-            color: white;
-            text-decoration: none;
+            margin-bottom: 25px;
+            max-width: 800px;
+            width: 100%;
         }
-        .main-header .navbar {
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
+        .form-header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
         }
-        .sidebar-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* --- Sidebar --- */
-        .main-sidebar {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            width: 230px;
-            height: calc(100vh - 50px);
-            background-color: var(--bg-dark);
-            padding-top: 15px;
-            transition: transform 0.3s ease-in-out;
-            z-index: 810;
-        }
-        .sidebar-menu {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .sidebar-menu li a {
-            color: #b8c7ce;
-            padding: 12px 15px;
-            display: block;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .sidebar-menu li.active > a,
-        .sidebar-menu li a:hover {
-            color: #fff;
-            background-color: #1e282c;
-        }
-        .sidebar-menu li.header {
-            padding: 10px 15px;
-            color: #4b646f;
-            background: #1a2226;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .sidebar-menu .treeview-menu {
-            display: none;
-            list-style: none;
-            padding-left: 15px;
-        }
-         .sidebar-menu .treeview-menu li a {
-             font-size: 13px;
-         }
-
-        /* --- Content --- */
-        .content-wrapper {
-            flex-grow: 1;
-            margin-top: 50px;
-            margin-left: 230px;
-            padding: 15px;
-            background-color: #ecf0f5;
-            transition: margin-left 0.3s ease-in-out;
-        }
-        .content-header {
-            padding: 0 0 15px 0;
-        }
-        .content-header h1 {
-            margin: 0;
+        .form-header h2 {
+            color: var(--primary-hover);
             font-size: 24px;
-            font-weight: 400;
+            margin: 0;
+            font-weight: 600;
         }
-        .breadcrumb {
-            background: transparent;
-            padding: 0;
+        .form-header p {
             margin-top: 5px;
-            font-size: 12px;
+            margin-bottom: 0;
+            font-size: 16px;
+            color: var(--text-light);
         }
 
-        /* --- Box/Card Component --- */
-        .box {
-            background: #fff;
+        #pendaftaranForm {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* --- Card/Box Component untuk Fieldset --- */
+        .form-card {
+            background: var(--card-bg);
             border-radius: 5px;
             border-top: 3px solid var(--primary-color);
-            box-shadow: var(--box-shadow);
+            box-shadow: 0 1px 3px rgba(0,0,0,.1);
             margin-bottom: 20px;
             width: 100%;
         }
-        .box-header {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--border-color);
+        .card-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f4f4f4;
         }
-        .box-header .box-title {
-            display: inline-block;
+        .card-header .card-title {
             font-size: 18px;
             margin: 0;
-            line-height: 1;
-            color: #444;
             font-weight: 600;
+            color: var(--text-dark);
         }
-        .box-body {
-            padding: 15px;
+        .card-body {
+            padding: 20px;
         }
-        .box-footer {
-            padding: 10px 15px;
+        .card-footer {
+            padding: 15px 20px;
             background-color: #f9f9f9;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid #f4f4f4;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
         
         /* --- Form Elements --- */
         .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        .input-group:last-child { margin-bottom: 0; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-light); }
         .is-required::after { content: " *"; color: #dc3545; font-weight: bold; }
-        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group select, .input-group textarea, .select2-container { width: 100% !important; box-sizing: border-box; }
+        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group select, .input-group textarea, .select2-container { width: 100% !important; }
         .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group textarea {
             padding: 10px;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
             font-size: 14px;
             transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
-        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-hover); box-shadow: 0 0 0 0.2rem rgba(60, 141, 188, 0.25); outline: 0; }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
         .input-group input:read-only, .input-group select:disabled, .input-group input:disabled { background-color: #e9ecef; cursor: not-allowed; }
 
         /* --- Buttons --- */
         .btn {
-            padding: 10px 15px;
+            padding: 10px 18px;
             border: 1px solid transparent;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -200,172 +124,141 @@
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            color: #fff;
         }
         .btn:disabled { cursor: not-allowed; opacity: 0.65; }
-        .btn-primary { color: #fff; background-color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
         .btn-primary:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
-        .btn-secondary { color: #fff; background-color: #6c757d; border-color: #6c757d; }
-        .btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
-        .btn-success { color: #fff; background-color: #28a745; border-color: #28a745; }
-        .btn-success:hover { background-color: #218838; border-color: #1e7e34; }
-        .button-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: var(--secondary-hover); border-color: var(--secondary-hover); }
+        .btn-success { background-color: var(--success-color); border-color: var(--success-color); }
+        .btn-success:hover { background-color: var(--success-hover); border-color: var(--success-hover); }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; }
         .button-group .btn { flex-grow: 1; min-width: 150px; }
+        .card-footer .btn { width: 100%; }
 
         /* --- Select2 Overrides --- */
-        .select2-container .select2-selection--single { height: 40px !important; padding: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .select2-container .select2-selection--single { height: 40px !important; padding: 5px 0; border: 1px solid var(--border-color); border-radius: 4px; }
         .select2-container--default .select2-selection--single .select2-selection__arrow { height: 38px !important; }
         .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 28px !important; }
-        .select2-dropdown { border: 1px solid #ccc; border-radius: 4px; }
+        .select2-dropdown { border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
 
-        /* --- Popup & Spinner (Unchanged) --- */
-        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
-        .popup-content { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 90%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
+        /* --- Popup & Spinner (Unchanged Logic, Adjusted Style) --- */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+        .popup-content { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 100%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
         .popup-content.show { transform: scale(1); opacity: 1; }
         .popup-content .close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: 700; color: #aaa; cursor: pointer; line-height: 1; }
-        #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: #555; }
+        #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--text-light); }
         #popup-message a { color: var(--primary-hover); font-weight: 700; text-decoration: underline; }
         #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
         .spinner { width: 48px; height: 48px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* --- Responsive Design --- */
-        @media (max-width: 768px) {
-            .main-sidebar { transform: translateX(-230px); }
-            .content-wrapper { margin-left: 0; }
-            .main-header .logo { display: none; }
-            body.sidebar-open .main-sidebar { transform: translateX(0); }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .form-header h2 { font-size: 20px; }
+            .card-body, .card-footer, .card-header { padding: 15px; }
         }
     </style>
 </head>
 <body>
-
-    <div class="wrapper">
-        <header class="main-header">
-            <a href="#" class="logo"><b>Admin</b>PPDB</a>
-            <nav class="navbar">
-                <a href="#" class="sidebar-toggle" id="sidebar-toggle-btn" role="button">
-                    <i class="fas fa-bars"></i>
-                </a>
-            </nav>
-        </header>
-
-        <aside class="main-sidebar">
-            <section class="sidebar">
-                <ul class="sidebar-menu">
-                    <li class="header">NAVIGASI UTAMA</li>
-                    <li class="active">
-                        <a href="#"><i class="fas fa-edit"></i> <span>Formulir Pendaftaran</span></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fas fa-bullhorn"></i> <span>Pengumuman</span></a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fas fa-question-circle"></i> <span>Bantuan</span></a>
-                    </li>
-                </ul>
-            </section>
-        </aside>
-
-        <div class="content-wrapper">
-            <section class="content-header">
-                <h1>
-                    Formulir Pendaftaran
-                    <small>SD Negeri Kota Denpasar TA 2026/2027</small>
-                </h1>
-            </section>
-
-            <section class="content">
-                <form name="form-pendaftaran-sd" id="pendaftaranForm">
-                    <input type="hidden" name="editNik" id="editNik">
-                    
-                    <div class="box box-primary" id="fieldset-a">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">A. Verifikasi Admin Sekolah</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="input-group">
-                                <label for="token">Masukkan Token</label>
-                                <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin">
-                            </div>
-                        </div>
-                        <div class="box-footer">
-                            <div class="button-group" id="token-verification-group">
-                                <button type="button" class="btn btn-primary" id="verify-token-btn">✔️ Verifikasi Token</button>
-                            </div>
-                            <div class="button-group" id="post-verification-group" style="display: none;">
-                                <button type="button" class="btn btn-secondary edit-trigger">✏️ Edit Data</button>
-                                <button type="button" class="btn btn-success next-btn" data-current="fieldset-a" data-next="fieldset-b">Pendaftaran ✍</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="box box-primary" id="fieldset-b" style="display:none;">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">B. Data Diri Calon Siswa</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
-                            <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
-                            <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
-                            <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
-                            <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
-                            <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
-                        </div>
-                        <div class="box-footer">
-                             <button type="button" class="btn btn-success next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya 👉</button>
-                        </div>
-                    </div>
-
-                    <div class="box box-primary" id="fieldset-c" style="display:none;">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">C. Alamat Tinggal (Sesuai KK)</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
-                            <div class="input-group" id="provinsi-group" style="display:none;"><label for="provinsi">Provinsi</label><select id="provinsi" name="provinsi"><option value="" disabled selected>Pilih Provinsi Asal</option><option value="Bali">Bali</option><option value="Luar Bali">Luar Bali</option></select></div>
-                            <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
-                            <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
-                            <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
-                            <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
-                        </div>
-                        <div class="box-footer">
-                            <button type="button" class="btn btn-success next-btn" data-current="fieldset-c" data-next="fieldset-d">Selanjutnya 👉</button>
-                        </div>
-                    </div>
-
-                    <div class="box box-primary" id="fieldset-d" style="display:none;">
-                        <div class="box-header with-border">
-                           <h3 class="box-title">D. Data Orang Tua / Wali</h3>
-                        </div>
-                        <div class="box-body">
-                           <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
-                           <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
-                           <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="text" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
-                           <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
-                        </div>
-                        <div class="box-footer">
-                           <button type="button" class="btn btn-success next-btn" data-current="fieldset-d" data-next="fieldset-e">Selanjutnya 👉</button>
-                        </div>
-                    </div>
-
-                    <div class="box box-primary" id="fieldset-e" style="display:none;">
-                        <div class="box-header with-border">
-                           <h3 class="box-title">E. Pilihan Sekolah</h3>
-                        </div>
-                        <div class="box-body">
-                           <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
-                           <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Wajib)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
-                           <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" disabled><option></option></select></div>
-                           <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" disabled><option></option></select></div>
-                        </div>
-                        <div class="box-footer">
-                           <button type="submit" class="btn btn-primary submit-btn" style="width: 100%;">Kirim & Unduh Bukti Daftar 🚀</button>
-                        </div>
-                    </div>
-                </form>
-            </section>
+    <div class="form-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
+        <div>
+            <h2>Formulir Pendaftaran Murid Baru SD Negeri</h2>
+            <p>Kota Denpasar - Tahun Ajaran 2026/2027</p>
         </div>
     </div>
+        
+    <form name="form-pendaftaran-sd" id="pendaftaranForm">
+        <input type="hidden" name="editNik" id="editNik">
+        
+        <div class="form-card" id="fieldset-a">
+            <div class="card-header">
+                <h3 class="card-title">A. Verifikasi Admin Sekolah</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <label for="token">Masukkan Token</label>
+                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin">
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="button-group" id="token-verification-group">
+                    <button type="button" class="btn btn-primary" id="verify-token-btn" style="width: 100%;">✔️ Verifikasi Token</button>
+                </div>
+                <div class="button-group" id="post-verification-group" style="display: none;">
+                    <button type="button" class="btn btn-secondary edit-trigger">✏️ Edit Data</button>
+                    <button type="button" class="btn btn-success next-btn" data-current="fieldset-a" data-next="fieldset-b">Pendaftaran ✍</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card" id="fieldset-b" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title">B. Data Diri Calon Siswa</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
+                <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="text" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
+                <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="text" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
+                <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
+                <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
+            </div>
+            <div class="card-footer">
+                 <button type="button" class="btn btn-success next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya 👉</button>
+            </div>
+        </div>
+
+        <div class="form-card" id="fieldset-c" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title">C. Alamat Tinggal (Sesuai KK)</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
+                <div class="input-group" id="provinsi-group" style="display:none;"><label for="provinsi">Provinsi</label><select id="provinsi" name="provinsi"><option value="" disabled selected>Pilih Provinsi Asal</option><option value="Bali">Bali</option><option value="Luar Bali">Luar Bali</option></select></div>
+                <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
+                <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
+                <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
+                <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-success next-btn" data-current="fieldset-c" data-next="fieldset-d">Selanjutnya 👉</button>
+            </div>
+        </div>
+
+        <div class="form-card" id="fieldset-d" style="display:none;">
+            <div class="card-header">
+               <h3 class="card-title">D. Data Orang Tua / Wali</h3>
+            </div>
+            <div class="card-body">
+               <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
+               <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
+               <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="text" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
+               <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
+            </div>
+            <div class="card-footer">
+               <button type="button" class="btn btn-success next-btn" data-current="fieldset-d" data-next="fieldset-e">Selanjutnya 👉</button>
+            </div>
+        </div>
+
+        <div class="form-card" id="fieldset-e" style="display:none;">
+            <div class="card-header">
+               <h3 class="card-title">E. Pilihan Sekolah</h3>
+            </div>
+            <div class="card-body">
+               <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Wajib)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" disabled><option></option></select></div>
+            </div>
+            <div class="card-footer">
+               <button type="submit" class="btn btn-primary submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
+            </div>
+        </div>
+    </form>
     
     <div class="popup-overlay" id="popup-modal">
         <div class="popup-content" id="popup-content-box">
@@ -379,25 +272,16 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
-        // SCRIPT TAMBAHAN UNTUK FUNGSI TOGGLE SIDEBAR
-        $('#sidebar-toggle-btn').on('click', function(e) {
-            e.preventDefault();
-            $('body').toggleClass('sidebar-open');
-        });
-
         // ======================================================= //
         // SEMUA LOGIKA FORMULIR ANDA DI BAWAH INI TETAP UTUH      //
         // TANPA PERUBAHAN APAPUN                                  //
         // ======================================================= //
         
-        // PENTING: Ganti dengan URL Web App Anda yang sudah di-deploy
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
-        
         const form = document.getElementById('pendaftaranForm');
         const submitButton = form.querySelector('.submit-btn');
         let allSchools = [];
         let allSchoolNames = [];
-        
         const popupModal = document.getElementById('popup-modal');
         const popupContentBox = document.getElementById('popup-content-box');
         const popupIcon = document.getElementById('popup-icon');
@@ -405,7 +289,7 @@
         const popupCloseBtn = document.getElementById('popup-close-btn');
 
         const icons = {
-            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#28a745" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
+            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#00a65a" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
             error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
             loading: `<div class="spinner"></div>`
         };
@@ -431,13 +315,12 @@
         });
         
         function validateSection(fieldsetId) {
-            // Logika ini masih berfungsi karena elemen masih memiliki ID yang sama (misal 'fieldset-b')
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
                 if (input.id === 'token') continue;
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).prev('label').text() || $(input).parent().find('label').text()}' masih kosong.`, 'error');
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
                     input.focus();
                     return false;
                 }
@@ -450,8 +333,8 @@
             const nextFieldsetId = e.target.dataset.next;
 
             if (validateSection(currentFielsetId)) {
-                $(`#${nextFieldsetId}`).slideDown(); // Bekerja pada <div> seperti pada <fieldset>
-                $(e.target).hide(); 
+                $(`#${nextFieldsetId}`).slideDown();
+                $(e.target).hide();
             }
         }
         
@@ -513,8 +396,8 @@
                          $('#nik').prop('readonly', true);
                          submitButton.disabled = false;
                         
-                         $('.box').slideDown(); // Menampilkan semua box
-                         $('.next-btn').hide(); // Menyembunyikan semua tombol "Selanjutnya"
+                         $('.form-card').slideDown();
+                         $('.next-btn').hide();
                         
                          showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                      } else {
@@ -534,9 +417,9 @@
             
             $('.edit-trigger').on('click', handleEdit);
             
-            $('#jenisKelamin, #provinsi').select2();
+            $('#jenisKelamin, #provinsi').select2({ minimumResultsForSearch: Infinity }); // Sembunyikan search box
             $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
-            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK" });
+            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK", minimumResultsForSearch: Infinity });
             $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
             const banjarSelect = $('#banjar').select2({ placeholder: "Memuat data banjar..." });
             const pilihan1 = $('#pilihanSekolah1').select2({ placeholder: "Pilih banjar terlebih dahulu" });
@@ -706,7 +589,7 @@
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
                         $('#token').prop('readonly', false);
-                        $('.box').not('#fieldset-a').hide();
+                        $('.form-card').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
                         $('.next-btn').show(); 
                         $('#post-verification-group').hide();
