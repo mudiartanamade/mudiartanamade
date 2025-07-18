@@ -186,8 +186,8 @@
             <div class="card-form-header">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
                 <div>
-                    <h2>Formulir Pendaftaran Murid Baru SD Negeri</h2>
-                    <p>Kota Denpasar - Tahun Ajaran 2026/2027</p>
+                    <h2>Formulir Pendaftaran Murid Baru SD Negeri Kota Denpasar</h2>
+                    <p>Tahun Ajaran 2026/2027</p>
                 </div>
             </div>
             
@@ -197,7 +197,7 @@
             <div class="card-body">
                 <div class="input-group">
                     <label for="token">Masukkan Token</label>
-                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin">
+                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin Disdikpora Dps">
                 </div>
             </div>
             <div class="card-footer">
@@ -230,7 +230,7 @@
 
         <div class="form-card" id="fieldset-c" style="display:none;">
             <div class="card-header">
-                <h3 class="card-title">C. Alamat Tinggal (Sesuai KK)</h3>
+                <h3 class="card-title">C. Alamat Tinggal (Sesuai KK/Dokumen sah lainnya)</h3>
             </div>
             <div class="card-body">
                 <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
@@ -252,7 +252,7 @@
             <div class="card-body">
                <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
                <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
-               <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="text" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
+               <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tell" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
                <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
             </div>
             <div class="card-footer">
@@ -277,7 +277,7 @@
     </form>
     
     <footer class="page-footer">
-        SPMB Online SD Negeri Kota Denpasar @2025
+        SPMB Online SD Negeri Kota Denpasar @2026
     </footer>
     
     <div class="popup-overlay" id="popup-modal">
@@ -594,7 +594,7 @@
                 .then(data => {
                     if (data.result === 'success' && data.pdfUrl) {
                         const actionText = $('#editNik').val() ? 'diperbarui' : 'didaftarkan';
-                        const message = `Data berhasil ${actionText}! <a href="${data.pdfUrl}" target="_blank">Klik di sini untuk mengunduh bukti.</a>`;
+                        const message = `Data berhasil ${actionText}! <a href="${data.pdfUrl}" target="_blank">Klik di sini untuk mengunduh bukti daftar.</a>`;
                         showPopup(message, 'success');
                         
                         const downloadLink = document.createElement('a');
