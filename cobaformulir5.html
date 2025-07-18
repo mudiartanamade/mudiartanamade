@@ -61,13 +61,18 @@
             
             <fieldset id="fieldset-a">
                 <legend><strong>A. Verifikasi Admin Sekolah</strong></legend>
-                <div class="input-group"><label for="token">Masukkan Token</label><input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required></div>
-                <div class="button-group">
-                    <button type="button" class="edit-btn edit-trigger" disabled>✏️ Edit Data</button>
-                    <button type="button" class="next-btn" id="next-to-b" data-current="fieldset-a" data-next="fieldset-b" disabled>Selanjutnya ➡️</button>
+                <div class="input-group">
+                    <label for="token">Masukkan Token</label>
+                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required>
+                </div>
+                <div class="button-group" id="token-verification-group">
+                    <button type="button" class="submit-btn" id="verify-token-btn">✔️ Verifikasi Token</button>
+                </div>
+                <div class="button-group" id="post-verification-group" style="display: none;">
+                    <button type="button" class="edit-btn edit-trigger">✏️ Edit Data</button>
+                    <button type="button" class="next-btn" data-current="fieldset-a" data-next="fieldset-b">Selanjutnya ➡️</button>
                 </div>
             </fieldset>
-
             <fieldset id="fieldset-b" style="display:none;">
                 <legend><strong>B. Data Diri Calon Siswa</strong></legend>
                 <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
@@ -168,8 +173,10 @@
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
+                // Lewati validasi input token karena sudah diverifikasi
+                if (input.id === 'token') continue;
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).prev('label').text()}' masih kosong.`, 'error');
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).prev('label').text() || $(input).parent().find('label').text()}' masih kosong.`, 'error');
                     input.focus();
                     return false;
                 }
@@ -183,7 +190,7 @@
 
             if (validateSection(currentFielsetId)) {
                 $(`#${nextFieldsetId}`).slideDown();
-                $(e.target).hide();
+                $(e.target).closest('.button-group').hide();
             }
         }
         
@@ -240,17 +247,14 @@
                                 }
                             }
                         });
-
-                        // PERUBAHAN: Kosongkan input token saat data berhasil dimuat
-                        $('#token').val('');
                         
                         $('#editNik').val(nikToEdit);
                         $('#nik').prop('readonly', true);
                         submitButton.disabled = false;
                         
                         $('fieldset').slideDown();
-                        $('.next-btn').hide();
-                        $('.edit-trigger').hide(); 
+                        $('.next-btn').closest('.button-group').hide();
+                        $('#post-verification-group').hide(); 
                         
                         showPopup("Data ditemukan. Silakan edit dan kirim ulang.", 'success');
                     } else {
@@ -302,15 +306,13 @@
                     showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
                 });
             
-            $('#token').on('blur', function() {
-                const tokenInput = $(this);
+            // #### PERUBAHAN JAVASCRIPT DIMULAI DI SINI ####
+            // Mengganti event 'blur' dengan 'click' pada tombol baru
+            $('#verify-token-btn').on('click', function() {
+                const tokenInput = $('#token');
                 const token = tokenInput.val().toUpperCase();
-                const nextBtn = $('#next-to-b');
-                const editBtn = $('.edit-trigger'); 
                 
                 tokenInput.val(token);
-                nextBtn.prop('disabled', true);
-                editBtn.prop('disabled', true); 
 
                 if (!tokenInput[0].checkValidity()) {
                     showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
@@ -321,19 +323,28 @@
                 fetch(`${scriptURL}?action=checkToken&token=${token}`)
                     .then(res => res.json())
                     .then(response => {
+                        // Logika ini sesuai dengan script lama Anda, tidak perlu diubah di sisi server
                         if (response.result === 'success' && response.valid) {
-                            showPopup('Token valid. Silakan lanjutkan pendaftaran.', 'success');
-                            nextBtn.prop('disabled', false);
-                            editBtn.prop('disabled', false); 
+                            // Pesan sukses sesuai permintaan baru
+                            showPopup('Token valid, silakan lanjutkan pendaftaran atau edit data!', 'success');
+                            
+                            // Tampilkan tombol "Edit Data" & "Selanjutnya", sembunyikan tombol "Verifikasi"
+                            $('#token-verification-group').hide();
+                            $('#post-verification-group').css('display', 'flex'); // Gunakan flex agar tombol sejajar
+                            tokenInput.prop('readonly', true); // Kunci input token agar tidak diubah
+
                         } else {
-                            showPopup('Token tidak ditemukan. Pendaftaran hanya bisa dilakukan oleh pihak sekolah atau cek kembali token Anda.', 'error');
+                            // Pesan error sesuai permintaan baru
+                            const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
+                            showPopup(errorMessage, 'error');
                         }
                     })
                     .catch(err => {
                         console.error('Error checking token:', err);
-                        showPopup('Gagal memeriksa token. Coba lagi.', 'error');
+                        showPopup('Gagal memeriksa token. Periksa koneksi dan coba lagi.', 'error');
                     });
             });
+            // #### PERUBAHAN JAVASCRIPT SELESAI ####
 
             $('#kategoriKK').on('change', function() {
                 const kategori = $(this).val();
@@ -413,32 +424,15 @@
             if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
             
             showPopup('Memproses pendaftaran...', 'loading');
-
-            // ========================================================================= //
-            // == PERUBAHAN DIMULAI DI SINI UNTUK MEMPERTAHANKAN ANGKA NOL DI DEPAN == //
-            // ========================================================================= //
             
-            // 1. Buat objek FormData dari form
             const formData = new FormData(form);
-
-            // 2. Ambil nilai dari kolom yang berpotensi memiliki angka 0 di depan
-            //const nikValue = formData.get('nik');
+            
             const nisnValue = formData.get('nisn');
             const noHPValue = formData.get('noHP');
 
-            // 3. Tambahkan apostrof (') di awal nilai agar dibaca sebagai TEKS oleh Google Sheets
-            //formData.set('nik', `'${nikValue}`);
-            if (nisnValue) { // Hanya proses jika NISN diisi
-                formData.set('nisn', `'${nisnValue}`);
-            }
+            if (nisnValue) { formData.set('nisn', `'${nisnValue}`); }
             formData.set('noHP', `'${noHPValue}`);
-
-            // ========================================================================= //
-            // ========================= PERUBAHAN SELESAI ========================= //
-            // ========================================================================= //
-
-
-            // 4. Kirim FormData yang sudah dimodifikasi
+            
             fetch(scriptURL, { method: 'POST', body: formData}) 
                 .then(res => res.json())
                 .then(data => {
@@ -454,16 +448,18 @@
                         downloadLink.click();
                         document.body.removeChild(downloadLink);
                         
+                        // Reset form ke kondisi awal yang benar
                         form.reset();
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
+                        $('#token').prop('readonly', false); // Buka kembali kunci token
                         $('fieldset').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
-                        $('.next-btn').show();
-                        $('#next-to-b').prop('disabled', true);
-                        $('.edit-trigger').show().prop('disabled', true);
-
+                        $('.next-btn').closest('.button-group').show(); // Tampilkan kembali button group
+                        $('#post-verification-group').hide(); // Sembunyikan tombol edit/selanjutnya
+                        $('#token-verification-group').show(); // Tampilkan kembali tombol verifikasi
+                        
                     } else {
                         throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
                     }
