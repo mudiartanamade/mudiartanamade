@@ -422,12 +422,12 @@
             const formData = new FormData(form);
 
             // 2. Ambil nilai dari kolom yang berpotensi memiliki angka 0 di depan
-            const nikValue = formData.get('nik');
+            //const nikValue = formData.get('nik');
             const nisnValue = formData.get('nisn');
             const noHPValue = formData.get('noHP');
 
             // 3. Tambahkan apostrof (') di awal nilai agar dibaca sebagai TEKS oleh Google Sheets
-            formData.set('nik', `'${nikValue}`);
+            //formData.set('nik', `'${nikValue}`);
             if (nisnValue) { // Hanya proses jika NISN diisi
                 formData.set('nisn', `'${nisnValue}`);
             }
