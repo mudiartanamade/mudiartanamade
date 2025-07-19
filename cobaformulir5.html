@@ -1,949 +1,693 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    
-    <style>
-        :root {
-            --primary-color: #3C8DBC;
-            --primary-hover: #367FA9;
-            --bg-color: #ecf0f5;
-            --card-bg: #ffffff;
-            --text-dark: #333;
-            --text-light: #666; /* Warna teks lebih lembut */
-            --border-color: #ddd;
-            --success-color: #00a65a;
-            --success-hover: #008d4c;
-            --secondary-color: #6c757d;
-            --secondary-hover: #5a6268;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pendaftaran Siswa Baru SD - Kota Denpasar</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-color: #3C8DBC;
+            --primary-hover: #367FA9;
+            --bg-color: #ecf0f5;
+            --card-bg: #ffffff;
+            --text-dark: #333;
+            --text-light: #666; /* Warna teks lebih lembut */
+            --border-color: #ddd;
+            --success-color: #00a65a;
+            --success-hover: #008d4c;
+            --secondary-color: #6c757d;
+            --secondary-hover: #5a6268;
+        }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        #pendaftaranForm {
-            width: 100%;
-            max-width: 800px;
-        }
+        #pendaftaranForm {
+            width: 100%;
+            max-width: 800px;
+        }
 
-        /* --- Card/Box Component untuk Fieldset --- */
-        .form-card {
-            background: var(--card-bg);
-            border-radius: 5px;
-            box-shadow: 0 1px 4px rgba(0,0,0,.1);
-            margin-bottom: 20px;
-            width: 100%;
-            overflow: hidden; /* Penting agar border-top tidak terpisah */
-        }
-        
-        .card-form-header {
-            text-align: center;
-            padding: 20px 20px 15px 20px;
-            border-bottom: 1px solid #f4f4f4;
-        }
-        .card-form-header img {
-            width: 80px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-        .card-form-header h2 {
-            color: var(--primary-hover);
-            font-size: 24px;
-            margin: 0;
-            font-weight: 600;
-        }
-        .card-form-header p {
-            margin-top: 5px;
-            margin-bottom: 0;
-            font-size: 16px;
-            color: var(--text-light);
-        }
+        /* --- Card/Box Component untuk Fieldset --- */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.1);
+            margin-bottom: 20px;
+            width: 100%;
+            overflow: hidden; /* Penting agar border-top tidak terpisah */
+        }
+        
+        .card-form-header {
+            text-align: center;
+            padding: 20px 20px 15px 20px;
+            border-bottom: 1px solid #f4f4f4;
+        }
+        .card-form-header img {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .card-form-header h2 {
+            color: var(--primary-hover);
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .card-form-header p {
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-size: 16px;
+            color: var(--text-light);
+        }
 
-        .card-header {
-            padding: 12px 20px;
-            background-color: #fafafa;
-            border-top: 1px solid #f4f4f4;
-            border-bottom: 1px solid #f4f4f4;
-        }
-        #fieldset-a .card-header {
-            border-top: none; 
-        }
+        .card-header {
+            padding: 12px 20px;
+            background-color: #fafafa;
+            border-top: 1px solid #f4f4f4;
+            border-bottom: 1px solid #f4f4f4;
+        }
+        #fieldset-a .card-header {
+            border-top: none; 
+        }
 
-        .card-header .card-title {
-            font-size: 18px;
-            margin: 0;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-footer {
-            padding: 15px 20px;
-            background-color: #f9f9f9;
-            border-top: 1px solid #f4f4f4;
-        }
-        
-        /* --- Form Elements --- */
-        .input-group { margin-bottom: 15px; }
-        .input-group:last-child { margin-bottom: 0; }
-        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-light); }
-        .is-required::after { content: " *"; color: #dc3545; font-weight: bold; }
-        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group select, .input-group textarea, .select2-container { width: 100% !important; }
-        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group textarea {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            font-size: 14px;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
-        .input-group input:read-only, .input-group select:disabled, .input-group input:disabled { background-color: #e9ecef; cursor: not-allowed; }
+        .card-header .card-title {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-footer {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #f4f4f4;
+        }
+        
+        /* --- Form Elements --- */
+        .input-group { margin-bottom: 15px; }
+        .input-group:last-child { margin-bottom: 0; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-light); }
+        .is-required::after { content: " *"; color: #dc3545; font-weight: bold; }
+        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group select, .input-group textarea, .select2-container { width: 100% !important; }
+        .input-group input[type=text], .input-group input[type=number], .input-group input[type=date], .input-group input[type=tel], .input-group input[type=email], .input-group textarea {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
+        .input-group input:read-only, .input-group select:disabled, .input-group input:disabled { background-color: #e9ecef; cursor: not-allowed; }
 
-        /* --- Buttons --- */
-        .btn {
-            padding: 10px 18px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all .2s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            color: #fff;
-        }
-        .btn:disabled { cursor: not-allowed; opacity: 0.65; }
-        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
-        .btn-primary:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
-        .btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); }
-        .btn-secondary:hover { background-color: var(--secondary-hover); border-color: var(--secondary-hover); }
-        .btn-success { background-color: var(--success-color); border-color: var(--success-color); }
-        .btn-success:hover { background-color: var(--success-hover); border-color: var(--success-hover); }
-        .button-group { display: flex; flex-wrap: wrap; gap: 10px; }
-        .button-group .btn { flex-grow: 1; min-width: 150px; }
-        .card-footer .btn { width: 100%; }
+        /* --- Buttons --- */
+        .btn {
+            padding: 10px 18px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            color: #fff;
+        }
+        .btn:disabled { cursor: not-allowed; opacity: 0.65; }
+        .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); }
+        .btn-secondary:hover { background-color: var(--secondary-hover); border-color: var(--secondary-hover); }
+        .btn-success { background-color: var(--success-color); border-color: var(--success-color); }
+        .btn-success:hover { background-color: var(--success-hover); border-color: var(--success-hover); }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .button-group .btn { flex-grow: 1; min-width: 150px; }
+        .card-footer .btn { width: 100%; }
 
-        /* --- Select2 Overrides --- */
-        .select2-container .select2-selection--single { height: 40px !important; padding: 5px 0; border: 1px solid var(--border-color); border-radius: 4px; }
-        .select2-container--default .select2-selection--single .select2-selection__arrow { height: 38px !important; }
-        .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 28px !important; }
-        .select2-dropdown { border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+        /* --- Select2 Overrides --- */
+        .select2-container .select2-selection--single { height: 40px !important; padding: 5px 0; border: 1px solid var(--border-color); border-radius: 4px; }
+        .select2-container--default .select2-selection--single .select2-selection__arrow { height: 38px !important; }
+        .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 28px !important; }
+        .select2-dropdown { border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
 
-        /* --- Popup & Spinner (Unchanged Logic, Adjusted Style) --- */
-        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
-        .popup-content { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 100%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
-        .popup-content.show { transform: scale(1); opacity: 1; }
-        .popup-content .close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: 700; color: #aaa; cursor: pointer; line-height: 1; }
-        #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--text-light); }
-        #popup-message a { color: var(--primary-hover); font-weight: 700; text-decoration: underline; }
-        #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
-        /* [BARU] Styling untuk input di dalam popup */
-        #popup-message .popup-input { margin-top: 15px; padding: 10px; width: 100%; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; }
-        #popup-message .popup-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
-        #popup-message .popup-button { margin-top: 15px; width: 100%; }
+        /* --- Popup & Spinner (Unchanged Logic, Adjusted Style) --- */
+        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+        .popup-content { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 100%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
+        .popup-content.show { transform: scale(1); opacity: 1; }
+        .popup-content .close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: 700; color: #aaa; cursor: pointer; line-height: 1; }
+        #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--text-light); }
+        #popup-message a { color: var(--primary-hover); font-weight: 700; text-decoration: underline; }
+        #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+        /* [BARU] Styling untuk input di dalam popup */
+        #popup-message .popup-input { margin-top: 15px; padding: 10px; width: 100%; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; }
+        #popup-message .popup-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
+        #popup-message .popup-button { margin-top: 15px; width: 100%; }
 
-        .spinner { width: 48px; height: 48px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .page-footer {
-            width: 100%;
-            text-align: center;
-            padding: 20px 0 0 0;
-            color: var(--text-light);
-            font-size: 14px;
-        }
+        .spinner { width: 48px; height: 48px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .page-footer {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0 0 0;
+            color: var(--text-light);
+            font-size: 14px;
+        }
 
-        /* --- Responsive Design --- */
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .card-form-header h2 { font-size: 20px; }
-            .card-body, .card-footer, .card-header, .card-form-header { padding: 15px; }
-        }
-    </style>
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .card-form-header h2 { font-size: 20px; }
+            .card-body, .card-footer, .card-header, .card-form-header { padding: 15px; }
+        }
+    </style>
 </head>
 <body>
-    <form name="form-pendaftaran-sd" id="pendaftaranForm">
-        <input type="hidden" name="editNik" id="editNik">
-        
-        <div class="form-card" id="fieldset-a">
-            <div class="card-form-header">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
-                <div>
-                    <h2>Formulir Pendaftaran Murid Baru SD Negeri Kota Denpasar</h2>
-                    <p>Tahun Ajaran 2026/2027</p>
-                </div>
-            </div>
-            
-            <div class="card-header">
-                <h3 class="card-title">A. Verifikasi Admin Sekolah</h3>
-            </div>
-            <div class="card-body">
-                <div class="input-group">
-                    <label for="token">Masukkan Token</label>
-                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin Disdikpora Dps">
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="button-group" id="token-verification-group">
-                    <button type="button" class="btn btn-primary" id="verify-token-btn" style="width: 100%;">✔️ Verifikasi Token</button>
-                </div>
-                <div class="button-group" id="post-verification-group" style="display: none;">
-                    <button type="button" class="btn btn-secondary edit-trigger">✏️ Edit Data</button>
-                    <button type="button" class="btn btn-success next-btn" data-current="fieldset-a" data-next="fieldset-b">Pendaftaran ✍</button>
-                </div>
-            </div>
-        </div>
+    <form name="form-pendaftaran-sd" id="pendaftaranForm">
+        <input type="hidden" name="editNik" id="editNik">
+        
+        <div class="form-card" id="fieldset-a">
+            <div class="card-form-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Lambang_Kota_Denpasar_%281%29.png/1077px-Lambang_Kota_Denpasar_%281%29.png" alt="Logo Kota Denpasar">
+                <div>
+                    <h2>Formulir Pendaftaran Murid Baru SD Negeri Kota Denpasar</h2>
+                    <p>Tahun Ajaran 2026/2027</p>
+                </div>
+            </div>
+            
+            <div class="card-header">
+                <h3 class="card-title">A. Verifikasi Admin Sekolah</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <label for="token">Masukkan Token</label>
+                    <input type="text" id="token" name="token" pattern="[A-Z0-9]{8}" title="Token harus 8 karakter kombinasi huruf kapital dan angka." required placeholder="Token 8 karakter dari Admin Disdikpora Dps">
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="button-group" id="token-verification-group">
+                    <button type="button" class="btn btn-primary" id="verify-token-btn" style="width: 100%;">✔️ Verifikasi Token</button>
+                </div>
+                <div class="button-group" id="post-verification-group" style="display: none;">
+                    <button type="button" class="btn btn-secondary edit-trigger">✏️ Edit Data</button>
+                    <button type="button" class="btn btn-success next-btn" data-current="fieldset-a" data-next="fieldset-b">Pendaftaran ✍</button>
+                </div>
+            </div>
+        </div>
 
-        <div class="form-card" id="fieldset-b" style="display:none;">
-            <div class="card-header">
-                <h3 class="card-title">B. Data Diri Calon Siswa</h3>
-            </div>
-            <div class="card-body">
-                <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
-                <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="number" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
-                <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="number" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
-                <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
-                <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
-                <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
-            </div>
-            <div class="card-footer">
-                 <button type="button" class="btn btn-success next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya 👉</button>
-            </div>
-        </div>
+        <div class="form-card" id="fieldset-b" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title">B. Data Diri Calon Siswa</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group"><label for="namaLengkap">Nama Lengkap</label><input type="text" id="namaLengkap" name="namaLengkap" placeholder="Sesuai Akta Kelahiran" required></div>
+                <div class="input-group"><label for="nik">Nomor Induk Kependudukan (NIK)</label><input type="number" id="nik" name="nik" pattern="\d{16}" title="NIK harus terdiri dari 16 digit angka" placeholder="16 digit angka" required></div>
+                <div class="input-group"><label for="nisn">Nomor Induk Siswa Nasional (NISN)</label><input type="number" id="nisn" name="nisn" pattern="\d{10}" title="NISN harus terdiri dari 10 digit angka" placeholder="Jika ada"></div>
+                <div class="input-group"><label for="jenisKelamin">Jenis Kelamin</label><select id="jenisKelamin" name="jenisKelamin" required><option value="" disabled selected>Pilih Jenis Kelamin</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
+                <div class="input-group"><label for="tempatLahir">Tempat Lahir</label><input type="text" id="tempatLahir" name="tempatLahir" placeholder="Contoh: Denpasar" required></div>
+                <div class="input-group"><label for="tanggalLahir">Tanggal Lahir</label><input type="date" id="tanggalLahir" name="tanggalLahir" required></div>
+            </div>
+            <div class="card-footer">
+                 <button type="button" class="btn btn-success next-btn" data-current="fieldset-b" data-next="fieldset-c">Selanjutnya 👉</button>
+            </div>
+        </div>
 
-        <div class="form-card" id="fieldset-c" style="display:none;">
-            <div class="card-header">
-                <h3 class="card-title">C. Alamat Tinggal (Sesuai Dokumen Resmi)</h3>
-            </div>
-            <div class="card-body">
-                <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
-                <div class="input-group" id="provinsi-group" style="display:none;"><label for="provinsi">Provinsi</label><select id="provinsi" name="provinsi"><option value="" disabled selected>Pilih Provinsi Asal</option><option value="Bali">Bali</option><option value="Luar Bali">Luar Bali</option></select></div>
-                <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
-                <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
-                <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
-                <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
-            </div>
-            <div class="card-footer">
-                <button type="button" class="btn btn-success next-btn" data-current="fieldset-c" data-next="fieldset-d">Selanjutnya 👉</button>
-            </div>
-        </div>
+        <div class="form-card" id="fieldset-c" style="display:none;">
+            <div class="card-header">
+                <h3 class="card-title">C. Alamat Tinggal (Sesuai Dokumen Resmi)</h3>
+            </div>
+            <div class="card-body">
+                <div class="input-group"><label for="kategoriKK">Kategori KK</label><select id="kategoriKK" name="kategoriKK" required><option></option><option value="KK Denpasar">KK Denpasar</option><option value="KK Luar Denpasar">KK Luar Denpasar</option></select></div>
+                <div class="input-group" id="provinsi-group" style="display:none;"><label for="provinsi">Provinsi</label><select id="provinsi" name="provinsi"><option value="" disabled selected>Pilih Provinsi Asal</option><option value="Bali">Bali</option><option value="Luar Bali">Luar Bali</option></select></div>
+                <div class="input-group"><label for="alamat">Alamat Lengkap Jalan</label><textarea id="alamat" name="alamat" placeholder="Contoh: Jalan Sulatri No. 3 Denpasar" required></textarea></div>
+                <div class="input-group"><label for="kecamatan">Kecamatan</label><select id="kecamatan" name="kecamatan" required><option></option><option value="Denpasar Barat">Denpasar Barat</option><option value="Denpasar Selatan">Denpasar Selatan</option><option value="Denpasar Timur">Denpasar Timur</option><option value="Denpasar Utara">Denpasar Utara</option></select></div>
+                <div class="input-group"><label for="kelurahan">Kelurahan/Desa</label><input type="text" id="kelurahan" name="kelurahan" placeholder="Contoh: Penatih" required></div>
+                <div class="input-group"><label for="banjar">Banjar/Dusun/Lingkungan</label><select id="banjar" name="banjar" required disabled><option></option></select></div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-success next-btn" data-current="fieldset-c" data-next="fieldset-d">Selanjutnya 👉</button>
+            </div>
+        </div>
 
-        <div class="form-card" id="fieldset-d" style="display:none;">
-            <div class="card-header">
-               <h3 class="card-title">D. Data Orang Tua / Wali</h3>
-            </div>
-            <div class="card-body">
-               <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
-               <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
-               <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
-               <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
-            </div>
-            <div class="card-footer">
-               <button type="button" class="btn btn-success next-btn" data-current="fieldset-d" data-next="fieldset-e">Selanjutnya 👉</button>
-            </div>
-        </div>
+        <div class="form-card" id="fieldset-d" style="display:none;">
+            <div class="card-header">
+               <h3 class="card-title">D. Data Orang Tua / Wali</h3>
+            </div>
+            <div class="card-body">
+               <div class="input-group"><label for="namaAyah">Nama Ayah</label><input type="text" id="namaAyah" name="namaAyah" required></div>
+               <div class="input-group"><label for="namaIbu">Nama Ibu</label><input type="text" id="namaIbu" name="namaIbu" required></div>
+               <div class="input-group"><label for="noHP">Nomor HP/WhatsApp Aktif</label><input type="tel" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required></div>
+               <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" placeholder="Contoh: orangtua@mail.com"></div>
+            </div>
+            <div class="card-footer">
+               <button type="button" class="btn btn-success next-btn" data-current="fieldset-d" data-next="fieldset-e">Selanjutnya 👉</button>
+            </div>
+        </div>
 
-        <div class="form-card" id="fieldset-e" style="display:none;">
-            <div class="card-header">
-               <h3 class="card-title">E. Pilihan Sekolah</h3>
-            </div>
-            <div class="card-body">
-               <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
-               <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Wajib)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
-               <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" disabled><option></option></select></div>
-               <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" disabled><option></option></select></div>
-            </div>
-            <div class="card-footer">
-               <button type="submit" class="btn btn-primary submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
-            </div>
-        </div>
-    </form>
-    
-    <footer class="page-footer">
-        SPMB <i>Online</i> SD Negeri Kota Denpasar © 2026
-    </footer>
-    
-    <div class="popup-overlay" id="popup-modal">
-        <div class="popup-content" id="popup-content-box">
-            <span class="close-btn" id="popup-close-btn">&times;</span>
-            <div id="popup-icon" class="popup-icon"></div>
-            <div id="popup-message"></div>
-        </div>
-    </div>
+        <div class="form-card" id="fieldset-e" style="display:none;">
+            <div class="card-header">
+               <h3 class="card-title">E. Pilihan Sekolah</h3>
+            </div>
+            <div class="card-body">
+               <div class="input-group"><label for="jalurPmb">Jalur Penerimaan Murid Baru (PMB)</label><select id="jalurPmb" name="jalurPmb" required disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah1">Pilihan Sekolah 1 (Wajib)</label><select id="pilihanSekolah1" name="pilihanSekolah1" required disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah2">Pilihan Sekolah 2 (Alternatif)</label><select id="pilihanSekolah2" name="pilihanSekolah2" disabled><option></option></select></div>
+               <div class="input-group"><label for="pilihanSekolah3">Pilihan Sekolah 3 (Alternatif)</label><select id="pilihanSekolah3" name="pilihanSekolah3" disabled><option></option></select></div>
+            </div>
+            <div class="card-footer">
+               <button type="submit" class="btn btn-primary submit-btn">Kirim & Unduh Bukti Daftar 🚀</button>
+            </div>
+        </div>
+    </form>
+    
+    <footer class="page-footer">
+        SPMB <i>Online</i> SD Negeri Kota Denpasar © 2026
+    </footer>
+    
+    <div class="popup-overlay" id="popup-modal">
+        <div class="popup-content" id="popup-content-box">
+            <span class="close-btn" id="popup-close-btn">&times;</span>
+            <div id="popup-icon" class="popup-icon"></div>
+            <div id="popup-message"></div>
+        </div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
-        const form = document.getElementById('pendaftaranForm');
-        const submitButton = form.querySelector('.submit-btn');
-        let allSchools = [];
-        let allSchoolNames = [];
-        const popupModal = document.getElementById('popup-modal');
-        const popupContentBox = document.getElementById('popup-content-box');
-        const popupIcon = document.getElementById('popup-icon');
-        const popupMessage = document.getElementById('popup-message');
-        const popupCloseBtn = document.getElementById('popup-close-btn');
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <script>
+        // ======================================================= //
+        // SEMUA LOGIKA FORMULIR ANDA DI BAWAH INI TETAP UTUH      //
+        // KECUALI FUNGSI showPopup DAN handleEdit YANG DIPERBARUI //
+        // ======================================================= //
+        
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
+        const form = document.getElementById('pendaftaranForm');
+        const submitButton = form.querySelector('.submit-btn');
+        let allSchools = [];
+        let allSchoolNames = [];
+        const popupModal = document.getElementById('popup-modal');
+        const popupContentBox = document.getElementById('popup-content-box');
+        const popupIcon = document.getElementById('popup-icon');
+        const popupMessage = document.getElementById('popup-message');
+        const popupCloseBtn = document.getElementById('popup-close-btn');
 
-        const icons = {
-            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#00a65a" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
-            error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
-            loading: `<div class="spinner"></div>`,
-            edit: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#3C8DBC" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>`
-        };
-        
-        function showPopup(message, type = 'success') {
-            popupMessage.innerHTML = message;
-            popupIcon.innerHTML = icons[type] || '';
-            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block';
-            popupModal.style.display = 'flex';
-            setTimeout(() => popupContentBox.classList.add('show'), 10);
-        }
+        const icons = {
+            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#00a65a" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
+            error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
+            loading: `<div class="spinner"></div>`,
+            // [BARU] Ikon untuk popup edit data
+            edit: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#3C8DBC" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>`
+        };
+        
+        // [PERUBAHAN] Fungsi showPopup dimodifikasi sedikit
+        function showPopup(message, type = 'success') {
+            popupMessage.innerHTML = message;
+            popupIcon.innerHTML = icons[type] || '';
+            
+            // Tombol close hanya disembunyikan saat loading
+            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block';
+            
+            popupModal.style.display = 'flex';
+            setTimeout(() => popupContentBox.classList.add('show'), 10);
+        }
 
-        function hidePopup() {
-            popupContentBox.classList.remove('show');
-            setTimeout(() => popupModal.style.display = 'none', 300);
-        }
+        function hidePopup() {
+            popupContentBox.classList.remove('show');
+            setTimeout(() => popupModal.style.display = 'none', 300);
+        }
 
-        popupCloseBtn.addEventListener('click', hidePopup);
-        popupModal.addEventListener('click', (e) => {
-            if (e.target === popupModal && popupCloseBtn.style.display !== 'none') {
-                hidePopup();
-            }
-        });
-        
-        // [PERUBAHAN 1] Tambahkan parameter 'checkToken' untuk validasi kondisional.
-        function validateSection(fieldsetId, checkToken = false) {
-            const section = document.getElementById(fieldsetId);
-            const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
-            for (let input of inputs) {
-                // [PERUBAHAN 2] Gunakan parameter 'checkToken'. Jika false, lewati validasi token.
-                if (input.id === 'token' && !checkToken) continue;
+        popupCloseBtn.addEventListener('click', hidePopup);
+        popupModal.addEventListener('click', (e) => {
+            if (e.target === popupModal && popupCloseBtn.style.display !== 'none') {
+                hidePopup();
+            }
+        });
+        
+        function validateSection(fieldsetId) {
+            const section = document.getElementById(fieldsetId);
+            const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+            for (let input of inputs) {
+                if (!input.value || (input.type === 'checkbox' && !input.checked)) {
+                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
 
-                if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
-                    input.focus();
-                    return false;
-                }
-            }
-            return true;
-        }
+        function handleNextStep(e) {
+            const currentFielsetId = e.target.dataset.current;
+            const nextFieldsetId = e.target.dataset.next;
+            if (validateSection(currentFielsetId)) {
+                $(`#${nextFieldsetId}`).slideDown();
+                $(e.target).hide();
+            }
+        }
+        
+        document.querySelectorAll('.next-btn').forEach(button => {
+            button.addEventListener('click', handleNextStep);
+        });
+        
+        function updatePilihanSekolah1() {
+            const jalur = $('#jalurPmb').val();
+            const selectedBanjar = $('#banjar').val();
+            const pilihan1 = $('#pilihanSekolah1');
+            pilihan1.empty().append(new Option()).trigger('change');
+            if (jalur === 'Mutasi') {
+                allSchoolNames.forEach(s => pilihan1.append(new Option(s, s, false, false)));
+                pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah (Jalur Mutasi)" });
+            } else {
+                if (selectedBanjar) {
+                    const filteredSchools = allSchools.filter(s => s.banjar === selectedBanjar).map(s => s.nama);
+                    if (filteredSchools.length > 0) {
+                        filteredSchools.forEach(s => pilihan1.append(new Option(s, s, false, false)));
+                        pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah sesuai banjar" });
+                    } else {
+                         pilihan1.prop('disabled', true).select2({ placeholder: "Tidak ada sekolah di banjar ini" });
+                    }
+                } else {
+                    pilihan1.prop('disabled', true).select2({ placeholder: "Pilih banjar terlebih dahulu" });
+                }
+            }
+        }
+        
+        // [PERUBAHAN TOTAL] Fungsi handleEdit kini menggunakan popup kustom
+        const handleEdit = () => {
+            const popupHTML = `
+                <h4>Cari Data Pendaftar</h4>
+                <p>Masukkan NIK 16 digit yang sudah terdaftar untuk mengubah data.</p>
+                <input type="number" id="nik-popup-input" class="popup-input" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
+                <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
+            `;
+            showPopup(popupHTML, 'edit');
 
-        function handleNextStep(e) {
-            const currentFielsetId = e.target.dataset.current;
-            const nextFieldsetId = e.target.dataset.next;
-            // Memanggil validateSection seperti aslinya, (checkToken=false), sehingga token tidak divalidasi.
-            if (validateSection(currentFielsetId)) {
-                $(`#${nextFieldsetId}`).slideDown();
-                $(e.target).hide();
-            }
-        }
-        
-        document.querySelectorAll('.next-btn').forEach(button => {
-            button.addEventListener('click', handleNextStep);
-        });
-        
-        function updatePilihanSekolah1() {
-            const jalur = $('#jalurPmb').val();
-            const selectedBanjar = $('#banjar').val();
-            const pilihan1 = $('#pilihanSekolah1');
-            pilihan1.empty().append(new Option()).trigger('change');
-            if (jalur === 'Mutasi') {
-                allSchoolNames.forEach(s => pilihan1.append(new Option(s, s, false, false)));
-                pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah (Jalur Mutasi)" });
-            } else {
-                if (selectedBanjar) {
-                    const filteredSchools = allSchools.filter(s => s.banjar === selectedBanjar).map(s => s.nama);
-                    if (filteredSchools.length > 0) {
-            _BANTUAN-CHATBOT-INDONESIA/issues/new" class="btn btn-primary" target="_blank">Laporkan Masalah</a>
-                        filteredSchools.forEach(s => pilihan1.append(new Option(s, s, false, false)));
-                        pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah sesuai banjar" });
-                    } else {
-                         pilihan1.prop('disabled', true).select2({ placeholder: "Tidak ada sekolah di banjar ini" });
-                    }
-                } else {
-                    pilihan1.prop('disabled', true).select2({ placeholder: "Pilih banjar terlebih dahulu" });
-                }
-            }
-        }
-        
-        const handleEdit = () => {
-            const popupHTML = `
-                <h4>Cari Data Pendaftar</h4>
-                <p>Masukkan NIK 16 digit yang sudah terdaftar untuk mengubah data.</p>
-                <input type="number" id="nik-popup-input" class="popup-input" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
-                <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
-            `;
-            showPopup(popupHTML, 'edit');
+            const nikInputPopup = document.getElementById('nik-popup-input');
+            const searchButtonPopup = document.getElementById('search-nik-btn');
+            
+            nikInputPopup.focus();
 
-            const nikInputPopup = document.getElementById('nik-popup-input');
-            const searchButtonPopup = document.getElementById('search-nik-btn');
-            
-            nikInputPopup.focus();
+            const performSearch = () => {
+                const nikToEdit = nikInputPopup.value;
+                if (!/^\d{16}$/.test(nikToEdit)) {
+                    // Tampilkan error di dalam popup yang sama tanpa menutupnya
+                    showPopup(`
+                        <h4>NIK Tidak Valid</h4>
+                        <p>Harap masukkan 16 digit angka NIK yang benar.</p>
+                        <input type="text" id="nik-popup-input" class="popup-input" value="${nikToEdit}" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
+                        <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
+                    `, 'error');
+                    // Re-attach event listener karena innerHTML di-refresh
+                    document.getElementById('search-nik-btn').addEventListener('click', performSearch);
+                    document.getElementById('nik-popup-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') performSearch(); });
+                    document.getElementById('nik-popup-input').focus();
+                    return;
+                }
+                
+                showPopup('Mencari data...', 'loading');
 
-            const performSearch = () => {
-                const nikToEdit = nikInputPopup.value;
-                if (!/^\d{16}$/.test(nikToEdit)) {
-                    showPopup(`
-                        <h4>NIK Tidak Valid</h4>
-                        <p>Harap masukkan 16 digit angka NIK yang benar.</p>
-                        <input type="text" id="nik-popup-input" class="popup-input" value="${nikToEdit}" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
-                        <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
-                    `, 'error');
-                    document.getElementById('search-nik-btn').addEventListener('click', performSearch);
-                    document.getElementById('nik-popup-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') performSearch(); });
-                    document.getElementById('nik-popup-input').focus();
-                    return;
-                }
-                
-                showPopup('Mencari data...', 'loading');
+                fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
+                    .then(res => res.json())
+                    .then(response => {
+if(response.result === 'success' && response.data) {
+    const data = response.data;
+    Object.keys(data).forEach(key => {
+        const el = form.elements[key];
+        if (el) {
+            if (el.tagName === 'SELECT') {
+                $(`#${el.id}`).val(data[key]).trigger('change');
+            } else {
+                el.value = data[key];
+            }
+        }
+    });
+    
+    $('#editNik').val(nikToEdit);
+    $('#nik').prop('readonly', true);
+    submitButton.disabled = false;
+    
+    $('.form-card').not('#fieldset-a').slideDown();
+    $('.next-btn').hide();
+    
+    // [PERUBAHAN] Kosongkan token dan hapus status readonly
+    $('#token').val('').prop('readonly', false);
+    
+    // [PERUBAHAN] Tutup popup pencarian dan tampilkan notifikasi yang jelas
+    hidePopup();
+    setTimeout(() => {
+        showPopup(
+            "Data ditemukan. <strong>PENTING: Masukkan ulang Token Verifikasi Anda di Bagian A</strong> sebelum mengirim formulir.", 
+            'success'
+        );
+        // Fokuskan ke kolom token agar admin langsung tahu
+        $('#token').focus();
+    }, 350); // Sedikit delay agar transisi mulus
 
-                fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if(response.result === 'success' && response.data) {
-                            const data = response.data;
-                            Object.keys(data).forEach(key => {
-                                const el = form.elements[key];
-                                if (el) {
-                                    if (el.tagName === 'SELECT') {
-                                        $(`#${el.id}`).val(data[key]).trigger('change');
-                                    } else {
-                                        el.value = data[key];
-                                    }
-                                }
-                            });
-                           
-                            $('#editNik').val(nikToEdit);
-                            $('#nik').prop('readonly', true);
-                            submitButton.disabled = false;
-                            
-                            // [PERUBAHAN 3] Kosongkan dan buka kunci Token saat data edit ditemukan.
-                            $('#token').val('').prop('readonly', false);
-                            
-                            $('.form-card').not('#fieldset-a').slideDown();
-                            $('.next-btn').hide();
-                           
-                            hidePopup();
-                            setTimeout(() => {
-                                showPopup("Data ditemukan. Harap <strong>isi ulang Token Anda</strong>, periksa kembali data, lalu kirim ulang.", 'success');
-                            }, 300);
+} else {                            
+  showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error fetching edit data:", err);
+                        showPopup("Terjadi kesalahan saat mengambil data. Periksa koneksi internet Anda.", 'error');
+                    });
+            };
 
-                        } else {
-                            showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Error fetching edit data:", err);
-                        showPopup("Terjadi kesalahan saat mengambil data. Periksa koneksi internet Anda.", 'error');
-                    });
-            };
+            searchButtonPopup.addEventListener('click', performSearch);
+            nikInputPopup.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
 
-            searchButtonPopup.addEventListener('click', performSearch);
-            nikInputPopup.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-        }
+        $(document).ready(function() {
+            $('input[required], select[required], textarea[required]').each(function() {
+                $('label[for="' + this.id + '"]').addClass('is-required');
+            });
+            
+            $('.edit-trigger').on('click', handleEdit);
+            
+            $('#jenisKelamin, #provinsi').select2({ minimumResultsForSearch: Infinity });
+            $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
+            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK", minimumResultsForSearch: Infinity });
+            $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
+            const banjarSelect = $('#banjar').select2({ placeholder: "Memuat data banjar..." });
+            const pilihan1 = $('#pilihanSekolah1').select2({ placeholder: "Pilih banjar terlebih dahulu" });
+            const pilihan2 = $('#pilihanSekolah2').select2({ placeholder: "Memuat data sekolah..." });
+            const pilihan3 = $('#pilihanSekolah3').select2({ placeholder: "Memuat data sekolah..." });
 
-        $(document).ready(function() {
-            $('input[required], select[required], textarea[required]').each(function() {
-                $('label[for="' + this.id + '"]').addClass('is-required');
-            });
-            
-            $('.edit-trigger').on('click', handleEdit);
-            
-            $('#jenisKelamin, #provinsi').select2({ minimumResultsForSearch: Infinity });
-            $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
-            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK", minimumResultsForSearch: Infinity });
-            $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
-            const banjarSelect = $('#banjar').select2({ placeholder: "Memuat data banjar..." });
-            const pilihan1 = $('#pilihanSekolah1').select2({ placeholder: "Pilih banjar terlebih dahulu" });
-            const pilihan2 = $('#pilihanSekolah2').select2({ placeholder: "Memuat data sekolah..." });
-            const pilihan3 = $('#pilihanSekolah3').select2({ placeholder: "Memuat data sekolah..." });
+            fetch(scriptURL + '?action=getInitialData')
+                .then(res => res.json())
+                .then(response => {
+                    if (response.result === 'success') {
+                        allSchools = response.schools;
+                        allSchoolNames = [...new Set(allSchools.map(s => s.nama))];
+                        const allBanjars = response.banjars;
 
-            fetch(scriptURL + '?action=getInitialData')
-                .then(res => res.json())
-                .then(response => {
-                    if (response.result === 'success') {
-                        allSchools = response.schools;
-                        allSchoolNames = [...new Set(allSchools.map(s => s.nama))];
-                        const allBanjars = response.banjars;
+                        banjarSelect.empty().append(new Option());
+                        allBanjars.forEach(b => banjarSelect.append(new Option(b, b, false, false)));
+                        banjarSelect.prop('disabled', false).select2({ placeholder: "Cari & pilih banjar" });
+                        
+                        [pilihan2, pilihan3].forEach(sel => {
+                            sel.empty().append(new Option());
+                            allSchoolNames.forEach(s => sel.append(new Option(s, s, false, false)));
+                            sel.prop('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
+                        });
+                    } else { throw new Error('Gagal memuat data awal.'); }
+                }).catch(err => {
+                    console.error('Error fetching data:', err);
+                    showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
+                });
+            
+            $('#verify-token-btn').on('click', function() {
+                const tokenInput = $('#token');
+                const token = tokenInput.val().toUpperCase();
+                
+                tokenInput.val(token);
 
-                        banjarSelect.empty().append(new Option());
-                        allBanjars.forEach(b => banjarSelect.append(new Option(b, b, false, false)));
-                        banjarSelect.prop('disabled', false).select2({ placeholder: "Cari & pilih banjar" });
-                        
-                        [pilihan2, pilihan3].forEach(sel => {
-                            sel.empty().append(new Option());
-                            allSchoolNames.forEach(s => sel.append(new Option(s, s, false, false)));
-                            sel.prop('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
-                        });
-                    } else { throw new Error('Gagal memuat data awal.'); }
-                }).catch(err => {
-                    console.error('Error fetching data:', err);
-                    showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
-                });
-            
-            $('#verify-token-btn').on('click', function() {
-                const tokenInput = $('#token');
-                const token = tokenInput.val().toUpperCase();
-                
-                tokenInput.val(token);
+                if (!tokenInput[0].checkValidity()) {
+                    showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
+                    return;
+                }
+                
+                showPopup('Memeriksa Token...', 'loading');
+                fetch(`${scriptURL}?action=checkToken&token=${token}`)
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.result === 'success' && response.valid) {
+                            showPopup('Token valid, silakan lanjutkan pendaftaran atau edit data!', 'success');
+                            
+                            $('#token-verification-group').hide();
+                            $('#post-verification-group').css('display', 'flex');
+                            tokenInput.prop('readonly', true);
 
-                if (!tokenInput[0].checkValidity()) {
-                    showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
-                    return;
-                }
-                
-                showPopup('Memeriksa Token...', 'loading');
-                fetch(`${scriptURL}?action=checkToken&token=${token}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.result === 'success' && response.valid) {
-                            showPopup('Token valid, silakan lanjutkan pendaftaran atau edit data!', 'success');
-                            
-                            $('#token-verification-group').hide();
-                            $('#post-verification-group').css('display', 'flex');
-                            tokenInput.prop('readonly', true);
+                        } else {
+                            const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
+                            showPopup(errorMessage, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error checking token:', err);
+                        showPopup('Gagal memeriksa token. Periksa koneksi dan coba lagi.', 'error');
+                    });
+            });
 
-                        } else {
-                            const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
-                            showPopup(errorMessage, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error checking token:', err);
-                        showPopup('Gagal memeriksa token. Periksa koneksi dan coba lagi.', 'error');
-                    });
-            });
+            $('#kategoriKK').on('change', function() {
+                const kategori = $(this).val();
+                const jalurSelect = $('#jalurPmb');
+                jalurSelect.empty().append(new Option());
 
-            $('#kategoriKK').on('change', function() {
-                const kategori = $(this).val();
-                const jalurSelect = $('#jalurPmb');
-                jalurSelect.empty().append(new Option());
+                const provinsiGroup = $('#provinsi-group');
+                const provinsiInput = $('#provinsi');
+                if (kategori === 'KK Luar Denpasar') {
+                    provinsiGroup.slideDown();
+                    provinsiInput.prop('required', true).prev('label').addClass('is-required');
+                } else {
+                    provinsiGroup.slideUp();
+                    provinsiInput.prop('required', false).prev('label').removeClass('is-required');
+                    provinsiInput.val('').trigger('change');
+                }
 
-                const provinsiGroup = $('#provinsi-group');
-                const provinsiInput = $('#provinsi');
-                if (kategori === 'KK Luar Denpasar') {
-                    provinsiGroup.slideDown();
-                    provinsiInput.prop('required', true).prev('label').addClass('is-required');
-                } else {
-                    provinsiGroup.slideUp();
-                    provinsiInput.prop('required', false).prev('label').removeClass('is-required');
-                    provinsiInput.val('').trigger('change');
-                }
+                if (kategori === 'KK Denpasar') {
+                    ['Afirmasi', 'Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
+                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
+                } else if (kategori === 'KK Luar Denpasar') {
+                    ['Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
+                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
+                } else {
+                    jalurSelect.prop('disabled', true).select2({ placeholder: "Pilih kategori KK dahulu" });
+                }
+                updatePilihanSekolah1(); 
+            });
+            
+            $('#jalurPmb, #banjar').on('change', function() {
+                updatePilihanSekolah1();
+            });
 
-                if (kategori === 'KK Denpasar') {
-                    ['Afirmasi', 'Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
-                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
-                } else if (kategori === 'KK Luar Denpasar') {
-                    ['Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
-                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
-                } else {
-                    jalurSelect.prop('disabled', true).select2({ placeholder: "Pilih kategori KK dahulu" });
-              .0/dist/js/select2.min.js"></script>
-    
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
-        const form = document.getElementById('pendaftaranForm');
-        const submitButton = form.querySelector('.submit-btn');
-        let allSchools = [];
-        let allSchoolNames = [];
-        const popupModal = document.getElementById('popup-modal');
-        const popupContentBox = document.getElementById('popup-content-box');
-        const popupIcon = document.getElementById('popup-icon');
-        const popupMessage = document.getElementById('popup-message');
-        const popupCloseBtn = document.getElementById('popup-close-btn');
+            $('#nik').on('blur', function() {
+                const nikInput = $(this);
+                const nik = nikInput.val();
+                
+                if (nikInput.prop('readonly') || !/^\d{16}$/.test(nik)) {
+                    return;
+                }
+                
+                showPopup('Memeriksa NIK...', 'loading');
 
-        const icons = {
-            success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#00a65a" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
-            error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
-            loading: `<div class="spinner"></div>`,
-            edit: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#3C8DBC" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>`
-        };
-        
-        function showPopup(message, type = 'success') {
-            popupMessage.innerHTML = message;
-            popupIcon.innerHTML = icons[type] || '';
-            popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block';
-            popupModal.style.display = 'flex';
-            setTimeout(() => popupContentBox.classList.add('show'), 10);
-        }
+                fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.result === 'success') {
+                           if (response.exists) {
+                                const message = `NIK sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh bukti daftar</a> atau klik tombol 'Edit Data' untuk melakukan perubahan.`;
+                                showPopup(message, 'error');
+                                submitButton.disabled = true; 
+                            } else {
+                                showPopup('NIK belum terdaftar, silakan lanjutkan pengisian formulir.', 'success');
+                                submitButton.disabled = false;
+                            }
+                        } else {
+                            throw new Error('Pemeriksaan NIK gagal.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Error checking NIK:", err);
+                        showPopup('Gagal memeriksa NIK. Periksa koneksi dan coba lagi.', 'error');
+                        submitButton.disabled = false;
+                    });
+            });
+        });
 
-        function hidePopup() {
-            popupContentBox.classList.remove('show');
-            setTimeout(() => popupModal.style.display = 'none', 300);
-        }
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            // [PERUBAHAN] Validasi semua bagian form yang terlihat, bukan hanya yang terakhir
+let isFormValid = true;
+// Loop melalui setiap fieldset yang terlihat untuk divalidasi
+$('.form-card').filter(':visible').each(function() {
+    if (!validateSection(this.id)) {
+        isFormValid = false;
+        return false; // Hentikan loop .each() jika ada yang tidak valid
+    }
+});
 
-        popupCloseBtn.addEventListener('click', hidePopup);
-        popupModal.addEventListener('click', (e) => {
-            if (e.target === popupModal && popupCloseBtn.style.display !== 'none') {
-                hidePopup();
-            }
-        });
-        
-        // [PERUBAHAN 1] Tambahkan parameter 'checkToken' untuk validasi kondisional.
-        function validateSection(fieldsetId, checkToken = false) {
-            const section = document.getElementById(fieldsetId);
-            const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
-            for (let input of inputs) {
-                // [PERUBAHAN 2] Gunakan parameter 'checkToken'. Jika false, lewati validasi token.
-                if (input.id === 'token' && !checkToken) continue;
+// Hentikan proses submit jika ada bagian yang tidak valid
+if (!isFormValid) {
+    return; 
+}
 
-                if (!input.value || (input.type === 'checkbox' && !input.checked)) {
-                    showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
-                    input.focus();
-                    return false;
-                }
-            }
-            return true;
-        }
+            const s1 = $('#pilihanSekolah1').val();
+            const s2 = $('#pilihanSekolah2').val();
+            const s3 = $('#pilihanSekolah3').val();
+            if (s1 && s2 && s1 === s2) { showPopup('Pilihan Sekolah 1 dan 2 tidak boleh sama.', 'error'); return; }
+            if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
+            if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
+            
+            showPopup('Memproses pendaftaran...', 'loading');
+            
+            const formData = new FormData(form);
+            
+            const nisnValue = formData.get('nisn');
+            const noHPValue = formData.get('noHP');
 
-        function handleNextStep(e) {
-            const currentFielsetId = e.target.dataset.current;
-            const nextFieldsetId = e.target.dataset.next;
-            // Memanggil validateSection seperti aslinya, (checkToken=false), sehingga token tidak divalidasi.
-            if (validateSection(currentFielsetId)) {
-                $(`#${nextFieldsetId}`).slideDown();
-                $(e.target).hide();
-            }
-        }
-        
-        document.querySelectorAll('.next-btn').forEach(button => {
-            button.addEventListener('click', handleNextStep);
-        });
-        
-        function updatePilihanSekolah1() {
-            const jalur = $('#jalurPmb').val();
-            const selectedBanjar = $('#banjar').val();
-            const pilihan1 = $('#pilihanSekolah1');
-            pilihan1.empty().append(new Option()).trigger('change');
-            if (jalur === 'Mutasi') {
-                allSchoolNames.forEach(s => pilihan1.append(new Option(s, s, false, false)));
-                pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah (Jalur Mutasi)" });
-            } else {
-                if (selectedBanjar) {
-                    const filteredSchools = allSchools.filter(s => s.banjar === selectedBanjar).map(s => s.nama);
-                    if (filteredSchools.length > 0) {
-                        filteredSchools.forEach(s => pilihan1.append(new Option(s, s, false, false)));
-                        pilihan1.prop('disabled', false).select2({ placeholder: "Pilih sekolah sesuai banjar" });
-                    } else {
-                         pilihan1.prop('disabled', true).select2({ placeholder: "Tidak ada sekolah di banjar ini" });
-                    }
-                } else {
-                    pilihan1.prop('disabled', true).select2({ placeholder: "Pilih banjar terlebih dahulu" });
-                }
-            }
-        }
-        
-        const handleEdit = () => {
-            const popupHTML = `
-                <h4>Cari Data Pendaftar</h4>
-                <p>Masukkan NIK 16 digit yang sudah terdaftar untuk mengubah data.</p>
-                <input type="number" id="nik-popup-input" class="popup-input" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
-                <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
-            `;
-            showPopup(popupHTML, 'edit');
-
-            const nikInputPopup = document.getElementById('nik-popup-input');
-            const searchButtonPopup = document.getElementById('search-nik-btn');
-            
-            nikInputPopup.focus();
-
-            const performSearch = () => {
-                const nikToEdit = nikInputPopup.value;
-                if (!/^\d{16}$/.test(nikToEdit)) {
-                    showPopup(`
-                        <h4>NIK Tidak Valid</h4>
-                        <p>Harap masukkan 16 digit angka NIK yang benar.</p>
-                        <input type="text" id="nik-popup-input" class="popup-input" value="${nikToEdit}" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
-                        <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
-                    `, 'error');
-                    document.getElementById('search-nik-btn').addEventListener('click', performSearch);
-                    document.getElementById('nik-popup-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') performSearch(); });
-                    document.getElementById('nik-popup-input').focus();
-                    return;
-                }
-                
-                showPopup('Mencari data...', 'loading');
-
-                fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if(response.result === 'success' && response.data) {
-                            const data = response.data;
-                            Object.keys(data).forEach(key => {
-                                const el = form.elements[key];
-                                if (el) {
-                                    if (el.tagName === 'SELECT') {
-                                        $(`#${el.id}`).val(data[key]).trigger('change');
-                                    } else {
-                                        el.value = data[key];
-                                    }
-                                }
-                            });
-                           
-                            $('#editNik').val(nikToEdit);
-                            $('#nik').prop('readonly', true);
-                            submitButton.disabled = false;
-                            
-                            // [PERUBAHAN 3] Kosongkan dan buka kunci Token saat data edit ditemukan.
-                            $('#token').val('').prop('readonly', false);
-                            
-                            $('.form-card').not('#fieldset-a').slideDown();
-                            $('.next-btn').hide();
-                           
-                            hidePopup();
-                            setTimeout(() => {
-                                showPopup("Data ditemukan. Harap <strong>isi ulang Token Anda</strong>, periksa kembali data, lalu kirim ulang.", 'success');
-                            }, 300);
-
-                        } else {
-                            showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Error fetching edit data:", err);
-                        showPopup("Terjadi kesalahan saat mengambil data. Periksa koneksi internet Anda.", 'error');
-                    });
-            };
-
-            searchButtonPopup.addEventListener('click', performSearch);
-            nikInputPopup.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            $('input[required], select[required], textarea[required]').each(function() {
-                $('label[for="' + this.id + '"]').addClass('is-required');
-            });
-            
-            $('.edit-trigger').on('click', handleEdit);
-            
-            $('#jenisKelamin, #provinsi').select2({ minimumResultsForSearch: Infinity });
-            $('#kecamatan').select2({ placeholder: "Pilih Kecamatan" });
-            $('#kategoriKK').select2({ placeholder: "Pilih Kategori KK", minimumResultsForSearch: Infinity });
-            $('#jalurPmb').select2({ placeholder: "Pilih kategori KK dahulu" });
-            const banjarSelect = $('#banjar').select2({ placeholder: "Memuat data banjar..." });
-            const pilihan1 = $('#pilihanSekolah1').select2({ placeholder: "Pilih banjar terlebih dahulu" });
-            const pilihan2 = $('#pilihanSekolah2').select2({ placeholder: "Memuat data sekolah..." });
-            const pilihan3 = $('#pilihanSekolah3').select2({ placeholder: "Memuat data sekolah..." });
-
-            fetch(scriptURL + '?action=getInitialData')
-                .then(res => res.json())
-                .then(response => {
-                    if (response.result === 'success') {
-                        allSchools = response.schools;
-                        allSchoolNames = [...new Set(allSchools.map(s => s.nama))];
-                        const allBanjars = response.banjars;
-
-                        banjarSelect.empty().append(new Option());
-                        allBanjars.forEach(b => banjarSelect.append(new Option(b, b, false, false)));
-                        banjarSelect.prop('disabled', false).select2({ placeholder: "Cari & pilih banjar" });
-                        
-                        [pilihan2, pilihan3].forEach(sel => {
-                            sel.empty().append(new Option());
-                            allSchoolNames.forEach(s => sel.append(new Option(s, s, false, false)));
-                            sel.prop('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
-                        });
-                    } else { throw new Error('Gagal memuat data awal.'); }
-                }).catch(err => {
-                    console.error('Error fetching data:', err);
-                    showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
-                });
-            
-            $('#verify-token-btn').on('click', function() {
-                const tokenInput = $('#token');
-                const token = tokenInput.val().toUpperCase();
-                
-                tokenInput.val(token);
-
-                if (!tokenInput[0].checkValidity()) {
-                    showPopup('Token tidak valid. Pastikan 8 karakter kombinasi huruf kapital dan angka.', 'error');
-                    return;
-                }
-                
-                showPopup('Memeriksa Token...', 'loading');
-                fetch(`${scriptURL}?action=checkToken&token=${token}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.result === 'success' && response.valid) {
-                            showPopup('Token valid, silakan lanjutkan pendaftaran atau edit data!', 'success');
-                            
-                            $('#token-verification-group').hide();
-                            $('#post-verification-group').css('display', 'flex');
-                            tokenInput.prop('readonly', true);
-
-                        } else {
-                            const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
-                            showPopup(errorMessage, 'error');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error checking token:', err);
-                        showPopup('Gagal memeriksa token. Periksa koneksi dan coba lagi.', 'error');
-                    });
-            });
-
-            $('#kategoriKK').on('change', function() {
-                const kategori = $(this).val();
-                const jalurSelect = $('#jalurPmb');
-                jalurSelect.empty().append(new Option());
-
-                const provinsiGroup = $('#provinsi-group');
-                const provinsiInput = $('#provinsi');
-                if (kategori === 'KK Luar Denpasar') {
-                    provinsiGroup.slideDown();
-                    provinsiInput.prop('required', true).prev('label').addClass('is-required');
-                } else {
-                    provinsiGroup.slideUp();
-                    provinsiInput.prop('required', false).prev('label').removeClass('is-required');
-                    provinsiInput.val('').trigger('change');
-                }
-
-                if (kategori === 'KK Denpasar') {
-                    ['Afirmasi', 'Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
-                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
-                } else if (kategori === 'KK Luar Denpasar') {
-                    ['Mutasi', 'Domisili'].forEach(j => jalurSelect.append(new Option(j, j)));
-                    jalurSelect.prop('disabled', false).select2({ placeholder: "Pilih Jalur PMB" });
-                } else {
-                    jalurSelect.prop('disabled', true).select2({ placeholder: "Pilih kategori KK dahulu" });
-                }
-                updatePilihanSekolah1(); 
-            });
-            
-            $('#jalurPmb, #banjar').on('change', function() {
-                updatePilihanSekolah1();
-            });
-
-            $('#nik').on('blur', function() {
-                const nikInput = $(this);
-                const nik = nikInput.val();
-                
-                if (nikInput.prop('readonly') || !/^\d{16}$/.test(nik)) {
-                    return;
-                }
-                
-                showPopup('Memeriksa NIK...', 'loading');
-
-                fetch(`${scriptURL}?action=checkNik&nik=${nik}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.result === 'success') {
-                           if (response.exists) {
-                                const message = `NIK sudah terdaftar. Silakan <a href="${response.pdfUrl}" target="_blank">unduh bukti daftar</a> atau klik tombol 'Edit Data' untuk melakukan perubahan.`;
-                                showPopup(message, 'error');
-                                submitButton.disabled = true; 
-                            } else {
-                                showPopup('NIK belum terdaftar, silakan lanjutkan pengisian formulir.', 'success');
-                                submitButton.disabled = false;
-                            }
-                        } else {
-                            throw new Error('Pemeriksaan NIK gagal.');
-                        }
-                    })
-                    .catch(err => {
-                        console.error("Error checking NIK:", err);
-                        showPopup('Gagal memeriksa NIK. Periksa koneksi dan coba lagi.', 'error');
-                        submitButton.disabled = false;
-                    });
-            });
-        });
-
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-
-            // [PERUBAHAN 4] Ganti validasi tunggal dengan validasi menyeluruh untuk semua bagian form yang terlihat.
-            let isFormValid = true;
-            const allVisibleFieldsets = document.querySelectorAll('.form-card:not([style*="display:none"])');
-            for (const fieldset of allVisibleFieldsets) {
-                const mustCheckToken = (fieldset.id === 'fieldset-a');
-                if (!validateSection(fieldset.id, mustCheckToken)) {
-                    isFormValid = false;
-                    break; // Hentikan validasi jika ada yang gagal
-                }
-            }
-            if (!isFormValid) return; // Hentikan submit jika form tidak valid
-
-            const s1 = $('#pilihanSekolah1').val();
-            const s2 = $('#pilihanSekolah2').val();
-            const s3 = $('#pilihanSekolah3').val();
-            if (s1 && s2 && s1 === s2) { showPopup('Pilihan Sekolah 1 dan 2 tidak boleh sama.', 'error'); return; }
-            if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
-            if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
-            
-            showPopup('Memproses pendaftaran...', 'loading');
-            
-            const formData = new FormData(form);
-            
-            const nisnValue = formData.get('nisn');
-            const noHPValue = formData.get('noHP');
-
-            if (nisnValue) { formData.set('nisn', `'${nisnValue}`); }
-            formData.set('noHP', `'${noHPValue}`);
-            
-            fetch(scriptURL, { method: 'POST', body: formData}) 
-                .then(res => res.json())
-                .then(data => {
-                    if (data.result === 'success' && data.pdfUrl) {
-                        const actionText = $('#editNik').val() ? 'diperbarui' : 'didaftarkan';
-                        const message = `Data berhasil ${actionText}! <a href="${data.pdfUrl}" target="_blank">Klik di sini untuk mengunduh bukti daftar.</a>`;
-                        showPopup(message, 'success');
-                        
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = data.pdfUrl;
-                        downloadLink.target = '_blank';
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                        
-                        form.reset();
-                        $('select').val(null).trigger('change');
-                        $('#editNik').val('');
-                        $('#nik').prop('readonly', false);
-                        $('#token').prop('readonly', false);
-                        $('.form-card').not('#fieldset-a').hide();
-                        $('#fieldset-a').show();
-                        $('.next-btn').show(); 
-                        $('#post-verification-group').hide();
-                        $('#token-verification-group').show();
-                        
-                    } else {
-                        throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
-                    }
-                })
-                .catch(error => {
-                    showPopup(`Terjadi kesalahan! ${error.message}. Silakan coba lagi.`, 'error');
-                })
-                .finally(() => {
-                    submitButton.disabled = false;
-                });
-        });
-    </script>
+            if (nisnValue) { formData.set('nisn', `'${nisnValue}`); }
+            formData.set('noHP', `'${noHPValue}`);
+            
+            fetch(scriptURL, { method: 'POST', body: formData}) 
+                .then(res => res.json())
+                .then(data => {
+                    if (data.result === 'success' && data.pdfUrl) {
+                        const actionText = $('#editNik').val() ? 'diperbarui' : 'didaftarkan';
+                        const message = `Data berhasil ${actionText}! <a href="${data.pdfUrl}" target="_blank">Klik di sini untuk mengunduh bukti daftar.</a>`;
+                        showPopup(message, 'success');
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = data.pdfUrl;
+                        downloadLink.target = '_blank';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        form.reset();
+                        $('select').val(null).trigger('change');
+                        $('#editNik').val('');
+                        $('#nik').prop('readonly', false);
+                        $('#token').prop('readonly', false);
+                        $('.form-card').not('#fieldset-a').hide();
+                        $('#fieldset-a').show();
+                        $('.next-btn').show(); 
+                        $('#post-verification-group').hide();
+                        $('#token-verification-group').show();
+                        
+                    } else {
+                        throw new Error(data.error || 'Gagal memproses data atau membuat PDF.');
+                    }
+                })
+                .catch(error => {
+                    showPopup(`Terjadi kesalahan! ${error.message}. Silakan coba lagi.`, 'error');
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                });
+        });
+    </script>
 </body>
 </html>
