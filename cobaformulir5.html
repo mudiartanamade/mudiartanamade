@@ -100,6 +100,7 @@
             border-top: 1px solid #f4f4f4;
         }
         
+        /* --- Form Elements --- */
         .input-group { margin-bottom: 15px; }
         .input-group:last-child { margin-bottom: 0; }
         .input-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-light); }
@@ -115,6 +116,7 @@
         .input-group input:focus, .input-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
         .input-group input:read-only, .input-group select:disabled, .input-group input:disabled { background-color: #e9ecef; cursor: not-allowed; }
 
+        /* --- Buttons --- */
         .btn {
             padding: 10px 18px;
             border: 1px solid transparent;
@@ -139,11 +141,13 @@
         .button-group .btn { flex-grow: 1; min-width: 150px; }
         .card-footer .btn { width: 100%; }
 
+        /* --- Select2 Overrides --- */
         .select2-container .select2-selection--single { height: 40px !important; padding: 5px 0; border: 1px solid var(--border-color); border-radius: 4px; }
         .select2-container--default .select2-selection--single .select2-selection__arrow { height: 38px !important; }
         .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 28px !important; }
         .select2-dropdown { border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
 
+        /* --- Popup & Spinner (Unchanged Logic, Adjusted Style) --- */
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
         .popup-content { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 100%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
         .popup-content.show { transform: scale(1); opacity: 1; }
@@ -151,6 +155,7 @@
         #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--text-light); }
         #popup-message a { color: var(--primary-hover); font-weight: 700; text-decoration: underline; }
         #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
+        /* [BARU] Styling untuk input di dalam popup */
         #popup-message .popup-input { margin-top: 15px; padding: 10px; width: 100%; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; }
         #popup-message .popup-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
         #popup-message .popup-button { margin-top: 15px; width: 100%; }
@@ -166,6 +171,7 @@
             font-size: 14px;
         }
 
+        /* --- Responsive Design --- */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .card-form-header h2 { font-size: 20px; }
@@ -287,6 +293,10 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
+        // ======================================================= //
+        // SCRIPT DENGAN PERBAIKAN LOGIKA SESUAI PERMINTAAN        //
+        // ======================================================= //
+        
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
         const form = document.getElementById('pendaftaranForm');
         const submitButton = form.querySelector('.submit-btn');
@@ -325,20 +335,17 @@
             }
         });
         
-        // [PENYEMPURNAAN 2.1] Fungsi validasi disempurnakan dengan parameter 'checkToken'
-        // Agar bisa membedakan validasi saat klik "Selanjutnya" (token boleh kosong) dan saat "Submit" (token wajib diisi)
+        // [LOGIC BARU] Fungsi validasi disempurnakan dengan parameter 'checkToken'
         function validateSection(fieldsetId, checkToken = false) {
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
-                // Saat 'checkToken' false (default), validasi token dilewati. Ini untuk tombol 'next-btn'.
-                // Saat 'checkToken' true, validasi token akan dijalankan. Ini untuk tombol 'submit-btn'.
+                // Logika ini dilewati jika validasi bukan untuk final submit (bukan dari tombol Kirim)
                 if (input.id === 'token' && !checkToken) continue;
                 
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
                     showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
                     input.focus();
-                    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return false;
                 }
             }
@@ -348,7 +355,7 @@
         function handleNextStep(e) {
             const currentFielsetId = e.target.dataset.current;
             const nextFieldsetId = e.target.dataset.next;
-            // Memanggil validateSection tanpa argumen kedua, sehingga token tidak divalidasi
+            // Memanggil validateSection seperti aslinya, token tidak divalidasi di sini
             if (validateSection(currentFielsetId)) {
                 $(`#${nextFieldsetId}`).slideDown();
                 $(e.target).hide();
@@ -432,17 +439,16 @@
                             $('#editNik').val(nikToEdit);
                             $('#nik').prop('readonly', true);
                             submitButton.disabled = false;
-
-                            // [PENYEMPURNAAN 1] Kosongkan dan buka kunci field Token
-                            // Ini memaksa admin untuk menginput ulang token mereka saat mengedit
-                            $('#token').val('').prop('readonly', false).focus();
+                           
+                            // [LOGIC BARU] Kosongkan dan buka kunci field Token tanpa auto-focus
+                            $('#token').val('').prop('readonly', false);
                             
                             $('.form-card').not('#fieldset-a').slideDown();
                             $('.next-btn').hide();
                            
                             hidePopup();
                             setTimeout(() => {
-                                showPopup("Data ditemukan. Silakan edit formulir, <strong>isi ulang token Anda</strong>, dan kirim ulang.", 'success');
+                                showPopup("Data ditemukan. Silakan edit formulir, <strong>isi ulang token Anda</strong>, lalu kirim ulang.", 'success');
                             }, 300);
 
                         } else {
@@ -458,7 +464,6 @@
             searchButtonPopup.addEventListener('click', performSearch);
             nikInputPopup.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    e.preventDefault(); // Mencegah submit form jika ada di dalam popup
                     performSearch();
                 }
             });
@@ -498,6 +503,7 @@
                             sel.prop('disabled', false).select2({ placeholder: "Cari & pilih sekolah" });
                         });
                     } else { throw new Error('Gagal memuat data awal.'); }
+      _BANTUAN-CHATBOT-INDONESIA/issues/new" class="btn btn-primary" target="_blank">Laporkan Masalah</a>
                 }).catch(err => {
                     console.error('Error fetching data:', err);
                     showPopup('Gagal memuat data dropdown. Coba refresh halaman.', 'error');
@@ -516,6 +522,7 @@
                 
                 showPopup('Memeriksa Token...', 'loading');
                 fetch(`${scriptURL}?action=checkToken&token=${token}`)
+            _BANTUAN-CHATBOT-INDONESIA/issues/new" class="btn btn-primary" target="_blank">Laporkan Masalah</a>
                     .then(res => res.json())
                     .then(response => {
                         if (response.result === 'success' && response.valid) {
@@ -524,6 +531,7 @@
                             $('#token-verification-group').hide();
                             $('#post-verification-group').css('display', 'flex');
                             tokenInput.prop('readonly', true);
+
                         } else {
                             const errorMessage = 'Maaf, token yang anda masukkan tidak ditemukan, pastikan Anda adalah Admin Sekolah yang memiliki Token yang diberikan oleh Disdikpora Kota Denpasar. Pendaftaran hanya bisa dilakukan oleh Tim SPMB di Sekolah';
                             showPopup(errorMessage, 'error');
@@ -586,9 +594,9 @@
                                 showPopup(message, 'error');
                                 submitButton.disabled = true; 
                             } else {
-                                hidePopup(); // Sembunyikan popup loading jika NIK tersedia
+                                showPopup('NIK belum terdaftar, silakan lanjutkan pengisian formulir.', 'success');
                                 submitButton.disabled = false;
-                 A           }
+                            }
                         } else {
                             throw new Error('Pemeriksaan NIK gagal.');
                         }
@@ -603,23 +611,20 @@
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-
-            // [PENYEMPURNAAN 2.2] Validasi menyeluruh sebelum submit
-            // Loop semua fieldset yang terlihat untuk divalidasi satu per satu
+            
+            // [LOGIC BARU] Validasi menyeluruh sebelum submit
             let isFormValid = true;
-            const allFieldsets = document.querySelectorAll('.form-card');
-            for(const fieldset of allFieldsets){
-                if ($(fieldset).is(':visible')) {
-                    // Untuk fieldset pertama (ID 'fieldset-a'), paksa pemeriksaan token (argumen kedua true)
-                    const mustCheckToken = (fieldset.id === 'fieldset-a');
-                    if(!validateSection(fieldset.id, mustCheckToken)){
-                        isFormValid = false;
-                        break; // Hentikan loop jika ditemukan error pertama
-                    }
+            const allVisibleFieldsets = document.querySelectorAll('.form-card:not([style*="display:none"])');
+            for(const fieldset of allVisibleFieldsets){
+                // Untuk fieldset pertama (verifikasi), paksa pemeriksaan token (argumen kedua true)
+                const mustCheckToken = (fieldset.id === 'fieldset-a');
+                if(!validateSection(fieldset.id, mustCheckToken)){
+                    isFormValid = false;
+                    break; // Hentikan loop jika ditemukan error
                 }
             }
-            if (!isFormValid) return; // Hentikan proses jika form tidak valid
-            
+            if (!isFormValid) return;
+
             const s1 = $('#pilihanSekolah1').val();
             const s2 = $('#pilihanSekolah2').val();
             const s3 = $('#pilihanSekolah3').val();
