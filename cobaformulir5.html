@@ -445,18 +445,24 @@
                             $('#nik').prop('readonly', true);
                             submitButton.disabled = false;
                            
-                            $('.form-card').not('#fieldset-a').slideDown();
-                            $('.next-btn').hide();
-                           
-                            // Menutup popup pencarian dan menampilkan notifikasi sukses
-                            hidePopup();
-                            setTimeout(() => {
-                                showPopup("Data ditemukan. Silakan edit formulir di bawah dan kirim ulang.", 'success');
-                            }, 300);
+// [PENYEMPURNAAN] Kosongkan dan buka kunci input token
+    $('#token').val('').prop('readonly', false);
+    
+    $('.form-card').not('#fieldset-a').slideDown();
+    $('.next-btn').hide();
+    
+    // Menutup popup pencarian dan menampilkan notifikasi sukses
+    hidePopup();
+    setTimeout(() => {
+        // [PENYEMPURNAAN] Pesan popup diubah agar lebih informatif
+        showPopup("Data ditemukan. <strong>Silakan isi ulang Token Admin Anda</strong>, edit formulir, lalu kirim ulang.", 'success');
+        // [PENYEMPURNAAN] Arahkan kursor langsung ke input token
+        $('#token').focus(); 
+    }, 300);
 
-                        } else {
-                            showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
-                        }
+} else {
+    showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
+}
                     })
                     .catch(err => {
                         console.error("Error fetching edit data:", err);
