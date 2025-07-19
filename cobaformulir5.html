@@ -345,6 +345,7 @@
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
+                if (input.id === 'token') continue;
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
                     showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
                     input.focus();
@@ -427,42 +428,34 @@
                 fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
                     .then(res => res.json())
                     .then(response => {
-if(response.result === 'success' && response.data) {
-    const data = response.data;
-    Object.keys(data).forEach(key => {
-        const el = form.elements[key];
-        if (el) {
-            if (el.tagName === 'SELECT') {
-                $(`#${el.id}`).val(data[key]).trigger('change');
-            } else {
-                el.value = data[key];
-            }
-        }
-    });
-    
-    $('#editNik').val(nikToEdit);
-    $('#nik').prop('readonly', true);
-    submitButton.disabled = false;
-    
-    $('.form-card').not('#fieldset-a').slideDown();
-    $('.next-btn').hide();
-    
-    // [PERUBAHAN] Kosongkan token dan hapus status readonly
-    $('#token').val('').prop('readonly', false);
-    
-    // [PERUBAHAN] Tutup popup pencarian dan tampilkan notifikasi yang jelas
-    hidePopup();
-    setTimeout(() => {
-        showPopup(
-            "Data ditemukan. <strong>PENTING: Masukkan ulang Token Verifikasi Anda di Bagian A</strong> sebelum mengirim formulir.", 
-            'success'
-        );
-        // Fokuskan ke kolom token agar admin langsung tahu
-        $('#token').focus();
-    }, 350); // Sedikit delay agar transisi mulus
+                        if(response.result === 'success' && response.data) {
+                            const data = response.data;
+                            Object.keys(data).forEach(key => {
+                                const el = form.elements[key];
+                                if (el) {
+                                    if (el.tagName === 'SELECT') {
+                                        $(`#${el.id}`).val(data[key]).trigger('change');
+                                    } else {
+                                        el.value = data[key];
+                                    }
+                                }
+                            });
+                           
+                            $('#editNik').val(nikToEdit);
+                            $('#nik').prop('readonly', true);
+                            submitButton.disabled = false;
+                           
+                            $('.form-card').not('#fieldset-a').slideDown();
+                            $('.next-btn').hide();
+                           
+                            // Menutup popup pencarian dan menampilkan notifikasi sukses
+                            hidePopup();
+                            setTimeout(() => {
+                                showPopup("Data ditemukan. Silakan edit formulir di bawah dan kirim ulang.", 'success');
+                            }, 300);
 
-} else {                            
-  showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
+                        } else {
+                            showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
                         }
                     })
                     .catch(err => {
@@ -619,20 +612,7 @@ if(response.result === 'success' && response.data) {
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            // [PERUBAHAN] Validasi semua bagian form yang terlihat, bukan hanya yang terakhir
-let isFormValid = true;
-// Loop melalui setiap fieldset yang terlihat untuk divalidasi
-$('.form-card').filter(':visible').each(function() {
-    if (!validateSection(this.id)) {
-        isFormValid = false;
-        return false; // Hentikan loop .each() jika ada yang tidak valid
-    }
-});
-
-// Hentikan proses submit jika ada bagian yang tidak valid
-if (!isFormValid) {
-    return; 
-}
+            if (!validateSection('fieldset-e')) return;
 
             const s1 = $('#pilihanSekolah1').val();
             const s2 = $('#pilihanSekolah2').val();
