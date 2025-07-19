@@ -293,11 +293,6 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
-        // ======================================================= //
-        // SEMUA LOGIKA FORMULIR ANDA DI BAWAH INI TETAP UTUH      //
-        // KECUALI FUNGSI showPopup DAN handleEdit YANG DIPERBARUI //
-        // ======================================================= //
-        
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzg3D5N2LHCFF7oiFpgndRf5hBrbuMnReaOUCOlYGAh8suyjG7EYb3CycNF28DIGb8/exec'; 
         const form = document.getElementById('pendaftaranForm');
         const submitButton = form.querySelector('.submit-btn');
@@ -313,16 +308,13 @@
             success: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#00a65a" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>`,
             error: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#dc3545" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/></svg>`,
             loading: `<div class="spinner"></div>`,
-            // [BARU] Ikon untuk popup edit data
             edit: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#3C8DBC" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>`
         };
         
-        // [PERUBAHAN] Fungsi showPopup dimodifikasi sedikit
         function showPopup(message, type = 'success') {
             popupMessage.innerHTML = message;
             popupIcon.innerHTML = icons[type] || '';
             
-            // Tombol close hanya disembunyikan saat loading
             popupCloseBtn.style.display = (type === 'loading') ? 'none' : 'block';
             
             popupModal.style.display = 'flex';
@@ -345,7 +337,7 @@
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
-                if (input.id === 'token') continue;
+                if (input.id === 'token' && !$('#editNik').val()) continue; // Abaikan token jika bukan mode edit
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
                     showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
                     input.focus();
@@ -391,11 +383,11 @@
             }
         }
         
-        // [PERUBAHAN TOTAL] Fungsi handleEdit kini menggunakan popup kustom
         const handleEdit = () => {
             const popupHTML = `
                 <h4>Cari Data Pendaftar</h4>
                 <p>Masukkan NIK 16 digit yang sudah terdaftar untuk mengubah data.</p>
+                <div id="popup-search-status" style="color: #dc3545; margin-bottom: 10px; min-height: 20px; font-weight: 600;"></div>
                 <input type="number" id="nik-popup-input" class="popup-input" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
                 <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
             `;
@@ -403,32 +395,27 @@
 
             const nikInputPopup = document.getElementById('nik-popup-input');
             const searchButtonPopup = document.getElementById('search-nik-btn');
+            const searchStatus = document.getElementById('popup-search-status');
             
             nikInputPopup.focus();
 
             const performSearch = () => {
+                searchStatus.innerHTML = ''; 
                 const nikToEdit = nikInputPopup.value;
+
                 if (!/^\d{16}$/.test(nikToEdit)) {
-                    // Tampilkan error di dalam popup yang sama tanpa menutupnya
-                    showPopup(`
-                        <h4>NIK Tidak Valid</h4>
-                        <p>Harap masukkan 16 digit angka NIK yang benar.</p>
-                        <input type="text" id="nik-popup-input" class="popup-input" value="${nikToEdit}" placeholder="Ketik 16 digit NIK di sini..." pattern="\\d{16}" required>
-                        <button type="button" id="search-nik-btn" class="btn btn-primary popup-button">🔍 Cari Data</button>
-                    `, 'error');
-                    // Re-attach event listener karena innerHTML di-refresh
-                    document.getElementById('search-nik-btn').addEventListener('click', performSearch);
-                    document.getElementById('nik-popup-input').addEventListener('keypress', function(e) { if (e.key === 'Enter') performSearch(); });
-                    document.getElementById('nik-popup-input').focus();
+                    searchStatus.textContent = 'Harap masukkan 16 digit angka NIK yang benar.';
+                    nikInputPopup.focus();
                     return;
                 }
                 
-                showPopup('Mencari data...', 'loading');
+                searchButtonPopup.disabled = true;
+                searchButtonPopup.innerHTML = '<div class="spinner" style="width:20px; height:20px; border-width: 3px; margin: auto;"></div>';
 
                 fetch(`${scriptURL}?action=edit&nik=${nikToEdit}`)
                     .then(res => res.json())
                     .then(response => {
-                        if(response.result === 'success' && response.data) {
+                        if (response.result === 'success' && response.data) {
                             const data = response.data;
                             Object.keys(data).forEach(key => {
                                 const el = form.elements[key];
@@ -440,43 +427,43 @@
                                     }
                                 }
                             });
-                           
+                            
                             $('#editNik').val(nikToEdit);
                             $('#nik').prop('readonly', true);
                             submitButton.disabled = false;
-                           
-// [PENYEMPURNAAN] Kosongkan dan buka kunci input token
-    $('#token').val('').prop('readonly', false);
-    
-    $('.form-card').not('#fieldset-a').slideDown();
-    $('.next-btn').hide();
-    
-    // Menutup popup pencarian dan menampilkan notifikasi sukses
-    hidePopup();
-    setTimeout(() => {
-        // [PENYEMPURNAAN] Pesan popup diubah agar lebih informatif
-        showPopup("Data ditemukan. <strong>Silakan isi ulang Token Admin Anda</strong>, edit formulir, lalu kirim ulang.", 'success');
-        // [PENYEMPURNAAN] Arahkan kursor langsung ke input token
-        $('#token').focus(); 
-    }, 300);
+                            $('#token').val('').prop('readonly', false);
+                            
+                            $('.form-card').not('#fieldset-a').slideDown();
+                            $('.next-btn').hide();
+                            
+                            hidePopup();
+                            setTimeout(() => {
+                                showPopup("Data ditemukan. <strong>Silakan isi ulang Token Admin Anda</strong>, edit formulir, lalu kirim ulang.", 'success');
+                                $('#token').focus(); 
+                            }, 300);
 
-} else {
-    showPopup(`Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan. Pastikan NIK sudah benar.`, 'error');
-}
+                        } else {
+                            searchStatus.innerHTML = `Data dengan NIK <strong>${nikToEdit}</strong> tidak ditemukan.`;
+                            searchButtonPopup.disabled = false;
+                            searchButtonPopup.innerHTML = '🔍 Cari Data';
+                        }
                     })
                     .catch(err => {
                         console.error("Error fetching edit data:", err);
-                        showPopup("Terjadi kesalahan saat mengambil data. Periksa koneksi internet Anda.", 'error');
+                        searchStatus.innerHTML = "Terjadi kesalahan. Periksa koneksi internet Anda.";
+                        searchButtonPopup.disabled = false;
+                        searchButtonPopup.innerHTML = '🔍 Cari Data';
                     });
             };
 
             searchButtonPopup.addEventListener('click', performSearch);
             nikInputPopup.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     performSearch();
                 }
             });
-        }
+        };
 
         $(document).ready(function() {
             $('input[required], select[required], textarea[required]').each(function() {
@@ -616,17 +603,7 @@
             });
         });
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            if (!validateSection('fieldset-e')) return;
-
-            const s1 = $('#pilihanSekolah1').val();
-            const s2 = $('#pilihanSekolah2').val();
-            const s3 = $('#pilihanSekolah3').val();
-            if (s1 && s2 && s1 === s2) { showPopup('Pilihan Sekolah 1 dan 2 tidak boleh sama.', 'error'); return; }
-            if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
-            if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
-            
+        function processFormSubmission() {
             showPopup('Memproses pendaftaran...', 'loading');
             
             const formData = new FormData(form);
@@ -673,6 +650,49 @@
                 .finally(() => {
                     submitButton.disabled = false;
                 });
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            if (!validateSection('fieldset-e')) return;
+
+            const s1 = $('#pilihanSekolah1').val();
+            const s2 = $('#pilihanSekolah2').val();
+            const s3 = $('#pilihanSekolah3').val();
+            if (s1 && s2 && s1 === s2) { showPopup('Pilihan Sekolah 1 dan 2 tidak boleh sama.', 'error'); return; }
+            if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
+            if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
+            
+            const isEditMode = $('#editNik').val() !== '';
+            const tokenInput = $('#token');
+            const token = tokenInput.val().toUpperCase();
+            tokenInput.val(token);
+
+            if (!tokenInput[0].checkValidity()) {
+                showPopup('Token Admin wajib diisi dan harus 8 karakter (huruf kapital/angka).', 'error');
+                tokenInput.focus();
+                return;
+            }
+            
+            if (isEditMode) {
+                showPopup('Memvalidasi Token Admin...', 'loading');
+                fetch(`${scriptURL}?action=checkToken&token=${token}`)
+                    .then(res => res.json())
+                    .then(response => {
+                        if (response.result === 'success' && response.valid) {
+                            processFormSubmission();
+                        } else {
+                            showPopup('Token Admin yang Anda masukkan tidak valid. Perubahan tidak dapat disimpan.', 'error');
+                            tokenInput.focus();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error checking token on submit:', err);
+                        showPopup('Gagal memeriksa token. Periksa koneksi internet dan coba lagi.', 'error');
+                    });
+            } else {
+                processFormSubmission();
+            }
         });
     </script>
 </body>
