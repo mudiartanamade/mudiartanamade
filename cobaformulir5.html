@@ -147,7 +147,7 @@
         .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 28px !important; }
         .select2-dropdown { border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
 
-        /* --- Popup & Spinner (Unchanged Logic, Adjusted Style) --- */
+        /* --- Popup & Spinner --- */
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
         .popup-content { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,.2); text-align: center; max-width: 450px; width: 100%; position: relative; transform: scale(.9); opacity: 0; transition: transform .3s ease, opacity .3s ease; }
         .popup-content.show { transform: scale(1); opacity: 1; }
@@ -155,7 +155,6 @@
         #popup-message { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--text-light); }
         #popup-message a { color: var(--primary-hover); font-weight: 700; text-decoration: underline; }
         #popup-icon { margin-bottom: 15px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
-        /* [BARU] Styling untuk input di dalam popup */
         #popup-message .popup-input { margin-top: 15px; padding: 10px; width: 100%; border: 1px solid var(--border-color); border-radius: 4px; font-size: 16px; text-align: center; }
         #popup-message .popup-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px var(--primary-color); outline: 0; }
         #popup-message .popup-button { margin-top: 15px; width: 100%; }
@@ -337,7 +336,7 @@
             const section = document.getElementById(fieldsetId);
             const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
             for (let input of inputs) {
-                if (input.id === 'token' && !$('#editNik').val()) continue; // Abaikan token jika bukan mode edit
+                if (input.id === 'token' && !$('#editNik').val()) continue;
                 if (!input.value || (input.type === 'checkbox' && !input.checked)) {
                     showPopup(`Harap isi semua kolom yang wajib di bagian ini. Kolom '${$(input).closest('.input-group').find('label').text()}' masih kosong.`, 'error');
                     input.focus();
@@ -431,15 +430,16 @@
                             $('#editNik').val(nikToEdit);
                             $('#nik').prop('readonly', true);
                             submitButton.disabled = false;
-                            $('#token').val('').prop('readonly', false);
+                            
+                            // [PERUBAHAN] Baris yang mengosongkan token DIHAPUS. Token awal tetap terkunci.
                             
                             $('.form-card').not('#fieldset-a').slideDown();
                             $('.next-btn').hide();
                             
                             hidePopup();
                             setTimeout(() => {
-                                showPopup("Data ditemukan. <strong>Silakan isi ulang Token Admin Anda</strong>, edit formulir, lalu kirim ulang.", 'success');
-                                $('#token').focus(); 
+                                // [PERUBAHAN] Pesan popup disederhanakan.
+                                showPopup("Data ditemukan. Silakan edit formulir di bawah dan kirim ulang.", 'success');
                             }, 300);
 
                         } else {
@@ -633,7 +633,7 @@
                         $('select').val(null).trigger('change');
                         $('#editNik').val('');
                         $('#nik').prop('readonly', false);
-                        $('#token').prop('readonly', false);
+                        $('#token').prop('readonly', false); // Buka kembali token untuk sesi berikutnya
                         $('.form-card').not('#fieldset-a').hide();
                         $('#fieldset-a').show();
                         $('.next-btn').show(); 
@@ -663,36 +663,10 @@
             if (s1 && s3 && s1 === s3) { showPopup('Pilihan Sekolah 1 dan 3 tidak boleh sama.', 'error'); return; }
             if (s2 && s3 && s2 === s3) { showPopup('Pilihan Sekolah 2 dan 3 tidak boleh sama.', 'error'); return; }
             
-            const isEditMode = $('#editNik').val() !== '';
-            const tokenInput = $('#token');
-            const token = tokenInput.val().toUpperCase();
-            tokenInput.val(token);
-
-            if (!tokenInput[0].checkValidity()) {
-                showPopup('Token Admin wajib diisi dan harus 8 karakter (huruf kapital/angka).', 'error');
-                tokenInput.focus();
-                return;
-            }
-            
-            if (isEditMode) {
-                showPopup('Memvalidasi Token Admin...', 'loading');
-                fetch(`${scriptURL}?action=checkToken&token=${token}`)
-                    .then(res => res.json())
-                    .then(response => {
-                        if (response.result === 'success' && response.valid) {
-                            processFormSubmission();
-                        } else {
-                            showPopup('Token Admin yang Anda masukkan tidak valid. Perubahan tidak dapat disimpan.', 'error');
-                            tokenInput.focus();
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error checking token on submit:', err);
-                        showPopup('Gagal memeriksa token. Periksa koneksi internet dan coba lagi.', 'error');
-                    });
-            } else {
-                processFormSubmission();
-            }
+            // [PERUBAHAN] Logika validasi ulang token dihapus.
+            // Proses submit sekarang langsung memanggil processFormSubmission
+            // karena token sudah divalidasi di awal dan tetap terkunci.
+            processFormSubmission();
         });
     </script>
 </body>
