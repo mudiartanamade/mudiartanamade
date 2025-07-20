@@ -29,17 +29,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
+            padding: 0; /* Ubah: Menghapus padding agar menempel pada container induk */
             color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             min-height: 100vh;
         }
 
         #pendaftaranForm {
             width: 100%;
-            max-width: 800px;
+            /* Hapus: max-width: 800px; agar menjadi full-width */
         }
 
         /* --- Card/Box Component untuk Fieldset --- */
@@ -165,14 +162,15 @@
         .page-footer {
             width: 100%;
             text-align: center;
-            padding: 20px 0 0 0;
+            padding: 20px; /* Ubah: Menambahkan padding agar tidak terlalu menempel di bawah */
             color: var(--text-light);
             font-size: 14px;
+            background: var(--bg-color); /* Menambahkan background agar konsisten */
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 600px) {
-            body { padding: 10px; }
+            body { padding: 10px; } /* Memberi sedikit padding pada layar kecil */
             .card-form-header h2 { font-size: 20px; }
             .card-body, .card-footer, .card-header, .card-form-header { padding: 15px; }
         }
@@ -434,7 +432,7 @@
                             $('#editNik').val(nikToEdit);
                             $('#nik').prop('readonly', true);
                             submitButton.disabled = false;
-                                                        
+                                                      
                             $('.form-card').not('#fieldset-a').slideDown();
                             $('.next-btn').hide();
                             
